@@ -10,6 +10,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="my-options">
   <template>
@@ -20,6 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 10px;
       }
     </style>
+    <style include="iron-flex iron-flex-alignment"></style>
 
     <div class="card">
       <div class="circle">3</div>
@@ -34,6 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <p>Vision: </p>
       <p>HRA/HSA: </p>
       <p>HRA/HSA Company Contribution: </p>
+      <div class="horizontal start-justified layout"><a href="/questions"><paper-button raised>Back</paper-button></a></div>
     </div>
   </template>
 
