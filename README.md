@@ -1,4 +1,5 @@
-# Polymer App Toolbox - Starter Kit
+# Insurance Calculator
+Built from the Polymer App Toolbox - Starter Kit - Circa 2016-12-20
 
 [![Build Status](https://travis-ci.org/PolymerElements/polymer-starter-kit.svg?branch=master)](https://travis-ci.org/PolymerElements/polymer-starter-kit)
 
@@ -30,11 +31,10 @@ Install [polymer-cli](https://github.com/Polymer/polymer-cli):
 
     npm install -g polymer-cli
 
-##### Initialize project from template
-
-    mkdir my-app
-    cd my-app
-    polymer init starter-kit
+##### Atom Setup
+Install linter `apm install linter`
+Install ESLint `apm install linter-eslint`
+Install Polylint `apm install polymer-atom`
 
 ### Start the development server
 
