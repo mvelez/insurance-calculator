@@ -5,6 +5,7 @@
     "src/my-overview.html",
     "src/my-questions.html",
     "src/my-options.html",
+    "src/my-feedback.html",
     "src/my-view404.html"
   ],
   "sourceGlobs": [
