@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="my-view1">
+<dom-module id="my-options">
   <template>
     <style include="shared-styles">
       :host {
@@ -22,16 +22,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+      <div class="circle">3</div>
+      <h1>Insurance Options</h1>
+      <p>Based on your answers these are your best options ranked</p>
+      <p>Best Option: </p>
+      <p>Annual Premium: </p>
+      <p>Monthly Premium:</p>
+      <p>Annual Deductible: </p>
+      <p>Max Annual Out Of Pocket: </p>
+      <p>Dental: </p>
+      <p>Vision: </p>
+      <p>HRA/HSA: </p>
+      <p>HRA/HSA Company Contribution: </p>
     </div>
   </template>
 
   <script>
     Polymer({
-      is: 'my-view1',
+      is: 'my-options',
     });
   </script>
 </dom-module>
