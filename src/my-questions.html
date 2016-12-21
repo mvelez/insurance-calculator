@@ -10,6 +10,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="my-questions">
   <template>
@@ -19,6 +21,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         padding: 10px;
       }
+    </style>
+    <style include="iron-flex iron-flex-alignment"></style>
+    <style>
+        .container {
+          @apply(--layout-horizontal);
+          @apply(--layout-justified);
+        }
     </style>
 
     <div class="card">
@@ -35,6 +44,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <p>Are you a tobacco user?</p>
       <p>Does anyone being covered have conditions which you would anticipate high medical costs in the year you are enrolling for?</p>
       <p>Show me my options</p>
+      <div class="container">
+        <a href="/overview"><paper-button raised>Back</paper-button></a>
+        <a href="/options"><paper-button raised>Next</paper-button></a>
+      </div>
     </div>
   </template>
 
