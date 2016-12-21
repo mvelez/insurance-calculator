@@ -1,0 +1,46 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-questions">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <div class="circle">2</div>
+      <h1>Questions</h1>
+      <p>Answer the questions below to calculate the cost of different plans.</p>
+      <p>None of this information is being transmitted beyond this system.</p>
+      <p>What is your annual salary range?</p>
+      <p>How many adults will you be covering?</p>
+      <p>OPTIONAL: Does the adult you are covering work at an employer which offers coverage?</p>
+      <p>OPTIONAL: What is the annual co-pay of their plan for a single person?</p>
+      <p>OPTIONAL: What is the annual co-pay of their plan for a plan that covers everyone (including yourself) that needs to be covered?</p>
+      <p>How many children will you be covering?</p>
+      <p>Are you a tobacco user?</p>
+      <p>Does anyone being covered have conditions which you would anticipate high medical costs in the year you are enrolling for?</p>
+      <p>Show me my options</p>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-questions',
+    });
+  </script>
+</dom-module>
