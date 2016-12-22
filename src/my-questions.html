@@ -79,11 +79,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <paper-card heading="Does their employer offer coverage?">
         <div class="card-content">
-          <paper-toggle-button>Yes</paper-toggle-button>
-          <paper-input label="Annual co-pay a single person?" type="number">
+          <paper-toggle-button on-click="showSpousalCoverageCosts">Yes</paper-toggle-button>
+          <paper-input label="Annual co-pay a single person?" type="number" hidden$="{{hideSpousalCoverageCosts}}">
             <div prefix>$</div>
           </paper-input>
-          <paper-input label="Annual co-pay for a plan that covers everyone?" type="number">
+          <paper-input label="Annual co-pay for a plan that covers everyone?" type="number" hidden$="{{hideSpousalCoverageCosts}}">
             <div prefix>$</div>
           </paper-input>
         </div>
@@ -123,7 +123,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         incomeBrackets: Object,
         addons: Object,
         coverageLevels: Object,
+        hideSpousalCoverageCosts: {
+            type: Boolean,
+            value: true // init the value to true so it will be hidden on page load
+        },
       },
+      showSpousalCoverageCosts: function() {
+          this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
+      }
     });
   </script>
 </dom-module>
