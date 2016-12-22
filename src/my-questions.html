@@ -11,6 +11,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="my-questions">
@@ -35,15 +41,50 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h1>Questions</h1>
       <p>Answer the questions below to calculate the cost of different plans.</p>
       <p>None of this information is being transmitted beyond this system.</p>
-      <p>What is your annual salary range?</p>
-      <p>How many adults will you be covering?</p>
-      <p>OPTIONAL: Does the adult you are covering work at an employer which offers coverage?</p>
-      <p>OPTIONAL: What is the annual co-pay of their plan for a single person?</p>
-      <p>OPTIONAL: What is the annual co-pay of their plan for a plan that covers everyone (including yourself) that needs to be covered?</p>
-      <p>How many children will you be covering?</p>
-      <p>Are you a tobacco user?</p>
-      <p>Does anyone being covered have conditions which you would anticipate high medical costs in the year you are enrolling for?</p>
-      <p>Show me my options</p>
+
+
+      <paper-dropdown-menu label="Annual salary range">
+        <paper-listbox class="dropdown-content">
+          <paper-item>Up to $24,999</paper-item>
+          <paper-item>$25,000-$37,499</paper-item>
+          <paper-item>$37,500-$49,999</paper-item>
+          <paper-item>$50,000-$74,999</paper-item>
+          <paper-item>$75,000-$99,999</paper-item>
+          <paper-item>$100,000-$149,999</paper-item>
+          <paper-item>$150,000 or more</paper-item>
+        </paper-listbox>
+      </paper-dropdown-menu>
+      <paper-toggle-button>Are you a tobacco user?</paper-toggle-button>
+      <div>
+        <paper-dropdown-menu label="Children being covered">
+          <paper-listbox class="dropdown-content">
+            <paper-item>One</paper-item>
+            <paper-item>Two or more</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </div>
+      <div>
+        <paper-dropdown-menu label="Adults being covered">
+          <paper-listbox class="dropdown-content">
+            <paper-item>One (Employee)</paper-item>
+            <paper-item>Two</paper-item>
+            <paper-item>Three or more</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </div>
+
+      <paper-card heading="Does their employer offer coverage?">
+        <div class="card-content">
+          <paper-toggle-button>Yes</paper-toggle-button>
+          <paper-input label="Annual co-pay a single person?" type="number">
+            <div prefix>$</div>
+          </paper-input>
+          <paper-input label="Annual co-pay for a plan that covers everyone?" type="number">
+            <div prefix>$</div>
+          </paper-input>
+        </div>
+      </paper-card>
+
       <div class="container">
         <a href="/overview"><paper-button raised>Back</paper-button></a>
         <a href="/options"><paper-button raised>Next</paper-button></a>
