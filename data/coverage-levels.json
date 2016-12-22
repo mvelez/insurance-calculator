@@ -1,0 +1,16 @@
+{
+  "coverageLevels": [
+    {
+      "coverageLevel": "1",
+      "description": "1-person (employee only)"
+    },
+    {
+      "coverageLevel": "2",
+      "description": "2-persons"
+    },
+    {
+      "coverageLevel": "3+",
+      "description": "3-or-more-persons"
+    }
+  ]
+}

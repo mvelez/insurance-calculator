@@ -1,0 +1,40 @@
+{
+  "incomeBrackets": [
+
+    {
+      "incomeBracket": "Up to $24,999",
+      "minRange": 0,
+      "maxRange": 24999
+    },
+    {
+      "incomeBracket": "$25,000-$37,499",
+      "minRange": 25000,
+      "maxRange": 37499
+    },
+    {
+      "incomeBracket": "$37,500-$49,999",
+      "minRange": 37500,
+      "maxRange": 49999
+    },
+    {
+      "incomeBracket": "$50,000-$74,999",
+      "minRange": 50000,
+      "maxRange": 74999
+    },
+    {
+      "incomeBracket": "$75,000-$99,999",
+      "minRange": 75000,
+      "maxRange": 99999
+    },
+    {
+      "incomeBracket": "$100,000-$149,999",
+      "minRange": 100000,
+      "maxRange": 149999
+    },
+    {
+      "incomeBracket": "$150,000 or more",
+      "minRange": 150000,
+      "maxRange": 999999999999
+    }
+  ]
+}
