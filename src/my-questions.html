@@ -47,7 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-dropdown-menu label="Annual salary range">
         <paper-listbox class="dropdown-content">
           <template is="dom-repeat" items="{{incomeBrackets.incomeBrackets}}" as="item">
-              <paper-item value="100">{{item.incomeBracket}}</paper-item>
+              <paper-item value="{{item.incomeBracket}}">{{item.incomeBracket}}</paper-item>
           </template>
         </paper-listbox>
       </paper-dropdown-menu>
@@ -55,17 +55,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>
         <paper-dropdown-menu label="Children being covered">
           <paper-listbox class="dropdown-content">
-            <paper-item>One</paper-item>
-            <paper-item>Two or more</paper-item>
+            <paper-item value="1">One</paper-item>
+            <paper-item value="2">Two or more</paper-item>
           </paper-listbox>
         </paper-dropdown-menu>
       </div>
+      <paper-dropdown-menu label="Do you live in a surcharge state?">
+        <paper-listbox class="dropdown-content" selected="0">
+          <template is="dom-repeat" items="{{addons.stateSurcharge}}" as="item">
+              <paper-item value="{{item.state}}">{{item.state}}</paper-item>
+          </template>
+        </paper-listbox>
+      </paper-dropdown-menu>
       <div>
         <paper-dropdown-menu label="Adults being covered">
           <paper-listbox class="dropdown-content">
-            <paper-item>One (Employee)</paper-item>
-            <paper-item>Two</paper-item>
-            <paper-item>Three or more</paper-item>
+            <paper-item value="1">One (Employee)</paper-item>
+            <paper-item value="2">Two</paper-item>
+            <paper-item value="3">Three or more</paper-item>
           </paper-listbox>
         </paper-dropdown-menu>
       </div>
@@ -94,6 +101,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       method="get"
       handle-as="json"
       last-response="{{incomeBrackets}}">
+      <iron-ajax
+        auto
+        url="/data/addons.json"
+        method="get"
+        handle-as="json"
+        last-response="{{addons}}">
+      <iron-ajax
+        auto
+        url="/data/coverage-levels.json"
+        method="get"
+        handle-as="json"
+        last-response="{{coverageLevels}}">
     </iron-ajax>
   </template>
 
@@ -101,7 +120,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'my-questions',
       properties: {
-        incomeBrackets: Object
+        incomeBrackets: Object,
+        addons: Object,
+        coverageLevels: Object,
       },
     });
   </script>
