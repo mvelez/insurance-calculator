@@ -1,0 +1,57 @@
+{
+  "tobbacoSurcharge": 500,
+  "stateSurcharge": [
+    {
+      "state": "AK",
+      "surcharge": 100
+    },
+    {
+      "state": "ID",
+      "surcharge": 100
+    },
+    {
+      "state": "ME",
+      "surcharge": 100
+    },
+    {
+      "state": "MI",
+      "surcharge": 100
+    },
+    {
+      "state": "NY",
+      "surcharge": 100
+    },
+    {
+      "state": "VT",
+      "surcharge": 100
+    }
+  ],
+  "visionInsurance": [
+    {
+      "coverageLevel": "1",
+      "cost": 100
+    },
+    {
+      "coverageLevel": "2",
+      "cost": 200
+    },
+    {
+      "coverageLevel": "3+",
+      "cost": 300
+    }
+  ],
+  "dentalInsurance": [
+    {
+      "coverageLevel": "1",
+      "cost": 150
+    },
+    {
+      "coverageLevel": "2",
+      "cost": 300
+    },
+    {
+      "coverageLevel": "3+",
+      "cost": 450
+    }
+  ]
+}

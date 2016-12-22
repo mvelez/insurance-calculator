@@ -1,0 +1,16 @@
+{
+  "plans": [
+    {
+      "name": "Option 1",
+      "hraOrHsa": "HRA"
+    },
+    {
+      "name": "Option 2",
+      "hraOrHsa": "HRA"
+    },
+    {
+      "name": "Option 3",
+      "hraOrHsa": "HSA"
+    }
+  ]
+}
