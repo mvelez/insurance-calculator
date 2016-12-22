@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="my-questions">
   <template>
@@ -45,13 +46,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <paper-dropdown-menu label="Annual salary range">
         <paper-listbox class="dropdown-content">
-          <paper-item>Up to $24,999</paper-item>
-          <paper-item>$25,000-$37,499</paper-item>
-          <paper-item>$37,500-$49,999</paper-item>
-          <paper-item>$50,000-$74,999</paper-item>
-          <paper-item>$75,000-$99,999</paper-item>
-          <paper-item>$100,000-$149,999</paper-item>
-          <paper-item>$150,000 or more</paper-item>
+          <template is="dom-repeat" items="{{incomeBrackets.incomeBrackets}}" as="item">
+              <paper-item value="100">{{item.incomeBracket}}</paper-item>
+          </template>
         </paper-listbox>
       </paper-dropdown-menu>
       <paper-toggle-button>Are you a tobacco user?</paper-toggle-button>
@@ -90,11 +87,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <a href="/options"><paper-button raised>Next</paper-button></a>
       </div>
     </div>
+
+    <iron-ajax
+      auto
+      url="/data/income-brackets.json"
+      method="get"
+      handle-as="json"
+      last-response="{{incomeBrackets}}">
+    </iron-ajax>
   </template>
 
   <script>
     Polymer({
       is: 'my-questions',
+      properties: {
+        incomeBrackets: Object
+      },
     });
   </script>
 </dom-module>
