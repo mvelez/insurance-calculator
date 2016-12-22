@@ -1,5 +1,5 @@
 {
-  "tobbacoSurcharge": 652,
+  "tobbacoSurcharge": 500,
   "stateSurcharge": [
     {
       "state": "AK",
@@ -29,29 +29,29 @@
   "visionInsurance": [
     {
       "coverageLevel": "1",
-      "cost": 99
+      "cost": 100
     },
     {
       "coverageLevel": "2",
-      "cost": 198
+      "cost": 200
     },
     {
       "coverageLevel": "3+",
-      "cost": 297
+      "cost": 300
     }
   ],
   "dentalInsurance": [
     {
       "coverageLevel": "1",
-      "cost": 168
+      "cost": 150
     },
     {
       "coverageLevel": "2",
-      "cost": 336
+      "cost": 300
     },
     {
       "coverageLevel": "3+",
-      "cost": 504
+      "cost": 450
     }
   ]
 }
