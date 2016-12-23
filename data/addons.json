@@ -2,6 +2,10 @@
   "tobbacoSurcharge": 500,
   "stateSurcharge": [
     {
+      "state": "No.",
+      "surcharge": 0
+    },
+    {
       "state": "AK",
       "surcharge": 100
     },
