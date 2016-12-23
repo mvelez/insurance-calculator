@@ -6,6 +6,7 @@
         {
           "name": "Option 1",
           "deductible": 10,
+          "savingsAccountContribution": 5,
           "incomeBrackets": [
             {
               "incomeBracket": "Up to $24,999",
@@ -47,6 +48,7 @@
         {
           "name": "Option 2",
           "deductible": 15,
+          "savingsAccountContribution": 5,
           "incomeBrackets": [
             {
               "incomeBracket": "Up to $24,999",
@@ -88,6 +90,7 @@
         {
           "name": "Option 3",
           "deductible": 20,
+          "savingsAccountContribution": 0,
           "incomeBrackets": [
             {
               "incomeBracket": "Up to $24,999",
@@ -134,6 +137,7 @@
         {
           "name": "Option 1",
           "deductible": 20,
+          "savingsAccountContribution": 7,
           "incomeBrackets": [
             {
               "incomeBracket": "Up to $24,999",
@@ -175,6 +179,7 @@
         {
           "name": "Option 2",
           "deductible": 30,
+          "savingsAccountContribution": 7,
           "incomeBrackets": [
             {
               "incomeBracket": "Up to $24,999",
@@ -216,6 +221,7 @@
         {
           "name": "Option 3",
           "deductible": 40,
+          "savingsAccountContribution": 0,
           "incomeBrackets": [
             {
               "incomeBracket": "Up to $24,999",
@@ -262,6 +268,7 @@
         {
           "name": "Option 1",
           "deductible": 25,
+          "savingsAccountContribution": 10,
           "incomeBrackets": [
             {
               "incomeBracket": "Up to $24,999",
@@ -303,6 +310,7 @@
         {
           "name": "Option 2",
           "deductible": 37,
+          "savingsAccountContribution": 10,
           "incomeBrackets": [
             {
               "incomeBracket": "Up to $24,999",
@@ -344,6 +352,7 @@
         {
           "name": "Option 3",
           "deductible": 50,
+          "savingsAccountContribution": 0,
           "incomeBrackets": [
             {
               "incomeBracket": "Up to $24,999",

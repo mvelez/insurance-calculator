@@ -110,13 +110,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       method="get"
       handle-as="json"
       last-response="{{addons}}">
-    <iron-ajax
-      auto
-      url="/data/coverage-levels.json"
-      method="get"
-      handle-as="json"
-      last-response="{{coverageLevels}}">
-    </iron-ajax>
   </template>
 
   <script>
@@ -125,7 +118,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         incomeBrackets: Object,
         addons: Object,
-        coverageLevels: Object,
         hideSpousalCoverageCosts: {
             type: Boolean,
             value: true // init the value to true so it will be hidden on page load
