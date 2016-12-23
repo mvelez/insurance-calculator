@@ -1,0 +1,397 @@
+{
+  "coverageLevels": [
+    {
+      "coverageLevel": "1",
+      "plans": [
+        {
+          "name": "Option 1",
+          "deductible": 10,
+          "savingsAccountContribution": 5,
+          "incomeBrackets": [
+            {
+              "incomeBracket": "Up to $24,999",
+              "premium": 9,
+              "coinsuranceMax": 5
+            },
+            {
+              "incomeBracket": "$25,000-$37,499",
+              "premium": 10,
+              "coinsuranceMax": 5
+            },
+            {
+              "incomeBracket": "$37,500-$49,999",
+              "premium": 12,
+              "coinsuranceMax": 10
+            },
+            {
+              "incomeBracket": "$50,000-$74,999",
+              "premium": 15,
+              "coinsuranceMax": 17
+            },
+            {
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 18,
+              "coinsuranceMax": 17
+            },
+            {
+              "incomeBracket": "$100,000-$149,999",
+              "premium": 23,
+              "coinsuranceMax": 25
+            },
+            {
+              "incomeBracket": "$150,000 or more",
+              "premium": 31,
+              "coinsuranceMax": 25
+            }
+          ]
+        },
+        {
+          "name": "Option 2",
+          "deductible": 15,
+          "savingsAccountContribution": 5,
+          "incomeBrackets": [
+            {
+              "incomeBracket": "Up to $24,999",
+              "premium": 4,
+              "coinsuranceMax": 15
+            },
+            {
+              "incomeBracket": "$25,000-$37,499",
+              "premium": 5,
+              "coinsuranceMax": 15
+            },
+            {
+              "incomeBracket": "$37,500-$49,999",
+              "premium": 8,
+              "coinsuranceMax": 15
+            },
+            {
+              "incomeBracket": "$50,000-$74,999",
+              "premium": 11,
+              "coinsuranceMax": 22
+            },
+            {
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 15,
+              "coinsuranceMax": 22
+            },
+            {
+              "incomeBracket": "$100,000-$149,999",
+              "premium": 20,
+              "coinsuranceMax": 30
+            },
+            {
+              "incomeBracket": "$150,000 or more",
+              "premium": 27,
+              "coinsuranceMax": 30
+            }
+          ]
+        },
+        {
+          "name": "Option 3",
+          "deductible": 20,
+          "savingsAccountContribution": 0,
+          "incomeBrackets": [
+            {
+              "incomeBracket": "Up to $24,999",
+              "premium": 1,
+              "coinsuranceMax": 20
+            },
+            {
+              "incomeBracket": "$25,000-$37,499",
+              "premium": 1,
+              "coinsuranceMax": 20
+            },
+            {
+              "incomeBracket": "$37,500-$49,999",
+              "premium": 1,
+              "coinsuranceMax": 20
+            },
+            {
+              "incomeBracket": "$50,000-$74,999",
+              "premium": 3,
+              "coinsuranceMax": 27
+            },
+            {
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 6,
+              "coinsuranceMax": 27
+            },
+            {
+              "incomeBracket": "$100,000-$149,999",
+              "premium": 11,
+              "coinsuranceMax": 35
+            },
+            {
+              "incomeBracket": "$150,000 or more",
+              "premium": 18,
+              "coinsuranceMax": 35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "coverageLevel": "2",
+      "plans": [
+        {
+          "name": "Option 1",
+          "deductible": 20,
+          "savingsAccountContribution": 7,
+          "incomeBrackets": [
+            {
+              "incomeBracket": "Up to $24,999",
+              "premium": 18,
+              "coinsuranceMax": 7
+            },
+            {
+              "incomeBracket": "$25,000-$37,499",
+              "premium": 21,
+              "coinsuranceMax": 7
+            },
+            {
+              "incomeBracket": "$37,500-$49,999",
+              "premium": 24,
+              "coinsuranceMax": 15
+            },
+            {
+              "incomeBracket": "$50,000-$74,999",
+              "premium": 30,
+              "coinsuranceMax": 26
+            },
+            {
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 37,
+              "coinsuranceMax": 26
+            },
+            {
+              "incomeBracket": "$100,000-$149,999",
+              "premium": 47,
+              "coinsuranceMax": 37
+            },
+            {
+              "incomeBracket": "$150,000 or more",
+              "premium": 63,
+              "coinsuranceMax": 37
+            }
+          ]
+        },
+        {
+          "name": "Option 2",
+          "deductible": 30,
+          "savingsAccountContribution": 7,
+          "incomeBrackets": [
+            {
+              "incomeBracket": "Up to $24,999",
+              "premium": 8,
+              "coinsuranceMax": 22
+            },
+            {
+              "incomeBracket": "$25,000-$37,499",
+              "premium": 11,
+              "coinsuranceMax": 22
+            },
+            {
+              "incomeBracket": "$37,500-$49,999",
+              "premium": 16,
+              "coinsuranceMax": 22
+            },
+            {
+              "incomeBracket": "$50,000-$74,999",
+              "premium": 22,
+              "coinsuranceMax": 33
+            },
+            {
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 30,
+              "coinsuranceMax": 33
+            },
+            {
+              "incomeBracket": "$100,000-$149,999",
+              "premium": 40,
+              "coinsuranceMax": 45
+            },
+            {
+              "incomeBracket": "$150,000 or more",
+              "premium": 55,
+              "coinsuranceMax": 45
+            }
+          ]
+        },
+        {
+          "name": "Option 3",
+          "deductible": 40,
+          "savingsAccountContribution": 0,
+          "incomeBrackets": [
+            {
+              "incomeBracket": "Up to $24,999",
+              "premium": 2,
+              "coinsuranceMax": 30
+            },
+            {
+              "incomeBracket": "$25,000-$37,499",
+              "premium": 2,
+              "coinsuranceMax": 30
+            },
+            {
+              "incomeBracket": "$37,500-$49,999",
+              "premium": 3,
+              "coinsuranceMax": 30
+            },
+            {
+              "incomeBracket": "$50,000-$74,999",
+              "premium": 7,
+              "coinsuranceMax": 41
+            },
+            {
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 13,
+              "coinsuranceMax": 41
+            },
+            {
+              "incomeBracket": "$100,000-$149,999",
+              "premium": 22,
+              "coinsuranceMax": 45
+            },
+            {
+              "incomeBracket": "$150,000 or more",
+              "premium": 36,
+              "coinsuranceMax": 45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "coverageLevel": "3+",
+      "plans": [
+        {
+          "name": "Option 1",
+          "deductible": 25,
+          "savingsAccountContribution": 10,
+          "incomeBrackets": [
+            {
+              "incomeBracket": "Up to $24,999",
+              "premium": 22,
+              "coinsuranceMax": 10
+            },
+            {
+              "incomeBracket": "$25,000-$37,499",
+              "premium": 27,
+              "coinsuranceMax": 10
+            },
+            {
+              "incomeBracket": "$37,500-$49,999",
+              "premium": 30,
+              "coinsuranceMax": 20
+            },
+            {
+              "incomeBracket": "$50,000-$74,999",
+              "premium": 37,
+              "coinsuranceMax": 35
+            },
+            {
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 47,
+              "coinsuranceMax": 35
+            },
+            {
+              "incomeBracket": "$100,000-$149,999",
+              "premium": 59,
+              "coinsuranceMax": 50
+            },
+            {
+              "incomeBracket": "$150,000 or more",
+              "premium": 78,
+              "coinsuranceMax": 50
+            }
+          ]
+        },
+        {
+          "name": "Option 2",
+          "deductible": 37,
+          "savingsAccountContribution": 10,
+          "incomeBrackets": [
+            {
+              "incomeBracket": "Up to $24,999",
+              "premium": 10,
+              "coinsuranceMax": 30
+            },
+            {
+              "incomeBracket": "$25,000-$37,499",
+              "premium": 14,
+              "coinsuranceMax": 30
+            },
+            {
+              "incomeBracket": "$37,500-$49,999",
+              "premium": 20,
+              "coinsuranceMax": 30
+            },
+            {
+              "incomeBracket": "$50,000-$74,999",
+              "premium": 28,
+              "coinsuranceMax": 45
+            },
+            {
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 38,
+              "coinsuranceMax": 45
+            },
+            {
+              "incomeBracket": "$100,000-$149,999",
+              "premium": 50,
+              "coinsuranceMax": 60
+            },
+            {
+              "incomeBracket": "$150,000 or more",
+              "premium": 69,
+              "coinsuranceMax": 60
+            }
+          ]
+        },
+        {
+          "name": "Option 3",
+          "deductible": 50,
+          "savingsAccountContribution": 0,
+          "incomeBrackets": [
+            {
+              "incomeBracket": "Up to $24,999",
+              "premium": 3,
+              "coinsuranceMax": 40
+            },
+            {
+              "incomeBracket": "$25,000-$37,499",
+              "premium": 4,
+              "coinsuranceMax": 40
+            },
+            {
+              "incomeBracket": "$37,500-$49,999",
+              "premium": 4,
+              "coinsuranceMax": 40
+            },
+            {
+              "incomeBracket": "$50,000-$74,999",
+              "premium": 9,
+              "coinsuranceMax": 55
+            },
+            {
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 17,
+              "coinsuranceMax": 55
+            },
+            {
+              "incomeBracket": "$100,000-$149,999",
+              "premium": 28,
+              "coinsuranceMax": 70
+            },
+            {
+              "incomeBracket": "$150,000 or more",
+              "premium": 45,
+              "coinsuranceMax": 70
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
