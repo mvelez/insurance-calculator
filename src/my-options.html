@@ -42,12 +42,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <vaadin-grid id="optionGrid">
         <table>
           <colgroup>
-            <col name="planName">
-            <col name="coverageLevel">
-            <col name="premium">
-            <col name="deductible">
-            <col name="savingsAccountContribution">
-            <col name="incomeBracket">
+            <col name="planName" sortable>
+            <col name="coverageLevel" sortable>
+            <col name="premium" sortable>
+            <col name="deductible" sortable>
+            <col name="savingsAccountContribution" sortable>
+            <col name="incomeBracket" sortable>
           </colgroup>
         </table>
       </vaadin-grid>
@@ -101,7 +101,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               option.deductible = plan.deductible;
               option.savingsAccountContribution = plan.savingsAccountContribution;
               option.coverageLevel = coverageLevel;
-
               option.incomeBracket = plan.incomeBrackets[k].incomeBracket;
               option.premium = plan.incomeBrackets[k].premium;
               this.unrankedOptions.push(option);
