@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 
 <dom-module id="my-options">
   <template>
@@ -29,7 +30,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="circle">3</div>
       <h1>Insurance Options</h1>
       <p>Based on your answers these are your best options ranked</p>
-      <p>Best Option: </p>
+      <!-- <p>Best Option: </p>
       <p>Annual Premium: </p>
       <p>Monthly Premium:</p>
       <p>Annual Deductible: </p>
@@ -37,7 +38,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <p>Dental: </p>
       <p>Vision: </p>
       <p>HRA/HSA: </p>
-      <p>HRA/HSA Company Contribution: </p>
+      <p>HRA/HSA Company Contribution: </p> -->
+      <vaadin-grid id="optionGrid">
+        <table>
+          <colgroup>
+            <col name="planName">
+            <col name="coverageLevel">
+            <col name="premium">
+            <col name="deductible">
+            <col name="savingsAccountContribution">
+            <col name="incomeBracket">
+          </colgroup>
+        </table>
+      </vaadin-grid>
       <div class="horizontal start-justified layout"><paper-button raised on-click="denormalizeOptions">Calculate Options</paper-button></div>
       <div class="horizontal start-justified layout"><a href="/questions"><paper-button raised>Back</paper-button></a></div>
     </div>
@@ -65,32 +78,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       rateSheet: Object,
       unrankedOptions: Array,
       denormalizeOptions: function () {
-        var option = {};
+        var coverageLevel;
+
         var i = 0;
         var j = 0;
         var k = 0;
         var plan;
+        var grid = this.$.optionGrid;
         this.unrankedOptions = [];
         for (i = 0; i < this.rateSheet.coverageLevels.length; i ++) {
           for (j = 0; j < this.coverageLevels.coverageLevels.length; j++) {
             if (this.rateSheet.coverageLevels[i].coverageLevel === this.coverageLevels.coverageLevels[j].coverageLevel) {
-              option.coverageLevel = this.coverageLevels.coverageLevels[j].description;
+              coverageLevel = this.coverageLevels.coverageLevels[j].description;
               break;
             }
           }
           for (j = 0; j < this.rateSheet.coverageLevels[i].plans.length; j++) {
             plan = this.rateSheet.coverageLevels[i].plans[j];
-            option.planName = plan.name;
-            option.deductible = plan.deductible;
-            option.savingsAccountContribution = plan.savingsAccountContribution;
             for (k = 0; k < plan.incomeBrackets.length; k++) {
+              var option = {};
+              option.planName = plan.name;
+              option.deductible = plan.deductible;
+              option.savingsAccountContribution = plan.savingsAccountContribution;
+              option.coverageLevel = coverageLevel;
+
               option.incomeBracket = plan.incomeBrackets[k].incomeBracket;
               option.premium = plan.incomeBrackets[k].premium;
-              option.deductible = plan.incomeBrackets[k].deductible;
               this.unrankedOptions.push(option);
             }
           }
         }
+        grid.items = this.unrankedOptions;
       },
     });
   </script>
