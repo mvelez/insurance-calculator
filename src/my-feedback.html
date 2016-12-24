@@ -10,6 +10,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="my-feedback">
   <template>
@@ -20,13 +23,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 10px;
       }
     </style>
+    <style include="iron-flex iron-flex-alignment"></style>
 
     <div class="card">
       <div class="circle">2</div>
       <h1>Feedback</h1>
       <p>Use the form below to provide feedback to the developer on this application.</p>
-      <p>If there is a bug, fill out below.</p>
-      
+      <form is="iron-form" id="feedbackForm" method="post" action="http://httpbin.org/post">
+        <paper-textarea label="Submit a bug or an improvement request" feedback={{feedback}}></paper-textarea>
+        <div class="horizontal end-justified layout">
+          <paper-button raised onclick="submitForm(event)">Submit</paper-button>
+        </div>
+      </form>
     </div>
   </template>
 
@@ -34,5 +42,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'my-feedback',
     });
+    function submitForm (event) {
+      Polymer.dom(event).localTarget.parentElement.parentElement.submit();
+    }
   </script>
 </dom-module>
