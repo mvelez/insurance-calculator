@@ -59,16 +59,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       url="/data/coverage-levels.json"
       method="get"
       handle-as="json"
-      last-response="{{coverageLevels}}"
-      on-response="denormalizeOptions">
+      last-response="{{coverageLevels}}">
     </iron-ajax>
     <iron-ajax
       auto
       url="/data/rates-2017.json"
       method="get"
       handle-as="json"
-      last-response="{{rateSheet}}"
-      on-response="denormalizeOptions">
+      last-response="{{rateSheet}}">
     </iron-ajax>
   </template>
 
@@ -77,28 +75,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'my-options',
       coverageLevels: Object,
       rateSheet: Object,
-      unrankedOptions: Array,
-      denormalizeOptions: function () {
-        if (this.coverageLevels == undefined || this.rateSheet == undefined) {
-          return;
-        }
+      unrankedOptions: Array, // consider making this a computed
+      observers: [
+        'denormalizeOptions(rateSheet, coverageLevels)'
+      ],
+      denormalizeOptions: function (rateSheet, coverageLevels) {
         var coverageLevel;
-
         var i = 0;
         var j = 0;
         var k = 0;
         var plan;
         var grid = this.$.optionGrid;
         this.unrankedOptions = [];
-        for (i = 0; i < this.rateSheet.coverageLevels.length; i ++) {
-          for (j = 0; j < this.coverageLevels.coverageLevels.length; j++) {
-            if (this.rateSheet.coverageLevels[i].coverageLevel === this.coverageLevels.coverageLevels[j].coverageLevel) {
-              coverageLevel = this.coverageLevels.coverageLevels[j].description;
+        for (i = 0; i < rateSheet.coverageLevels.length; i ++) {
+          for (j = 0; j < coverageLevels.coverageLevels.length; j++) {
+            if (rateSheet.coverageLevels[i].coverageLevel === coverageLevels.coverageLevels[j].coverageLevel) {
+              coverageLevel = coverageLevels.coverageLevels[j].description;
               break;
             }
           }
-          for (j = 0; j < this.rateSheet.coverageLevels[i].plans.length; j++) {
-            plan = this.rateSheet.coverageLevels[i].plans[j];
+          for (j = 0; j < rateSheet.coverageLevels[i].plans.length; j++) {
+            plan = rateSheet.coverageLevels[i].plans[j];
             for (k = 0; k < plan.incomeBrackets.length; k++) {
               var option = {};
               option.planName = plan.name;
