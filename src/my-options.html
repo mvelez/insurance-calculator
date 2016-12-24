@@ -51,7 +51,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </colgroup>
         </table>
       </vaadin-grid>
-      <div class="horizontal start-justified layout"><paper-button raised on-click="denormalizeOptions">Calculate Options</paper-button></div>
       <div class="horizontal start-justified layout"><a href="/questions"><paper-button raised>Back</paper-button></a></div>
     </div>
 
@@ -60,14 +59,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       url="/data/coverage-levels.json"
       method="get"
       handle-as="json"
-      last-response="{{coverageLevels}}">
+      last-response="{{coverageLevels}}"
+      on-response="denormalizeOptions">
     </iron-ajax>
     <iron-ajax
       auto
       url="/data/rates-2017.json"
       method="get"
       handle-as="json"
-      last-response="{{rateSheet}}">
+      last-response="{{rateSheet}}"
+      on-response="denormalizeOptions">
     </iron-ajax>
   </template>
 
@@ -78,6 +79,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       rateSheet: Object,
       unrankedOptions: Array,
       denormalizeOptions: function () {
+        if (this.coverageLevels == undefined || this.rateSheet == undefined) {
+          return;
+        }
         var coverageLevel;
 
         var i = 0;
