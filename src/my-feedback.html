@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
 
 <dom-module id="my-feedback">
   <template>
@@ -29,12 +30,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="circle">2</div>
       <h1>Feedback</h1>
       <p>Use the form below to provide feedback to the developer on this application.</p>
+      <template is="dom-bind">
       <form is="iron-form" id="feedbackForm" method="post" action="http://httpbin.org/post">
-        <paper-textarea label="Submit a bug or an improvement request" feedback={{feedback}}></paper-textarea>
+        <paper-textarea name="feedback" label="Submit a bug or an improvement request" feedback={{feedback}}></paper-textarea>
+        <input type="hidden" id="test" value="test" />
         <div class="horizontal end-justified layout">
           <paper-button raised onclick="submitForm(event)">Submit</paper-button>
         </div>
       </form>
+    </template>
     </div>
   </template>
 
@@ -43,7 +47,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'my-feedback',
     });
     function submitForm (event) {
-      Polymer.dom(event).localTarget.parentElement.parentElement.submit();
+      var feedbackForm = Polymer.dom(event).localTarget.parentElement.parentElement
+
+      feedbackForm.submit();
     }
+
   </script>
 </dom-module>
