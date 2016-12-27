@@ -138,6 +138,11 @@
           value: "No.", // default to No
           notify: true,
         },
+        filterOptions: {
+          type: Object,
+          notify: true,
+          computed: 'buildFilterOptions(selectedIncomeBracket, selectedChildren, selectedAdults)'
+        }
       },
       _showSpousalCoverageCosts: function() {
         this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
@@ -151,6 +156,22 @@
       },
       _selectedIncomeBracketChanged: function(newIndex, oldIndex) {
         console.log(this.selectedIncomeBracket);
+      },
+      buildFilterOptions: function(selectedIncomeBracket, selectedChildren, selectedAdults) {
+        var filterOptions = {};
+        filterOptions.incomeBracket = selectedIncomeBracket;
+        filterOptions.coverageLevels = [];
+        if (selectedAdults == "1" && selectedChildren == "0") {
+          filterOptions.coverageLevels.push('1');
+        } else if (selectedAdults == "1" && selectedChildren == "1") {
+          filterOptions.coverageLevels.push('2');
+        } else if (selectedAdults == "1" && selectedChildren == "2") {
+          filterOptions.coverageLevels.push('3+');
+        }else if (selectedAdults == "2" && selectedChildren == "0") {
+          filterOptions.coverageLevels.push('1');
+          filterOptions.coverageLevels.push('2');
+        }
+        return filterOptions;
       },
     });
   </script>
