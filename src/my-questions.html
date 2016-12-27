@@ -72,7 +72,7 @@
       <div hidden$="{{hideSpousalOptions}}">
         <paper-card heading="Does their employer offer coverage?">
           <div class="card-content">
-            <paper-toggle-button on-click="showSpousalCoverageCosts">Yes</paper-toggle-button>
+            <paper-toggle-button on-click="_showSpousalCoverageCosts">Yes</paper-toggle-button>
             <paper-input label="Annual co-pay a single person?" type="number" hidden$="{{hideSpousalCoverageCosts}}">
               <div prefix>$</div>
             </paper-input>
@@ -139,7 +139,7 @@
           notify: true,
         },
       },
-      showSpousalCoverageCosts: function() {
+      _showSpousalCoverageCosts: function() {
         this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
       },
       _selectedAdultsChanged: function(newIndex, oldIndex) {
