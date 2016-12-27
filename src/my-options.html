@@ -65,13 +65,20 @@
   <script>
     Polymer({
       is: 'my-options',
-      coverageLevels: Object,
-      rateSheet: Object,
+      properties: {
+        filterOptions: {
+          type: Object,
+          notify: true,
+          value: {"incomeBracket":"$37,500-$49,999","coverageLevels":["1", "3+"]},
+        },
+        coverageLevels: Object,
+        rateSheet: Object,
+      },
       unrankedOptions: Array, // consider making this a computed
       observers: [
-        'denormalizeOptions(rateSheet, coverageLevels)'
+        'denormalizeOptions(rateSheet, coverageLevels, filterOptions)'
       ],
-      denormalizeOptions: function (rateSheet, coverageLevels) {
+      denormalizeOptions: function (rateSheet, coverageLevels, filterOptions) {
         var coverageLevel;
         var i = 0;
         var j = 0;
@@ -79,24 +86,37 @@
         var plan;
         var grid = this.$.optionGrid;
         this.unrankedOptions = [];
+
+        // TODO: this loop is getting pretty gnarly, need some underscore.
         for (i = 0; i < rateSheet.coverageLevels.length; i ++) {
-          for (j = 0; j < coverageLevels.coverageLevels.length; j++) {
-            if (rateSheet.coverageLevels[i].coverageLevel === coverageLevels.coverageLevels[j].coverageLevel) {
-              coverageLevel = coverageLevels.coverageLevels[j].description;
+          var includeOption = false;
+          for (j = 0; j < filterOptions.coverageLevels.length; j++) {
+            if(rateSheet.coverageLevels[i].coverageLevel === filterOptions.coverageLevels[j]) {
+              includeOption = true;
               break;
             }
           }
-          for (j = 0; j < rateSheet.coverageLevels[i].plans.length; j++) {
-            plan = rateSheet.coverageLevels[i].plans[j];
-            for (k = 0; k < plan.incomeBrackets.length; k++) {
-              var option = {};
-              option.planName = plan.name;
-              option.deductible = plan.deductible;
-              option.savingsAccountContribution = plan.savingsAccountContribution;
-              option.coverageLevel = coverageLevel;
-              option.incomeBracket = plan.incomeBrackets[k].incomeBracket;
-              option.premium = plan.incomeBrackets[k].premium;
-              this.unrankedOptions.push(option);
+          if (includeOption) {
+            for (j = 0; j < coverageLevels.coverageLevels.length; j++) {
+              if (rateSheet.coverageLevels[i].coverageLevel === coverageLevels.coverageLevels[j].coverageLevel) {
+                coverageLevel = coverageLevels.coverageLevels[j].description;
+                break;
+              }
+            }
+            for (j = 0; j < rateSheet.coverageLevels[i].plans.length; j++) {
+              plan = rateSheet.coverageLevels[i].plans[j];
+              for (k = 0; k < plan.incomeBrackets.length; k++) {
+                if (plan.incomeBrackets[k].incomeBracket === filterOptions.incomeBracket) {
+                  var option = {};
+                  option.planName = plan.name;
+                  option.deductible = plan.deductible;
+                  option.savingsAccountContribution = plan.savingsAccountContribution;
+                  option.coverageLevel = coverageLevel;
+                  option.incomeBracket = plan.incomeBrackets[k].incomeBracket;
+                  option.premium = plan.incomeBrackets[k].premium;
+                  this.unrankedOptions.push(option);
+                }
+              }
             }
           }
         }
