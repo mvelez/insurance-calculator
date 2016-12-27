@@ -27,10 +27,16 @@ The PRPL pattern, in a nutshell:
 
 ##### Prerequisites
 
+Node.js, npm, Bower
+
 Install [polymer-cli](https://github.com/Polymer/polymer-cli):
 
     npm install -g polymer-cli
 
+Update dependencies with Bower:
+
+    bower install
+    
 ##### Atom Setup
 Install linter `apm install linter`
 Install ESLint `apm install linter-eslint`
