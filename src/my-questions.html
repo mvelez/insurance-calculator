@@ -31,11 +31,12 @@
     <div class="card">
       <div class="circle">2</div>
       <h1>Questions</h1>
-      <p>Answer the questions below to calculate the cost of different plans.</p>
-      <p>None of this information is being transmitted beyond this system.</p>
+      <p>The below will help to determine different options that you have for
+        providing coverage for yourself and your family.  None of this
+        information is being saved.</p>
 
 
-      <paper-dropdown-menu label="Annual salary range" > <!-- TODO: need to propogate this up to index as a mediator pushing to overview -->
+      <paper-dropdown-menu label="Annual salary range" >
         <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{selectedIncomeBracket}}">
           <template is="dom-repeat" items="{{incomeBrackets.incomeBrackets}}" as="item">
               <paper-item value="{{item.incomeBracket}}">{{item.incomeBracket}}</paper-item>
@@ -120,7 +121,6 @@
         selectedIncomeBracket: {
           type: String,
           notify: true,
-          observer: '_selectedIncomeBracketChanged'
         },
         selectedChildren: {
           type: String,
@@ -148,29 +148,32 @@
         this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
       },
       _selectedAdultsChanged: function(newIndex, oldIndex) {
-        if(newIndex === "1") {
-          this.hideSpousalOptions = true;
-        } else {
-          this.hideSpousalOptions = false;
-        }
-      },
-      _selectedIncomeBracketChanged: function(newIndex, oldIndex) {
-        console.log(this.selectedIncomeBracket);
+        this.set('hideSpousalOptions', (newIndex === "1") ? true : false);
       },
       buildFilterOptions: function(selectedIncomeBracket, selectedChildren, selectedAdults) {
         var filterOptions = {};
         filterOptions.incomeBracket = selectedIncomeBracket;
         filterOptions.coverageLevels = [];
+
+        // simple options based on number of people
         if (selectedAdults == "1" && selectedChildren == "0") {
           filterOptions.coverageLevels.push('1');
         } else if (selectedAdults == "1" && selectedChildren == "1") {
           filterOptions.coverageLevels.push('2');
         } else if (selectedAdults == "1" && selectedChildren == "2") {
           filterOptions.coverageLevels.push('3+');
-        }else if (selectedAdults == "2" && selectedChildren == "0") {
+        } else if (selectedAdults == "2" && selectedChildren == "0") {
           filterOptions.coverageLevels.push('1');
           filterOptions.coverageLevels.push('2');
+        } else if (selectedAdults != "3" && selectedChildren == "0") {
+          filterOptions.coverageLevels.push('3+');
+        } else if (selectedAdults != "1" && selectedChildren != "0") {
+          filterOptions.coverageLevels.push('3+');
         }
+
+        // things get complicated when you have multiple adults eligible to be the insurance carrier and children
+
+
         return filterOptions;
       },
     });

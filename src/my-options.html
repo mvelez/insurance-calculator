@@ -43,7 +43,9 @@
           </colgroup>
         </table>
       </vaadin-grid>
-      <div class="horizontal start-justified layout"><a href="/questions"><paper-button raised>Back</paper-button></a></div>
+      <div class="horizontal start-justified layout">
+        <a href="/questions"><paper-button raised>Back</paper-button></a>
+      </div>
     </div>
 
     <iron-ajax
@@ -69,7 +71,6 @@
         filterOptions: {
           type: Object,
           notify: true,
-          // value: {"incomeBracket":"$37,500-$49,999","coverageLevels":["1", "3+"]},
         },
         coverageLevels: Object,
         rateSheet: Object,
@@ -87,35 +88,21 @@
         var grid = this.$.optionGrid;
         this.unrankedOptions = [];
 
-        // TODO: this loop is getting pretty gnarly, need some underscore.
         for (i = 0; i < rateSheet.coverageLevels.length; i ++) {
-          var includeOption = false;
           for (j = 0; j < filterOptions.coverageLevels.length; j++) {
+            // eliminate coverageLevels that don't need to be considered
             if(rateSheet.coverageLevels[i].coverageLevel === filterOptions.coverageLevels[j]) {
-              includeOption = true;
-              break;
-            }
-          }
-          if (includeOption) {
-            for (j = 0; j < coverageLevels.coverageLevels.length; j++) {
-              if (rateSheet.coverageLevels[i].coverageLevel === coverageLevels.coverageLevels[j].coverageLevel) {
-                coverageLevel = coverageLevels.coverageLevels[j].description;
-                break;
-              }
-            }
-            for (j = 0; j < rateSheet.coverageLevels[i].plans.length; j++) {
-              plan = rateSheet.coverageLevels[i].plans[j];
-              for (k = 0; k < plan.incomeBrackets.length; k++) {
-                if (plan.incomeBrackets[k].incomeBracket === filterOptions.incomeBracket) {
-                  var option = {};
-                  option.planName = plan.name;
-                  option.deductible = plan.deductible;
-                  option.savingsAccountContribution = plan.savingsAccountContribution;
-                  option.coverageLevel = coverageLevel;
-                  option.incomeBracket = plan.incomeBrackets[k].incomeBracket;
-                  option.premium = plan.incomeBrackets[k].premium;
-                  this.unrankedOptions.push(option);
-                }
+              coverageLevel = lookupCoverageLevel(
+                rateSheet.coverageLevels[i].coverageLevel,
+                coverageLevels.coverageLevels
+              );
+              for (k = 0; k < rateSheet.coverageLevels[i].plans.length; k++) {
+                plan = rateSheet.coverageLevels[i].plans[k];
+                this.push('unrankedOptions',
+                  generateOption(plan,
+                    coverageLevel,
+                    filterOptions.incomeBracket)
+                );
               }
             }
           }
@@ -123,5 +110,30 @@
         grid.items = this.unrankedOptions;
       },
     });
+
+    function generateOption (plan, coverageLevel, incomeBracket) {
+      var option = {};
+      var i = 0;
+      option.planName = plan.name;
+      option.deductible = plan.deductible;
+      option.savingsAccountContribution = plan.savingsAccountContribution;
+      option.coverageLevel = coverageLevel;
+      option.incomeBracket = incomeBracket;
+      for (i = 0; i < plan.incomeBrackets.length; i ++){
+        if (plan.incomeBrackets[i].incomeBracket === incomeBracket) {
+          option.premium = plan.incomeBrackets[i].premium;
+          return option;
+        }
+      }
+    }
+
+    function lookupCoverageLevel (target, lookupValues) {
+      var i = 0;
+      for (i = 0; i < lookupValues.length; i++) {
+        if (target === lookupValues[i].coverageLevel) {
+          return lookupValues[i].description;
+        }
+      }
+    }
   </script>
 </dom-module>
