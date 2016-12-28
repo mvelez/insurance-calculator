@@ -149,11 +149,7 @@
         this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
       },
       _selectedAdultsChanged: function(newIndex, oldIndex) {
-        if(newIndex === "1") {
-          this.hideSpousalOptions = true;
-        } else {
-          this.hideSpousalOptions = false;
-        }
+        this.set('hideSpousalOptions', (newIndex === "1") ? true : false);
       },
       _selectedIncomeBracketChanged: function(newIndex, oldIndex) {
         console.log(this.selectedIncomeBracket);
