@@ -36,7 +36,7 @@
         information is being saved.</p>
 
 
-      <paper-dropdown-menu label="Annual salary range" > <!-- TODO: need to propogate this up to index as a mediator pushing to overview -->
+      <paper-dropdown-menu label="Annual salary range" >
         <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{selectedIncomeBracket}}">
           <template is="dom-repeat" items="{{incomeBrackets.incomeBrackets}}" as="item">
               <paper-item value="{{item.incomeBracket}}">{{item.incomeBracket}}</paper-item>
@@ -121,7 +121,6 @@
         selectedIncomeBracket: {
           type: String,
           notify: true,
-          observer: '_selectedIncomeBracketChanged'
         },
         selectedChildren: {
           type: String,
@@ -150,9 +149,6 @@
       },
       _selectedAdultsChanged: function(newIndex, oldIndex) {
         this.set('hideSpousalOptions', (newIndex === "1") ? true : false);
-      },
-      _selectedIncomeBracketChanged: function(newIndex, oldIndex) {
-        console.log(this.selectedIncomeBracket);
       },
       buildFilterOptions: function(selectedIncomeBracket, selectedChildren, selectedAdults) {
         var filterOptions = {};
