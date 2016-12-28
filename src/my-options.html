@@ -95,10 +95,15 @@
             if(rateSheet.coverageLevels[i].coverageLevel === filterOptions.coverageLevels[j]) {
               coverageLevel = lookupCoverageLevel(
                 rateSheet.coverageLevels[i].coverageLevel,
-                coverageLevels.coverageLevels);
+                coverageLevels.coverageLevels
+              );
               for (k = 0; k < rateSheet.coverageLevels[i].plans.length; k++) {
                 plan = rateSheet.coverageLevels[i].plans[k];
-                this.unrankedOptions.push(generateOption(plan, coverageLevel, filterOptions.incomeBracket));
+                this.push('unrankedOptions',
+                  generateOption(plan,
+                    coverageLevel,
+                    filterOptions.incomeBracket)
+                );
               }
             }
           }
