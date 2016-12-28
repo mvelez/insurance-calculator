@@ -1,12 +1,4 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
+<!doctype html>
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
@@ -25,7 +17,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-
         padding: 10px;
       }
     </style>
@@ -44,8 +35,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <p>None of this information is being transmitted beyond this system.</p>
 
 
-      <paper-dropdown-menu label="Annual salary range">
-        <paper-listbox class="dropdown-content">
+      <paper-dropdown-menu label="Annual salary range" > <!-- TODO: need to propogate this up to index as a mediator pushing to overview -->
+        <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{selectedIncomeBracket}}">
           <template is="dom-repeat" items="{{incomeBrackets.incomeBrackets}}" as="item">
               <paper-item value="{{item.incomeBracket}}">{{item.incomeBracket}}</paper-item>
           </template>
@@ -54,7 +45,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-toggle-button>Are you a tobacco user?</paper-toggle-button>
       <div>
         <paper-dropdown-menu label="Children being covered">
-          <paper-listbox class="dropdown-content" selected="0" attr-for-selected="value">
+          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{selectedChildren}}">
             <paper-item value="0">Zero</paper-item>
             <paper-item value="1">One</paper-item>
             <paper-item value="2">Two or more</paper-item>
@@ -62,7 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-dropdown-menu>
       </div>
       <paper-dropdown-menu label="Do you live in a surcharge state?">
-        <paper-listbox class="dropdown-content" selected="0">
+        <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{surchargeState}}">
           <template is="dom-repeat" items="{{addons.stateSurcharge}}" as="item">
               <paper-item value="{{item.state}}">{{item.state}}</paper-item>
           </template>
@@ -70,7 +61,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </paper-dropdown-menu>
       <div>
         <paper-dropdown-menu label="Adults being covered">
-          <paper-listbox class="dropdown-content" on-iron-select="changeAdults" id="adultCount" selected="1" attr-for-selected="value">
+          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{selectedAdults}}">
             <paper-item value="1">One (Employee)</paper-item>
             <paper-item value="2">Two</paper-item>
             <paper-item value="3">Three or more</paper-item>
@@ -81,7 +72,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div hidden$="{{hideSpousalOptions}}">
         <paper-card heading="Does their employer offer coverage?">
           <div class="card-content">
-            <paper-toggle-button on-click="showSpousalCoverageCosts">Yes</paper-toggle-button>
+            <paper-toggle-button on-click="_showSpousalCoverageCosts">Yes</paper-toggle-button>
             <paper-input label="Annual co-pay a single person?" type="number" hidden$="{{hideSpousalCoverageCosts}}">
               <div prefix>$</div>
             </paper-input>
@@ -103,13 +94,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       url="/data/income-brackets.json"
       method="get"
       handle-as="json"
-      last-response="{{incomeBrackets}}">
+      last-response="{{incomeBrackets}}" />
     <iron-ajax
       auto
       url="/data/addons.json"
       method="get"
       handle-as="json"
-      last-response="{{addons}}">
+      last-response="{{addons}}" />
   </template>
 
   <script>
@@ -126,16 +117,61 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Boolean,
           value: true
         },
+        selectedIncomeBracket: {
+          type: String,
+          notify: true,
+          observer: '_selectedIncomeBracketChanged'
+        },
+        selectedChildren: {
+          type: String,
+          value: "0", // default to 0
+          notify: true,
+        },
+        selectedAdults: {
+          type: String,
+          notify: true,
+          value: "1", // default to 1
+          observer: '_selectedAdultsChanged'
+        },
+        surchargeState: {
+          type: String,
+          value: "No.", // default to No
+          notify: true,
+        },
+        filterOptions: {
+          type: Object,
+          notify: true,
+          computed: 'buildFilterOptions(selectedIncomeBracket, selectedChildren, selectedAdults)'
+        }
       },
-      showSpousalCoverageCosts: function() {
+      _showSpousalCoverageCosts: function() {
         this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
       },
-      changeAdults: function() {
-        if(this.$.adultCount.selected === "1") {
+      _selectedAdultsChanged: function(newIndex, oldIndex) {
+        if(newIndex === "1") {
           this.hideSpousalOptions = true;
         } else {
           this.hideSpousalOptions = false;
         }
+      },
+      _selectedIncomeBracketChanged: function(newIndex, oldIndex) {
+        console.log(this.selectedIncomeBracket);
+      },
+      buildFilterOptions: function(selectedIncomeBracket, selectedChildren, selectedAdults) {
+        var filterOptions = {};
+        filterOptions.incomeBracket = selectedIncomeBracket;
+        filterOptions.coverageLevels = [];
+        if (selectedAdults == "1" && selectedChildren == "0") {
+          filterOptions.coverageLevels.push('1');
+        } else if (selectedAdults == "1" && selectedChildren == "1") {
+          filterOptions.coverageLevels.push('2');
+        } else if (selectedAdults == "1" && selectedChildren == "2") {
+          filterOptions.coverageLevels.push('3+');
+        }else if (selectedAdults == "2" && selectedChildren == "0") {
+          filterOptions.coverageLevels.push('1');
+          filterOptions.coverageLevels.push('2');
+        }
+        return filterOptions;
       },
     });
   </script>
