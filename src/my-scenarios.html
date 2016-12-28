@@ -1,0 +1,86 @@
+<!doctype html>
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+
+<dom-module id="my-scenarios">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <style include="iron-flex iron-flex-alignment"></style>
+
+    <div class="card">
+      <div class="circle">4</div>
+      <h1>Cost Estimator</h1>
+      <p>
+        Explore how this will help you cover potential health scenarios.
+      </p>
+      <div class="horizontal start-justified layout">
+        <a href="/options"><paper-button raised>Back</paper-button></a>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-scenarios',
+      properties: [
+        healthcareCosts: {
+          type: Array,
+          notify: true,
+          // An array of 12 integers representing costs broken down by month
+          value: [
+            4, 4, 4,
+            4, 4, 4,
+            4, 4, 4,
+            4, 4, 4
+          ]
+        },
+        insuranceOptions: {
+          type: Array,
+          notify: true
+          // TODO: bind from previous screen.  Help with speeding up development.
+          value:
+          [
+            {
+              "planName": "Option 1",
+              "deductible": 10,
+              "savingsAccountContribution": 5,
+              "coverageLevel": "1-person (employee only)",
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 18,
+              "coinsuranceRate": 0.1
+            },
+            {
+              "planName": "Option 2",
+              "deductible": 15,
+              "savingsAccountContribution": 5,
+              "coverageLevel": "1-person (employee only)",
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 15,
+              "coinsuranceRate": 0.1
+            },
+            {
+              "planName": "Option 3",
+              "deductible": 20,
+              "savingsAccountContribution": 0,
+              "coverageLevel": "1-person (employee only)",
+              "incomeBracket": "$75,000-$99,999",
+              "premium": 6,
+              "coinsuranceRate": 0.1
+            }
+          ]
+        }
+      ]
+    });
+  </script>
+</dom-module>
