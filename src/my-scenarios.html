@@ -43,9 +43,9 @@
           value: function() {
             return [
                     4, 4, 4,
-                    4, 4, 4,
-                    4, 4, 4,
-                    4, 4, 4
+                    40, 40, 40,
+                    40, 40, 40,
+                    40, 40, 40
                   ];
           }
         },
@@ -111,6 +111,7 @@
 
     function calculatePerformance(insuranceOption, healthcareCosts){
       var paymentShares = [];
+      var paymentShare = {};
       var i = 0;
       var toAllocate;
       var paidFromDeductible = 0;
@@ -119,33 +120,37 @@
       var insuredTotally = 0;
       var deductibleRemaining = insuranceOption.deductible;
       var coinsuranceRemaining = insuranceOption.coinsuranceMax;
+
       for (i = 0; i < healthcareCosts.length; i++) {
-        paidFromDeductible = 0;
-        paidFromCoinsurance = 0;
-        insuredByCoinsurance = 0;
-        insuredTotally = 0;
+        paymentShare = {};
         toAllocate = healthcareCosts[i];
+        paymentShare.healthcareCost = healthcareCosts[i];
+        paymentShare.paidFromDeductible = 0;
+        paymentShare.paidFromCoinsurance = 0;
+        paymentShare.insuredByCoinsurance = 0;
+        paymentShare.insuredTotally = 0;
 
         if (toAllocate > 0 && deductibleRemaining > 0) {
           var appliedAmount = minimumValue(deductibleRemaining, toAllocate);
-          paidFromDeductible = appliedAmount;
+          paymentShare.paidFromDeductible = appliedAmount;
           deductibleRemaining -= appliedAmount;
           toAllocate -= appliedAmount;
         }
 
         if (toAllocate > 0 && coinsuranceRemaining > 0) {
-          var appliedAmount = minimumValue(coinsuranceRemaining, toAllocate);
-          paidFromCoinsurance = appliedAmount * insuranceOption.coinsuranceRate;
-          insuredByCoinsurance = appliedAmount * (1 - insuranceOption.coinsuranceRate);
+          var appliedAmount = minimumValue((coinsuranceRemaining * 1 / insuranceOption.coinsuranceRate), toAllocate);
+          paymentShare.paidFromCoinsurance = appliedAmount * insuranceOption.coinsuranceRate;
+          paymentShare.insuredByCoinsurance = appliedAmount * (1 - insuranceOption.coinsuranceRate);
           coinsuranceRemaining -= appliedAmount * insuranceOption.coinsuranceRate;
           toAllocate -= appliedAmount;
         }
 
         if (toAllocate > 0) {
-          insuredTotally = toAllocate;
+          paymentShare.insuredTotally = toAllocate;
         }
-
+        paymentShares.push(paymentShare);
       }
+      return paymentShares;
     }
   </script>
 </dom-module>
