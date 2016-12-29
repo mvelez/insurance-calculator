@@ -4,6 +4,7 @@
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 
 
 <dom-module id="my-scenarios">
@@ -24,6 +25,25 @@
       <p>
         Explore how this will help you cover potential health scenarios.
       </p>
+      <template is="dom-repeat" items="{{scenarios}}" as="scenario">
+        <paper-card heading="{{scenario.insuranceOption.planName}}">
+          <div class="card-content">
+            <vaadin-grid id="scenarioGrid_[[index]]">
+              <table>
+                <colgroup>
+                  <col name="healthcareCost" sortable>
+                  <col name="paidFromDeductible" sortable>
+                  <col name="paidFromCoinsurance" sortable>
+                  <col name="insuredByCoinsurance" sortable>
+                  <col name="insuredTotally" sortable>
+                </colgroup>
+              </table>
+            </vaadin-grid>
+          </div>
+          <div class="card-actions">
+          </div>
+        </paper-card>
+      </template>
       <div class="horizontal start-justified layout"><paper-button raised on-click="calculateAll">Calculate Options</paper-button></div>
 
       <div class="horizontal start-justified layout">
@@ -36,6 +56,10 @@
     Polymer({
       is: 'my-scenarios',
       properties: {
+        scenarios: {
+          type: Array,
+          notify: true
+        },
         healthcareCosts: {
           type: Array,
           notify: true,
@@ -90,16 +114,38 @@
         }
       },
       observers: [
-        'calculateAll(insuranceOptions, healthcareCosts)'
+        'calculateAll(insuranceOptions, healthcareCosts)',
+        'pushGrids(scenarios)'
       ],
+      pushGrids: function(scenarios){
+        var grid;
+        var i = 0;
+        for (i = 0; i < scenarios.length; i++) {
+          // TODO: hardcoded for test
+          grid = this.$.scenarioGrid_0;
+          grid.items = scenarios[i].performance;
+        }
+      },
 
       calculateAll: function(insuranceOptions, healthcareCosts) {
         var i = 0;
+        var scenario = {};
+        // This is triggering push grids to fire but scenarios is empty and it does nothing.
+        this.set('scenarios', []);
+
         for (i = 0; i < insuranceOptions.length; i++) {
-          calculatePerformance(insuranceOptions[i], healthcareCosts);
+          scenario = {};
+          scenario.insuranceOption = insuranceOptions[i];
+          scenario.performance = calculatePerformance(insuranceOptions[i], healthcareCosts);
+          // TODO: This is not triggering pushGrids to fire
+          this.push('scenarios', scenario);
         }
+        // TODO: When this runs, the dom-repeat template still hasn't run and it is getting an error.
+        this.pushGrids(this.scenarios);
+
       },
     });
+
 
     function minimumValue(a, b) {
       if (a < b) {
@@ -114,10 +160,6 @@
       var paymentShare = {};
       var i = 0;
       var toAllocate;
-      var paidFromDeductible = 0;
-      var paidFromCoinsurance = 0;
-      var insuredByCoinsurance = 0;
-      var insuredTotally = 0;
       var deductibleRemaining = insuranceOption.deductible;
       var coinsuranceRemaining = insuranceOption.coinsuranceMax;
 
