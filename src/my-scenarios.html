@@ -24,6 +24,8 @@
       <p>
         Explore how this will help you cover potential health scenarios.
       </p>
+      <div class="horizontal start-justified layout"><paper-button raised on-click="calculateAll">Calculate Options</paper-button></div>
+
       <div class="horizontal start-justified layout">
         <a href="/options"><paper-button raised>Back</paper-button></a>
       </div>
@@ -33,54 +35,153 @@
   <script>
     Polymer({
       is: 'my-scenarios',
-      properties: [
+      properties: {
         healthcareCosts: {
           type: Array,
           notify: true,
           // An array of 12 integers representing costs broken down by month
-          value: [
-            4, 4, 4,
-            4, 4, 4,
-            4, 4, 4,
-            4, 4, 4
-          ]
+          value: function() {
+            return [
+                    4, 4, 4,
+                    4, 4, 4,
+                    4, 4, 4,
+                    4, 4, 4
+                  ];
+          }
         },
         insuranceOptions: {
           type: Array,
-          notify: true
+          notify: true,
           // TODO: bind from previous screen.  Help with speeding up development.
-          value:
-          [
-            {
-              "planName": "Option 1",
-              "deductible": 10,
-              "savingsAccountContribution": 5,
-              "coverageLevel": "1-person (employee only)",
-              "incomeBracket": "$75,000-$99,999",
-              "premium": 18,
-              "coinsuranceRate": 0.1
-            },
-            {
-              "planName": "Option 2",
-              "deductible": 15,
-              "savingsAccountContribution": 5,
-              "coverageLevel": "1-person (employee only)",
-              "incomeBracket": "$75,000-$99,999",
-              "premium": 15,
-              "coinsuranceRate": 0.1
-            },
-            {
-              "planName": "Option 3",
-              "deductible": 20,
-              "savingsAccountContribution": 0,
-              "coverageLevel": "1-person (employee only)",
-              "incomeBracket": "$75,000-$99,999",
-              "premium": 6,
-              "coinsuranceRate": 0.1
-            }
-          ]
+          value: function() {
+            return
+            [
+              {
+                "planName": "Option 1",
+                "deductible": 10,
+                "savingsAccountContribution": 5,
+                "coverageLevel": "1-person (employee only)",
+                "incomeBracket": "$75,000-$99,999",
+                "premium": 18,
+                "coinsuranceRate": 0.1,
+                "coinsuranceMax": 17
+              },
+              {
+                "planName": "Option 2",
+                "deductible": 15,
+                "savingsAccountContribution": 5,
+                "coverageLevel": "1-person (employee only)",
+                "incomeBracket": "$75,000-$99,999",
+                "premium": 15,
+                "coinsuranceRate": 0.1,
+                "coinsuranceMax": 22
+              },
+              {
+                "planName": "Option 3",
+                "deductible": 20,
+                "savingsAccountContribution": 0,
+                "coverageLevel": "1-person (employee only)",
+                "incomeBracket": "$75,000-$99,999",
+                "premium": 6,
+                "coinsuranceRate": 0.1,
+                "coinsuranceMax": 27
+              }
+            ]
+            ;
+          }
         }
-      ]
+      },
+      observers: [
+        'calculateAll(insuranceOptions, healthcareCosts)'
+      ],
+
+      calculateAll: function(a, b) {
+        var i = 0;
+        var insuranceOptions = [
+              {
+                "planName": "Option 1",
+                "deductible": 10,
+                "savingsAccountContribution": 5,
+                "coverageLevel": "1-person (employee only)",
+                "incomeBracket": "$75,000-$99,999",
+                "premium": 18,
+                "coinsuranceRate": 0.1,
+                "coinsuranceMax": 17
+              },
+              {
+                "planName": "Option 2",
+                "deductible": 15,
+                "savingsAccountContribution": 5,
+                "coverageLevel": "1-person (employee only)",
+                "incomeBracket": "$75,000-$99,999",
+                "premium": 15,
+                "coinsuranceRate": 0.1,
+                "coinsuranceMax": 22
+              },
+              {
+                "planName": "Option 3",
+                "deductible": 20,
+                "savingsAccountContribution": 0,
+                "coverageLevel": "1-person (employee only)",
+                "incomeBracket": "$75,000-$99,999",
+                "premium": 6,
+                "coinsuranceRate": 0.1,
+                "coinsuranceMax": 27
+              }
+            ];
+
+        var healthcareCosts = this.healthcareCosts;
+        for (i = 0; i < insuranceOptions.length; i++) {
+          calculatePerformance(insuranceOptions[i], healthcareCosts);
+        }
+      },
     });
+
+    function minimumValue(a, b) {
+      if (a < b) {
+        return a;
+      } else {
+        return b;
+      }
+    }
+
+    function calculatePerformance(insuranceOption, healthcareCosts){
+      var paymentShares = [];
+      var i = 0;
+      var toAllocate;
+      var paidFromDeductible = 0;
+      var paidFromCoinsurance = 0;
+      var insuredByCoinsurance = 0;
+      var insuredTotally = 0;
+      var deductibleRemaining = insuranceOption.deductible;
+      var coinsuranceRemaining = insuranceOption.coinsuranceMax;
+      for (i = 0; i < healthcareCosts.length; i++) {
+        paidFromDeductible = 0;
+        paidFromCoinsurance = 0;
+        insuredByCoinsurance = 0;
+        insuredTotally = 0;
+        toAllocate = healthcareCosts[i];
+
+        if (toAllocate > 0 && deductibleRemaining > 0) {
+          var appliedAmount = minimumValue(deductibleRemaining, toAllocate);
+          paidFromDeductible = appliedAmount;
+          deductibleRemaining -= appliedAmount;
+          toAllocate -= appliedAmount;
+        }
+
+        if (toAllocate > 0 && coinsuranceRemaining > 0) {
+          var appliedAmount = minimumValue(coinsuranceRemaining, toAllocate);
+          paidFromCoinsurance = appliedAmount * insuranceOption.coinsuranceRate;
+          insuredByCoinsurance = appliedAmount * (1 - insuranceOption.coinsuranceRate);
+          coinsuranceRemaining -= appliedAmount * insuranceOption.coinsuranceRate;
+          toAllocate -= appliedAmount;
+        }
+
+        if (toAllocate > 0) {
+          insuredTotally = toAllocate;
+        }
+
+      }
+    }
   </script>
 </dom-module>
