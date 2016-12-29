@@ -122,8 +122,8 @@
         var grid;
         var i = 0;
         for (i = 0; i < this.scenarios.length; i++) {
-          // TODO: hardcoded for test
-          grid = this.$.scenarioGrid_0;
+          var selector = '#scenarioGrid_' + i;
+          grid = this.$$(selector);
           grid.items = this.scenarios[i].performance;
         }
       },
@@ -142,7 +142,7 @@
           this.push('scenarios', scenario);
         }
         // TODO: When this runs, the dom-repeat template still hasn't run and it is getting an error.
-        this.pushGrids(this.scenarios);
+        // this.pushGrids(this.scenarios);
 
       },
     });
