@@ -18,7 +18,11 @@
       }
     </style>
 
-    <style include="iron-flex iron-flex-alignment"></style>
+    <style include="iron-flex iron-flex-alignment">
+      paper-card {
+        width: 100%;
+      }
+    </style>
 
     <div class="card">
       <div class="circle">4</div>
@@ -26,10 +30,10 @@
       <p>
         Explore how this will help you cover potential health scenarios.
       </p>
-      <template is="dom-repeat" items="{{scenarios}}" as="scenario">
+      <template id="scenarioCards" is="dom-repeat" items="{{scenarios}}" as="scenario">
         <paper-card heading="{{scenario.insuranceOption.planName}}">
           <div class="card-content">
-            <vaadin-grid id="scenarioGrid_[[index]]">
+            <vaadin-grid id="scenarioGrid_[[index]]" items="[[scenario.performance]]">
               <table>
                 <colgroup>
                   <col name="healthcareCost" sortable>
@@ -45,7 +49,6 @@
           </div>
         </paper-card>
       </template>
-      <div class="horizontal start-justified layout"><paper-button raised on-click="pushGrids">Calculate Options</paper-button></div>
 
       <div class="horizontal start-justified layout">
         <a href="/options"><paper-button raised>Back</paper-button></a>
@@ -116,17 +119,7 @@
       },
       observers: [
         'calculateAll(insuranceOptions, healthcareCosts)',
-        'pushGrids(scenarios)'
       ],
-      pushGrids: function(scenarios){
-        var grid;
-        var i = 0;
-        for (i = 0; i < this.scenarios.length; i++) {
-          var selector = '#scenarioGrid_' + i;
-          grid = this.$$(selector);
-          grid.items = this.scenarios[i].performance;
-        }
-      },
 
       calculateAll: function(insuranceOptions, healthcareCosts) {
         var i = 0;
@@ -138,11 +131,8 @@
           scenario = {};
           scenario.insuranceOption = insuranceOptions[i];
           scenario.performance = calculatePerformance(insuranceOptions[i], healthcareCosts);
-          // TODO: This is not triggering pushGrids to fire
           this.push('scenarios', scenario);
         }
-        // TODO: When this runs, the dom-repeat template still hasn't run and it is getting an error.
-        // this.pushGrids(this.scenarios);
 
       },
     });
@@ -182,14 +172,14 @@
 
         if (toAllocate > 0 && coinsuranceRemaining > 0) {
           var appliedAmount = minimumValue((coinsuranceRemaining * 1 / insuranceOption.coinsuranceRate), toAllocate);
-          paymentShare.paidFromCoinsurance = appliedAmount * insuranceOption.coinsuranceRate;
-          paymentShare.insuredByCoinsurance = appliedAmount * (1 - insuranceOption.coinsuranceRate);
+          paymentShare.paidFromCoinsurance = (appliedAmount * insuranceOption.coinsuranceRate).toFixed(2);;
+          paymentShare.insuredByCoinsurance = (appliedAmount * (1 - insuranceOption.coinsuranceRate)).toFixed(2);;
           coinsuranceRemaining -= appliedAmount * insuranceOption.coinsuranceRate;
           toAllocate -= appliedAmount;
         }
 
         if (toAllocate > 0) {
-          paymentShare.insuredTotally = toAllocate;
+          paymentShare.insuredTotally = toAllocate.toFixed(2);;
         }
         paymentShares.push(paymentShare);
       }
