@@ -130,7 +130,6 @@
         var k = 0;
         var plan;
         var unrankedOptions = [];
-        // this.set('unrankedOptions', []);
 
         for (i = 0; i < rateSheet.coverageLevels.length; i += 1) {
           for (j = 0; j < filterOptions.value.coverageLevels.length; j += 1) {
@@ -145,7 +144,6 @@
                   generateOption(plan,
                     coverageLevel,
                     filterOptions.value.incomeBracket));
-                // this.notifySplices('unrankedOptions', [{ index: k, removed: [], addedCount: 1, object: this.unrankedOptions, type: 'splice' }]);
               }
             }
           }
