@@ -87,8 +87,8 @@
             role="main">
           <my-overview name="overview"></my-overview>
           <my-questions name="questions" filter-options="{{myFilterOption}}"></my-questions>
-          <my-options name="options" filter-options="{{myFilterOption}}"></my-options>
-          <my-scenarios name="scenarios"></my-scenarios>
+          <my-options name="options" unranked-options="{{myOptions}}" filter-options="{{myFilterOption}}"></my-options>
+          <my-scenarios name="scenarios" insurance-options="{{myOptions}}"></my-scenarios>
           <my-feedback name="feedback"></my-feedback>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
@@ -109,14 +109,21 @@
         myFilterOption: {
           type: Object,
           notify: true,
-        }
+        },
+        myOptions: {
+          type: Array,
+          notify: true,
+        },
       },
 
       observers: [
         '_routePageChanged(routeData.page)',
+        '_debug(myOptions)',
       ],
-
-      _routePageChanged: function(page) {
+      _debug(myOptions) {
+        console.log(myOptions);
+      },
+      _routePageChanged: function (page) {
         this.page = page || 'overview';
 
         if (!this.$.drawer.persistent) {
@@ -124,13 +131,13 @@
         }
       },
 
-      _pageChanged: function(page) {
+      _pageChanged: function (page) {
         // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
       },
 
-      _showPage404: function() {
+      _showPage404: function () {
         this.page = 'view404';
       },
     });

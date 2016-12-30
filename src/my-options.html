@@ -16,7 +16,12 @@
         padding: 10px;
       }
     </style>
-    <style include="iron-flex iron-flex-alignment"></style>
+    <style include="iron-flex iron-flex-alignment">
+      .container {
+        @apply(--layout-horizontal);
+        @apply(--layout-justified);
+      }
+    </style>
 
     <div class="card">
       <div class="circle">3</div>
@@ -43,8 +48,9 @@
           </colgroup>
         </table>
       </vaadin-grid>
-      <div class="horizontal start-justified layout">
+      <div class="container">
         <a href="/questions"><paper-button raised>Back</paper-button></a>
+        <a href="/scenarios"><paper-button raised>Next</paper-button></a>
       </div>
     </div>
 
@@ -99,21 +105,41 @@
           type: Object,
           notify: true,
         },
-        coverageLevels: Object,
-        rateSheet: Object,
+        coverageLevels: {
+          type: Object,
+          notify: true,
+        },
+        rateSheet: {
+          type: Object,
+          notify: true,
+        },
       },
-      unrankedOptions: Array, // consider making this a computed
+      unrankedOptions: {
+        type: Array,
+        notify: true,
+        computed: '_c_denormalizeOptions(rateSheet, coverageLevels, filterOptions.*)',
+      },
       observers: [
-        'denormalizeOptions(rateSheet, coverageLevels, filterOptions)',
+        'updateGrid(unrankedOptions)',
+        '_o_denormalizeOptions(rateSheet, coverageLevels, filterOptions)',
       ],
+      _o_denormalizeOptions(rateSheet, coverageLevels, filterOptions) {
+        console.log('observable triggered'); // SUCCESS
+        this.denormalizeOptions(rateSheet, coverageLevels, filterOptions);
+      },
+      _c_denormalizeOptions(rateSheet, coverageLevels, filterOptions) {
+        console.log('computed triggered'); // NEVER HAPPENS
+        this.denormalizeOptions(rateSheet, coverageLevels, filterOptions);
+      },
+
       denormalizeOptions(rateSheet, coverageLevels, filterOptions) {
         var coverageLevel;
         var i = 0;
         var j = 0;
         var k = 0;
         var plan;
-        var grid = this.$.optionGrid;
-        this.unrankedOptions = [];
+        var unrankedOptions = [];
+        // this.set('unrankedOptions', []);
 
         for (i = 0; i < rateSheet.coverageLevels.length; i += 1) {
           for (j = 0; j < filterOptions.coverageLevels.length; j += 1) {
@@ -124,15 +150,20 @@
                 coverageLevels.coverageLevels);
               for (k = 0; k < rateSheet.coverageLevels[i].plans.length; k += 1) {
                 plan = rateSheet.coverageLevels[i].plans[k];
-                this.push('unrankedOptions',
+                unrankedOptions.push(
                   generateOption(plan,
                     coverageLevel,
                     filterOptions.incomeBracket));
+                // this.notifySplices('unrankedOptions', [{ index: k, removed: [], addedCount: 1, object: this.unrankedOptions, type: 'splice' }]);
               }
             }
           }
         }
-        grid.items = this.unrankedOptions;
+        return unrankedOptions;
+      },
+      updateGrid(unrankedOptions) {
+        var grid = this.$.optionGrid;
+        grid.items = unrankedOptions;
       },
     });
   </script>
