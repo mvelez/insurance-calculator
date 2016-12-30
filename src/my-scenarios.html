@@ -128,7 +128,11 @@
             },
             labels: {
                 items: [{
-                    html: 'Total Healthcare Spending',
+                    html: 'Total Healthcare Spending: $'
+                      .concat(scenario.insuranceOption.premium +
+                              sumForProperty(scenario.performance, 'paidFromDeductible') +
+                              sumForProperty(scenario.performance, 'paidFromCoinsurance')
+                            ),
                     style: {
                         left: '50px',
                         top: '18px',
@@ -136,21 +140,21 @@
                     }
                 }]
             },
+            plotOptions: {
+              column: {
+                stacking: 'normal'
+              }
+            },
             series: [
               {
                 type: 'column', // For some reason it is trying to make this first one a spline no matter what
-                name: '',
+                name: 'Premium',
                 data: []
               },
               {
                 type: 'column',
-                name: 'paidFromDeductible',
-                data: arrayForProperty(scenario.performance, 'paidFromDeductible')
-              },
-              {
-                type: 'column',
-                name: 'paidFromCoinsurance',
-                data: arrayForProperty(scenario.performance, 'paidFromCoinsurance')
+                name: 'insuredTotally',
+                data: arrayForProperty(scenario.performance, 'insuredTotally')
               },
               {
                 type: 'column',
@@ -159,8 +163,13 @@
               },
               {
                 type: 'column',
-                name: 'insuredTotally',
-                data: arrayForProperty(scenario.performance, 'insuredTotally')
+                name: 'paidFromCoinsurance',
+                data: arrayForProperty(scenario.performance, 'paidFromCoinsurance')
+              },
+              {
+                type: 'column',
+                name: 'paidFromDeductible',
+                data: arrayForProperty(scenario.performance, 'paidFromDeductible')
               },
               // {
               //   type: 'spline',
@@ -176,23 +185,18 @@
                   name: 'Total spending',
                   data: [
                     {
+                      name: 'Premium',
+                      y: scenario.insuranceOption.premium,
+                      color: Highcharts.getOptions().colors[0],
+                    },
+                    {
                       name: 'paidFromDeductible',
                       y: sumForProperty(scenario.performance, 'paidFromDeductible'),
-                      color: Highcharts.getOptions().colors[1],
+                      color: Highcharts.getOptions().colors[3],
                     },
                     {
                       name: 'paidFromCoinsurance',
                       y: sumForProperty(scenario.performance, 'paidFromCoinsurance'),
-                      color: Highcharts.getOptions().colors[2],
-                    },
-                    {
-                      name: 'insuredByCoinsurance',
-                      y: sumForProperty(scenario.performance, 'insuredByCoinsurance'),
-                      color: Highcharts.getOptions().colors[3],
-                    },
-                    {
-                      name: 'insuredTotally',
-                      y: sumForProperty(scenario.performance, 'insuredTotally'),
                       color: Highcharts.getOptions().colors[4],
                     }
                   ],
