@@ -4,8 +4,6 @@
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../bower_components/highcharts-chart/highcharts-chart.html">
 
 
@@ -31,27 +29,9 @@
       <p>
         Explore how this will help you cover potential health scenarios.
       </p>
-      <template id="scenarioCards" is="dom-repeat" items="{{scenarios_DELETEME}}" as="scenario">
-        <paper-card heading="{{scenario.insuranceOption.planName}}">
-          <div class="card-content">
-            <vaadin-grid id="scenarioGrid_[[index]]" items="[[scenario.performance]]">
-              <table>
-                <colgroup>
-                  <col name="healthcareCost" sortable>
-                  <col name="paidFromDeductible" sortable>
-                  <col name="paidFromCoinsurance" sortable>
-                  <col name="insuredByCoinsurance" sortable>
-                  <col name="insuredTotally" sortable>
-                </colgroup>
-              </table>
-            </vaadin-grid>
-          </div>
-          <div class="card-actions">
-          </div>
-        </paper-card>
-      </template>
       <template id="scenarioCharts" is="dom-repeat" items="{{chartOptions}}" as="chartOption">
         <highcharts-chart
+          type: "column"
           highchart-options="{{chartOption}}"
         >
         </highcharts-chart>
@@ -162,7 +142,7 @@
             },
             series: [
               {
-                type: 'column',
+                type: 'column', // For some reason it is trying to make this first one a spline no matter what
                 name: '',
                 data: []
               },
@@ -202,18 +182,22 @@
                     {
                       name: 'paidFromDeductible',
                       y: sumForProperty(scenario.performance, 'paidFromDeductible'),
+                      color: Highcharts.getOptions().colors[1],
                     },
                     {
                       name: 'paidFromCoinsurance',
                       y: sumForProperty(scenario.performance, 'paidFromCoinsurance'),
+                      color: Highcharts.getOptions().colors[2],
                     },
                     {
                       name: 'insuredByCoinsurance',
                       y: sumForProperty(scenario.performance, 'insuredByCoinsurance'),
+                      color: Highcharts.getOptions().colors[3],
                     },
                     {
                       name: 'insuredTotally',
                       y: sumForProperty(scenario.performance, 'insuredTotally'),
+                      color: Highcharts.getOptions().colors[4],
                     }
                   ],
                   center: [100, 80],
@@ -232,7 +216,7 @@
       calculateAll: function(insuranceOptions, healthcareCosts) {
         var i = 0;
         var scenario = {};
-        // This is triggering push grids to fire but scenarios is empty and it does nothing.
+
         this.set('scenarios', []);
 
         for (i = 0; i < insuranceOptions.length; i++) {
