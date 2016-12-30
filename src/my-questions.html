@@ -111,12 +111,12 @@
         incomeBrackets: Object,
         addons: Object,
         hideSpousalCoverageCosts: {
-            type: Boolean,
-            value: true // init the value to true so it will be hidden on page load
+          type: Boolean,
+          value: true, // init the value to true so it will be hidden on page load
         },
         hideSpousalOptions: {
           type: Boolean,
-          value: true
+          value: true,
         },
         selectedIncomeBracket: {
           type: String,
@@ -124,58 +124,60 @@
         },
         selectedChildren: {
           type: String,
-          value: "0", // default to 0
+          value: '0', // default to 0
           notify: true,
         },
         selectedAdults: {
           type: String,
           notify: true,
-          value: "1", // default to 1
-          observer: '_selectedAdultsChanged'
+          value: '1', // default to 1
+          observer: '_selectedAdultsChanged',
         },
         surchargeState: {
           type: String,
-          value: "No.", // default to No
+          value: 'No.', // default to No
           notify: true,
         },
         filterOptions: {
           type: Object,
           notify: true,
-          computed: 'buildFilterOptions(selectedIncomeBracket, selectedChildren, selectedAdults)'
-        }
+          computed: 'buildFilterOptions(selectedIncomeBracket, selectedChildren, selectedAdults)',
+        },
       },
-      _showSpousalCoverageCosts: function() {
+      _showSpousalCoverageCosts() {
         this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
       },
-      _selectedAdultsChanged: function(newIndex, oldIndex) {
-        this.set('hideSpousalOptions', (newIndex === "1") ? true : false);
+      _selectedAdultsChanged(newIndex) {
+        this.set('hideSpousalOptions', newIndex === '1');
       },
-      buildFilterOptions: function(selectedIncomeBracket, selectedChildren, selectedAdults) {
+      buildFilterOptions(selectedIncomeBracket, selectedChildren, selectedAdults) {
         var filterOptions = {};
         filterOptions.incomeBracket = selectedIncomeBracket;
         filterOptions.coverageLevels = [];
 
         // simple options based on number of people
-        if (selectedAdults == "1" && selectedChildren == "0") {
+        if (selectedAdults === '1' && selectedChildren === '0') {
           filterOptions.coverageLevels.push('1');
-        } else if (selectedAdults == "1" && selectedChildren == "1") {
+        } else if (selectedAdults === '1' && selectedChildren === '1') {
           filterOptions.coverageLevels.push('2');
-        } else if (selectedAdults == "1" && selectedChildren == "2") {
+        } else if (selectedAdults === '1' && selectedChildren === '2') {
           filterOptions.coverageLevels.push('3+');
-        } else if (selectedAdults == "2" && selectedChildren == "0") {
+        } else if (selectedAdults === '2' && selectedChildren === '0') {
           filterOptions.coverageLevels.push('1');
           filterOptions.coverageLevels.push('2');
-        } else if (selectedAdults != "3" && selectedChildren == "0") {
+        } else if (selectedAdults !== '3' && selectedChildren === '0') {
           filterOptions.coverageLevels.push('3+');
-        } else if (selectedAdults != "1" && selectedChildren != "0") {
+        } else if (selectedAdults !== '1' && selectedChildren !== '0') {
           filterOptions.coverageLevels.push('3+');
         }
 
-        // things get complicated when you have multiple adults eligible to be the insurance carrier and children
+        // things get complicated when you have multiple
+        // adults eligible to be the insurance carrier and children
 
 
         return filterOptions;
       },
     });
+
   </script>
 </dom-module>
