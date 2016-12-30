@@ -44,7 +44,7 @@
       <!--TODO: Make a logarithmic paper-slider  -->
       <paper-slider value="{{totalHealthcareCosts}}" max="1000" pin></paper-slider>
       <template id="scenarioCharts" is="dom-repeat" items="{{chartOptions}}" as="chartOption">
-        <highcharts-chart type: "column" highchart-options="{{chartOption}}" />
+        <highcharts-chart id="scenarioChart_[[index]]" type="column" highchart-options="{{chartOption}}" />
       </template>
       <div class="horizontal start-justified layout">
         <a href="/options"><paper-button raised>Back</paper-button></a>
@@ -205,12 +205,12 @@
                     {
                       name: 'paidFromDeductible',
                       y: sumForProperty(scenario.performance, 'paidFromDeductible'),
-                      color: Highcharts.getOptions().colors[3],
+                      color: Highcharts.getOptions().colors[4],
                     },
                     {
                       name: 'paidFromCoinsurance',
                       y: sumForProperty(scenario.performance, 'paidFromCoinsurance'),
-                      color: Highcharts.getOptions().colors[4],
+                      color: Highcharts.getOptions().colors[3],
                     }
                   ],
                   center: [100, 80],
@@ -223,8 +223,15 @@
             ]
           };
           options.push(highChartOptionObject);
+          var selector = '#scenarioChart_' + i;
+          var chart = this.$$(selector)
+          if (chart) {
+            // TODO: Pie chart is updating but the bar charts are not, WTF :-/
+            chart.reRender();
+          }
         }
         this.set('chartOptions', options);
+        this.notifyPath('chartOptions.*');
       },
       calculateAll: function(insuranceOptions, healthcareCosts) {
         var i = 0;
