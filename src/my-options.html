@@ -113,24 +113,15 @@
           type: Object,
           notify: true,
         },
-      },
-      unrankedOptions: {
-        type: Array,
-        notify: true,
-        computed: '_c_denormalizeOptions(rateSheet, coverageLevels, filterOptions.*)',
+        unrankedOptions: {
+          type: Array,
+          notify: true,
+          computed: 'denormalizeOptions(rateSheet, coverageLevels, filterOptions.*)',
+        },
       },
       observers: [
         'updateGrid(unrankedOptions)',
-        '_o_denormalizeOptions(rateSheet, coverageLevels, filterOptions)',
       ],
-      _o_denormalizeOptions(rateSheet, coverageLevels, filterOptions) {
-        console.log('observable triggered'); // SUCCESS
-        this.denormalizeOptions(rateSheet, coverageLevels, filterOptions);
-      },
-      _c_denormalizeOptions(rateSheet, coverageLevels, filterOptions) {
-        console.log('computed triggered'); // NEVER HAPPENS
-        this.denormalizeOptions(rateSheet, coverageLevels, filterOptions);
-      },
 
       denormalizeOptions(rateSheet, coverageLevels, filterOptions) {
         var coverageLevel;
@@ -142,9 +133,9 @@
         // this.set('unrankedOptions', []);
 
         for (i = 0; i < rateSheet.coverageLevels.length; i += 1) {
-          for (j = 0; j < filterOptions.coverageLevels.length; j += 1) {
+          for (j = 0; j < filterOptions.value.coverageLevels.length; j += 1) {
             // eliminate coverageLevels that don't need to be considered
-            if (rateSheet.coverageLevels[i].coverageLevel === filterOptions.coverageLevels[j]) {
+            if (rateSheet.coverageLevels[i].coverageLevel === filterOptions.value.coverageLevels[j]) {
               coverageLevel = lookupCoverageLevel(
                 rateSheet.coverageLevels[i].coverageLevel,
                 coverageLevels.coverageLevels);
@@ -153,7 +144,7 @@
                 unrankedOptions.push(
                   generateOption(plan,
                     coverageLevel,
-                    filterOptions.incomeBracket));
+                    filterOptions.value.incomeBracket));
                 // this.notifySplices('unrankedOptions', [{ index: k, removed: [], addedCount: 1, object: this.unrankedOptions, type: 'splice' }]);
               }
             }
