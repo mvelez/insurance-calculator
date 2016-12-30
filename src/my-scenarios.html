@@ -30,11 +30,7 @@
         Explore how this will help you cover potential health scenarios.
       </p>
       <template id="scenarioCharts" is="dom-repeat" items="{{chartOptions}}" as="chartOption">
-        <highcharts-chart
-          type: "column"
-          highchart-options="{{chartOption}}"
-        >
-        </highcharts-chart>
+        <highcharts-chart type: "column" highchart-options="{{chartOption}}" />
       </template>
       <div class="horizontal start-justified layout">
         <a href="/options"><paper-button raised>Back</paper-button></a>
