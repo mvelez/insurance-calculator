@@ -8,7 +8,7 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-/* eslint no-console: ["error", { allow: ["info"] }] */
+/* eslint no-console: ["error", { allow: ["info"] }], comma-dangle: "off"*/
 
 console.info(
   'Service worker disabled for development, will be generated at build time.'
