@@ -118,11 +118,7 @@
 
       observers: [
         '_routePageChanged(routeData.page)',
-        '_debug(myOptions)',
       ],
-      _debug(myOptions) {
-        console.log(myOptions);
-      },
       _routePageChanged: function (page) {
         this.page = page || 'overview';
 
