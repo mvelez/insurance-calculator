@@ -129,6 +129,7 @@
       scenarios: {
         type: Array,
         notify: true,
+        computed: 'calculateAll(insuranceOptions, healthcareCosts)',
       },
       totalHealthcareCosts: {
         type: Number,
@@ -143,7 +144,7 @@
       insuranceOptions: {
         type: Array,
         notify: true,
-        // TODO: bind from previous screen.  Help with speeding up development.
+        // bound from previous screen.  Uncomment to help with speeding up development on this screen.
         // value() {
         //   var options = [];
         //   options.push({
@@ -185,7 +186,7 @@
       },
     },
     observers: [
-      'calculateAll(insuranceOptions, healthcareCosts)',
+
       'buildChartOptions(scenarios)',
     ],
     buildChartOptions(scenarios) {
@@ -291,31 +292,30 @@
           ],
         };
         options.push(highChartOptionObject);
-        var selector = `#scenarioChart_${i}`;
-        var chart = this.$$(selector);
-        if (chart) {
-          // TODO: Pie chart is updating but the bar charts are not, WTF :-/
-          chart.reRender();
-        }
+        // var selector = `#scenarioChart_${i}`;
+        // var chart = this.$$(selector);
+        // if (chart) {
+        //   // TODO: Pie chart is updating but the bar charts are not, WTF :-/
+        //   chart.reRender();
+        // }
       }
       this.set('chartOptions', options);
-      this.notifyPath('chartOptions.*');
+      // this.notifyPath('chartOptions.*');
     },
     calculateAll(insuranceOptions, healthcareCosts) {
       var i = 0;
       var scenario = {};
-
-      this.set('scenarios', []);
+      var scenarios = [];
+      // this.set('scenarios', []);
 
       for (i = 0; i < insuranceOptions.length; i += 1) {
         scenario = {};
         scenario.insuranceOption = insuranceOptions[i];
         scenario.performance = calculatePerformance(insuranceOptions[i], healthcareCosts);
-        this.push('scenarios', scenario);
+        scenarios.push(scenario);
       }
-      // TODO: why isn't this getting triggered automatically?
-      // tried as an observable and as a computed
-      this.buildChartOptions(this.scenarios);
+
+      return scenarios;
     },
     generateCostCurve(totalHealthcareCosts) {
       var costCurve = [];

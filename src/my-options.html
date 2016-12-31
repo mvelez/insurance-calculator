@@ -79,9 +79,11 @@
       option.savingsAccountContribution = plan.savingsAccountContribution;
       option.coverageLevel = coverageLevel;
       option.incomeBracket = incomeBracket;
+      option.coinsuranceRate = 0.1; // TODO: hard coded
       for (i = 0; i < plan.incomeBrackets.length; i += 1) {
         if (plan.incomeBrackets[i].incomeBracket === incomeBracket) {
           option.premium = plan.incomeBrackets[i].premium;
+          option.coinsuranceMax = plan.incomeBrackets[i].coinsuranceMax;
           return option;
         }
       }
