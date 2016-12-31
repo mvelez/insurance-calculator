@@ -12,7 +12,8 @@
   },
   "scripts": {
     "lint": "eslint . --ext js,html; exit 0;",
-    "test": "npm run lint && polymer test"
+    "test": "npm run lint && polymer test",
+    "start": "polymer serve"
   },
   "dependencies": {
     "eslint-plugin-html": "^1.7.0"
