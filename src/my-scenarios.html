@@ -255,49 +255,49 @@
         type: Array,
         notify: true,
         // bound from previous screen.  Uncomment to help with speeding up development on this screen.
-        value() {
-          var options = [];
-          options.push({
-            planName: 'Option 1',
-            deductible: 10,
-            savingsAccountContribution: 5,
-            coverageLevel: '1-person (employee only)',
-            incomeBracket: '$75,000-$99,999',
-            premium: 18,
-            coinsuranceRate: 0.1,
-            coinsuranceMax: 17,
-          });
-          options.push({
-            planName: 'Option 2',
-            deductible: 15,
-            savingsAccountContribution: 5,
-            coverageLevel: '1-person (employee only)',
-            incomeBracket: '$75,000-$99,999',
-            premium: 15,
-            coinsuranceRate: 0.1,
-            coinsuranceMax: 22,
-          });
-          options.push({
-            planName: 'Option 3',
-            deductible: 20,
-            savingsAccountContribution: 0,
-            coverageLevel: '1-person (employee only)',
-            incomeBracket: '$75,000-$99,999',
-            premium: 6,
-            coinsuranceRate: 0.1,
-            coinsuranceMax: 27,
-          });
-          return options;
-        },
+        // value() {
+        //   var options = [];
+        //   options.push({
+        //     planName: 'Option 1',
+        //     deductible: 10,
+        //     savingsAccountContribution: 5,
+        //     coverageLevel: '1-person (employee only)',
+        //     incomeBracket: '$75,000-$99,999',
+        //     premium: 18,
+        //     coinsuranceRate: 0.1,
+        //     coinsuranceMax: 17,
+        //   });
+        //   options.push({
+        //     planName: 'Option 2',
+        //     deductible: 15,
+        //     savingsAccountContribution: 5,
+        //     coverageLevel: '1-person (employee only)',
+        //     incomeBracket: '$75,000-$99,999',
+        //     premium: 15,
+        //     coinsuranceRate: 0.1,
+        //     coinsuranceMax: 22,
+        //   });
+        //   options.push({
+        //     planName: 'Option 3',
+        //     deductible: 20,
+        //     savingsAccountContribution: 0,
+        //     coverageLevel: '1-person (employee only)',
+        //     incomeBracket: '$75,000-$99,999',
+        //     premium: 6,
+        //     coinsuranceRate: 0.1,
+        //     coinsuranceMax: 27,
+        //   });
+        //   return options;
+        // },
       },
     },
     observers: [
-
       'buildChartOptions(scenarios)',
     ],
     buildChartOptions(scenarios) {
       var i = 0;
       this.set('chartOptions', []);
+      this.$.scenarioCharts.render();
       for (i = 0; i < scenarios.length; i += 1) {
         this.push('chartOptions', buildCustomChartOptions(scenarios[i]));
       }
