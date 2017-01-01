@@ -129,11 +129,13 @@
 
       _pageChanged: function (page) {
         var resolvedPageUrl;
-        // Load page import on demand. Show 404 page if fails
+        // If they are reuesting a page that depends on answering uestions, forward them to questions
         if ((page === 'options' || page === 'scenarios') && !this.myFilterOption) {
           this.set('route.path', 'questions');
           this.set('page', 'questions');
         }
+
+        // Load page import on demand. Show 404 page if fails
         resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
       },

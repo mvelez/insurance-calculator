@@ -44,7 +44,7 @@
       <!--TODO: Make a logarithmic paper-slider  -->
       <paper-slider value="{{totalHealthcareCosts}}" max="1000" pin></paper-slider>
       <template id="scenarioCharts" is="dom-repeat" items="{{chartOptions}}" as="chartOption">
-        <highcharts-chart id="scenarioChart_[[index]]" type="column" highchart-options="{{chartOption}}" />
+        <highcharts-chart highchart-options="{{chartOption}}" />
       </template>
       <div class="horizontal start-justified layout">
         <a href="/options"><paper-button raised>Back</paper-button></a>
@@ -77,6 +77,14 @@
       return a;
     }
     return b;
+  }
+
+  function calculateTotalHealthcareSpending(scenario) {
+    var total = scenario.insuranceOption.premium;
+    total += sumForProperty(scenario.performance, 'paidFromDeductible');
+    total += sumForProperty(scenario.performance, 'paidFromCoinsurance');
+    total = Math.round(total * 100) / 100;
+    return 'Total Healthcare Spending: $' + total;
   }
 
   function calculatePerformance(insuranceOption, healthcareCosts) {
@@ -123,6 +131,100 @@
     return paymentShares;
   }
 
+  function buildCustomChartOptions(scenario) {
+    var highChartOptionObject =
+      {
+        title: {
+          text: scenario.insuranceOption.planName,
+        },
+        xAxis: {
+          categories: ['Jan', 'Feb', 'Mar',
+            'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep',
+            'Oct', 'Nov', 'Dec'],
+        },
+        labels: {
+          items: [{
+            html: calculateTotalHealthcareSpending(scenario),
+            style: {
+              left: '50px',
+              top: '18px',
+              color: 'black',
+            },
+          }],
+        },
+        plotOptions: {
+          column: {
+            stacking: 'normal',
+          },
+        },
+        series: [
+          {
+            type: 'column', // For some reason it is trying to make this first one a spline no matter what
+            name: 'Premium',
+            data: [],
+          },
+          {
+            type: 'column',
+            name: 'insuredTotally',
+            data: arrayForProperty(scenario.performance, 'insuredTotally'),
+          },
+          {
+            type: 'column',
+            name: 'insuredByCoinsurance',
+            data: arrayForProperty(scenario.performance, 'insuredByCoinsurance'),
+          },
+          {
+            type: 'column',
+            name: 'paidFromCoinsurance',
+            data: arrayForProperty(scenario.performance, 'paidFromCoinsurance'),
+          },
+          {
+            type: 'column',
+            name: 'paidFromDeductible',
+            data: arrayForProperty(scenario.performance, 'paidFromDeductible'),
+          },
+          // {
+          //   type: 'spline',
+          //   name: 'Average',
+          //   data: [3, 2.67, 3, 6.33, 3.33],
+          //   marker: {
+          //       lineWidth: 2,
+          //       fillColor: 'white'
+          //     }
+          // },
+          {
+            type: 'pie',
+            name: 'Total spending',
+            data: [
+              {
+                name: 'Premium',
+                y: scenario.insuranceOption.premium,
+                color: Highcharts.getOptions().colors[0],
+              },
+              {
+                name: 'paidFromDeductible',
+                y: sumForProperty(scenario.performance, 'paidFromDeductible'),
+                color: Highcharts.getOptions().colors[4],
+              },
+              {
+                name: 'paidFromCoinsurance',
+                y: sumForProperty(scenario.performance, 'paidFromCoinsurance'),
+                color: Highcharts.getOptions().colors[3],
+              },
+            ],
+            center: [100, 80],
+            size: 100,
+            showInLegend: false,
+            dataLabels: {
+              enabled: false,
+            },
+          },
+        ],
+      };
+    return highChartOptionObject;
+  }
+
   Polymer({
     is: 'my-scenarios',
     properties: {
@@ -140,6 +242,14 @@
         notify: true,
         // An array of 12 integers representing costs broken down by month
         computed: 'generateCostCurve(totalHealthcareCosts)',
+      },
+      chartOptions: {
+        type: Array,
+        notify: true,
+        value() {
+          var retVal = [];
+          return retVal;
+        },
       },
       insuranceOptions: {
         type: Array,
@@ -180,127 +290,17 @@
         //   return options;
         // },
       },
-      chartOptions: {
-        type: Array,
-        notify: true,
-      },
     },
     observers: [
-
       'buildChartOptions(scenarios)',
     ],
     buildChartOptions(scenarios) {
-      var highChartOptionObject = {};
-      var options = [];
-      var scenario = {};
-
       var i = 0;
+      this.set('chartOptions', []);
+      this.$.scenarioCharts.render();
       for (i = 0; i < scenarios.length; i += 1) {
-        scenario = scenarios[i];
-        highChartOptionObject =
-        {
-          title: {
-            text: scenario.insuranceOption.planName,
-          },
-          xAxis: {
-            categories: ['Jan', 'Feb', 'Mar',
-              'Apr', 'May', 'Jun',
-              'Jul', 'Aug', 'Sep',
-              'Oct', 'Nov', 'Dec'],
-          },
-          labels: {
-            items: [{
-              html: 'Total Healthcare Spending: $'.concat(Math.round(
-                            (scenario.insuranceOption.premium +
-                            sumForProperty(scenario.performance, 'paidFromDeductible') +
-                            sumForProperty(scenario.performance, 'paidFromCoinsurance'))
-                            * 100) / 100),
-              style: {
-                left: '50px',
-                top: '18px',
-                color: 'black',
-              },
-            }],
-          },
-          plotOptions: {
-            column: {
-              stacking: 'normal',
-            },
-          },
-          series: [
-            {
-              type: 'column', // For some reason it is trying to make this first one a spline no matter what
-              name: 'Premium',
-              data: [],
-            },
-            {
-              type: 'column',
-              name: 'insuredTotally',
-              data: arrayForProperty(scenario.performance, 'insuredTotally'),
-            },
-            {
-              type: 'column',
-              name: 'insuredByCoinsurance',
-              data: arrayForProperty(scenario.performance, 'insuredByCoinsurance'),
-            },
-            {
-              type: 'column',
-              name: 'paidFromCoinsurance',
-              data: arrayForProperty(scenario.performance, 'paidFromCoinsurance'),
-            },
-            {
-              type: 'column',
-              name: 'paidFromDeductible',
-              data: arrayForProperty(scenario.performance, 'paidFromDeductible'),
-            },
-            // {
-            //   type: 'spline',
-            //   name: 'Average',
-            //   data: [3, 2.67, 3, 6.33, 3.33],
-            //   marker: {
-            //       lineWidth: 2,
-            //       fillColor: 'white'
-            //     }
-            // },
-            {
-              type: 'pie',
-              name: 'Total spending',
-              data: [
-                {
-                  name: 'Premium',
-                  y: scenario.insuranceOption.premium,
-                  color: Highcharts.getOptions().colors[0],
-                },
-                {
-                  name: 'paidFromDeductible',
-                  y: sumForProperty(scenario.performance, 'paidFromDeductible'),
-                  color: Highcharts.getOptions().colors[4],
-                },
-                {
-                  name: 'paidFromCoinsurance',
-                  y: sumForProperty(scenario.performance, 'paidFromCoinsurance'),
-                  color: Highcharts.getOptions().colors[3],
-                },
-              ],
-              center: [100, 80],
-              size: 100,
-              showInLegend: false,
-              dataLabels: {
-                enabled: false,
-              },
-            },
-          ],
-        };
-        options.push(highChartOptionObject);
-        // var selector = `#scenarioChart_${i}`;
-        // var chart = this.$$(selector);
-        // if (chart) {
-        //   // TODO: Pie chart is updating but the bar charts are not, WTF :-/
-        //   chart.reRender();
-        // }
+        this.push('chartOptions', buildCustomChartOptions(scenarios[i]));
       }
-      this.set('chartOptions', options);
-      // this.notifyPath('chartOptions.*');
     },
     calculateAll(insuranceOptions, healthcareCosts) {
       var i = 0;
