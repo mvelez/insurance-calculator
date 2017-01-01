@@ -150,13 +150,13 @@
         },
       },
       _showSpousalCoverageCosts() {
-        this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
+        // this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
       },
       _toggleTobacco() {
         this.useTobacco = !this.useTobacco;
       },
       _selectedAdultsChanged(newIndex) {
-        this.set('hideSpousalOptions', newIndex === '1');
+        // this.set('hideSpousalOptions', newIndex === '1');
       },
       buildFilterOptions(selectedIncomeBracket, selectedChildren,
         selectedAdults, useTobacco, surchargeState) {
@@ -168,23 +168,38 @@
 
         // simple options based on number of people
         if (selectedAdults === '1' && selectedChildren === '0') {
+          // Single person only needs single coverage.
           filterOptions.coverageLevels.push('1');
         } else if (selectedAdults === '1' && selectedChildren === '1') {
+          // Single parent needs coverage for themself and their child.
           filterOptions.coverageLevels.push('2');
         } else if (selectedAdults === '1' && selectedChildren === '2') {
+          // Single parent needs coverage for themself and their children.
           filterOptions.coverageLevels.push('3+');
         } else if (selectedAdults === '2' && selectedChildren === '0') {
+          // TODO: Split this condition on whether or not spouse has coverage.
+          // Childless couple, spouse may have coverage from their employer
           filterOptions.coverageLevels.push('1');
           filterOptions.coverageLevels.push('2');
-        } else if (selectedAdults !== '3' && selectedChildren === '0') {
-          filterOptions.coverageLevels.push('3+');
-        } else if (selectedAdults !== '1' && selectedChildren !== '0') {
+        // } else if (selectedAdults === '3' && selectedChildren === '0') {
+        //   // TODO: Split this condition on whether or not spouse has coverage.
+        //   // Multiple adults may have coverage from their employers
+        //   filterOptions.coverageLevels.push('1');
+        //   filterOptions.coverageLevels.push('2');
+        //   filterOptions.coverageLevels.push('3+');
+        // } else if (selectedAdults !== '1' && selectedChildren !== '0') {
+        //   // TODO: Split this condition on whether or not spouse has coverage.
+        //   // Multiple adults with children. Adults may have other options.
+        //   filterOptions.coverageLevels.push('1');
+        //   filterOptions.coverageLevels.push('2');
+        //   filterOptions.coverageLevels.push('3+');
+        // }
+        } else {
+          // These are more complicated situations where the user needs to see all options.
+          filterOptions.coverageLevels.push('1');
+          filterOptions.coverageLevels.push('2');
           filterOptions.coverageLevels.push('3+');
         }
-
-        // things get complicated when you have multiple
-        // adults eligible to be the insurance carrier and children
-
 
         return filterOptions;
       },
