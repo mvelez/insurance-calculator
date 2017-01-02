@@ -17,6 +17,10 @@
           type: String,
           notify: true,
         },
+        page: {
+          type: String,
+          notify: true,
+        },
         sendEvent: {
           type: String,
           notify: true,
@@ -24,12 +28,13 @@
       },
       observers: [
         'createGa(gaCode)',
-        'fireEvent(sendEvent)',
+        'fireEvent(sendEvent, page)',
       ],
       createGa: function(gaCode){
         ga('create', gaCode, 'auto');
       },
-      fireEvent: function(eventType){
+      fireEvent: function(eventType, page){
+        ga('set', 'page', page);
         ga('send', eventType);
       },
 
