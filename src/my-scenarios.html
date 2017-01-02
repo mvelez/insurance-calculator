@@ -40,9 +40,8 @@
         45-64 years: $6,799 | 88.9%
         <a href="https://www.cdc.gov/nchs/data/hus/hus15.pdf#097">Centers for Disease Control</a>
       </p>
-      <div>Total Healthcare Costs:  <span id="ratingsLabel" class="caption">{{totalHealthcareCosts}}</span></div><br />
-      <!--TODO: Make a logarithmic paper-slider  -->
-      <paper-slider value="{{totalHealthcareCosts}}" max="1000" pin></paper-slider>
+      <div>Total Healthcare Costs:  <span id="ratingsLabel" class="caption">{{totalHealthcareCostsLabel}}</span></div><br />
+      <paper-slider value="{{logTotalHealthcareCosts}}" max="11.512925465" step=".001"></paper-slider>
       <template id="scenarioCharts" is="dom-repeat" items="{{chartOptions}}" as="chartOption">
         <highcharts-chart highchart-options="{{chartOption}}" />
       </template>
@@ -135,7 +134,7 @@
     var highChartOptionObject =
       {
         title: {
-          text: scenario.insuranceOption.planName,
+          text: scenario.insuranceOption.planName + ' - ' + scenario.insuranceOption.coverageLevel,
         },
         xAxis: {
           categories: ['Jan', 'Feb', 'Mar',
@@ -233,9 +232,17 @@
         notify: true,
         computed: 'calculateAll(insuranceOptions, healthcareCosts)',
       },
+      logTotalHealthcareCosts: {
+        type: Number,
+        value: 8.16394095476,
+      },
       totalHealthcareCosts: {
         type: Number,
-        value: 35,
+        computed: 'exponent(logTotalHealthcareCosts)',
+      },
+      totalHealthcareCostsLabel: {
+        type: Number,
+        computed: 'generateHealthcareCostsLabel(totalHealthcareCosts)',
       },
       healthcareCosts: {
         type: Array,
@@ -294,6 +301,10 @@
     observers: [
       'buildChartOptions(scenarios)',
     ],
+    exponent(value) {
+      // TODO: remove the /100 when using realdata
+      return Math.exp(value) / 100;
+    },
     buildChartOptions(scenarios) {
       var i = 0;
       this.set('chartOptions', []);
@@ -316,6 +327,13 @@
       }
 
       return scenarios;
+    },
+    generateHealthcareCostsLabel(totalHealthcareCosts) {
+      var label = '$' + totalHealthcareCosts;
+      if (totalHealthcareCosts > 100000) {
+        label = '$100,000 or more';
+      }
+      return label;
     },
     generateCostCurve(totalHealthcareCosts) {
       var costCurve = [];
