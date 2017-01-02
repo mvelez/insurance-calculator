@@ -302,7 +302,8 @@
       'buildChartOptions(scenarios)',
     ],
     exponent(value) {
-      return Math.exp(value);
+      // TODO: remove the /100 when using realdata
+      return Math.exp(value) / 100;
     },
     buildChartOptions(scenarios) {
       var i = 0;
