@@ -5,8 +5,6 @@
   </template>
   <script>
     window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-
-
     Polymer({
       is: 'google-analytics',
       properties: {
@@ -18,22 +16,49 @@
           type: String,
           notify: true,
         },
-        sendEvent: {
+        eventCategory: {
           type: String,
           notify: true,
+        },
+        eventAction: {
+          type: String,
+          notify: true,
+        },
+        eventLabel: {
+          type: String,
+          notify: true,
+          value: null,
+        },
+        eventValue: {
+          type: Number,
+          notify: true,
+          value: null,
+        },
+        fieldsObject: {
+          type: Object,
+          notify: true,
+          value() {
+            var retVal = null;
+            return retVal;
+          },
         }
       },
       observers: [
-        'createGa(gaCode)',
-        'fireEvent(sendEvent, page)',
+        '_createGa(gaCode)',
+        '_sendPageview(page)',
+        '_sendEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject)'
       ],
-      createGa: function(gaCode){
+      _createGa: function(gaCode){
         ga('create', gaCode, 'auto');
       },
-      fireEvent: function(eventType, page){
+      _sendPageview: function(page){
         ga('set', 'page', page);
-        ga('send', eventType);
+        ga('send', 'pageview');
       },
+      _sendEvent: function(eventCategory, eventAction, eventLabel, eventValue, fieldsObject){
+        ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+      }
+
 
     });
   </script>
