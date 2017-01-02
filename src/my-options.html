@@ -118,11 +118,11 @@
       return null;
     }
 
-    function lookupStateSurcharge(target, lookupValues) {
+    function lookupStateSurcharge(state, coverageLevel, lookupValues) {
       var i = 0;
       for (i = 0; i < lookupValues.length; i += 1) {
-        if (target === lookupValues[i].state) {
-          return lookupValues[i].surcharge;
+        if (state === lookupValues[i].state) {
+          return lookupValues[i][coverageLevel];
         }
       }
       return null;
@@ -185,11 +185,6 @@
           addons += addonsSheet.tobaccoSurcharge;
         }
 
-        if (filterOptions.value.surchargeState) {
-          addons += lookupStateSurcharge(filterOptions.value.surchargeState,
-            addonsSheet.stateSurcharge);
-        }
-
         for (i = 0; i < rateSheet.coverageLevels.length; i += 1) {
           for (j = 0; j < filterOptions.value.coverageLevels.length; j += 1) {
             // eliminate coverageLevels that don't need to be considered
@@ -198,6 +193,11 @@
                 rateSheet.coverageLevels[i].coverageLevel,
                 coverageLevels.coverageLevels);
               for (k = 0; k < rateSheet.coverageLevels[i].plans.length; k += 1) {
+
+                addons += lookupStateSurcharge(filterOptions.value.surchargeState,
+                  rateSheet.coverageLevels[i].coverageLevel,
+                  addonsSheet.stateSurcharge);
+
                 plan = rateSheet.coverageLevels[i].plans[k];
                 planDescription = lookupPlanDescription(plan.name, planSheet.plans);
                 plan.coinsuranceRate = planDescription.coinsuranceRate;
