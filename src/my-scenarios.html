@@ -5,7 +5,12 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<script>
+/* global Highcharts numeral:true */
+</script>
 <link rel="import" href="../bower_components/highcharts-chart/highcharts-chart.html">
+<link rel="import" href="../bower_components/numeral-js/numeral-js.html">
 
 
 <dom-module id="my-scenarios">
@@ -40,7 +45,9 @@
         45-64 years: $6,799 | 88.9%
         <a href="https://www.cdc.gov/nchs/data/hus/hus15.pdf#097">Centers for Disease Control</a>
       </p>
-      <div>Total Healthcare Costs:  <span id="ratingsLabel" class="caption">{{totalHealthcareCostsLabel}}</span></div><br />
+      <div>Total Healthcare Costs:
+         <span class="caption">{{totalHealthcareCostsLabel}}</span>
+      </div>
       <paper-slider value="{{logTotalHealthcareCosts}}" max="11.512925465" step=".001"></paper-slider>
       <template id="scenarioCharts" is="dom-repeat" items="{{chartOptions}}" as="chartOption">
         <highcharts-chart highchart-options="{{chartOption}}" />
@@ -68,7 +75,7 @@
     for (i = 0; i < objectArray.length; i += 1) {
       returnValue += objectArray[i][property];
     }
-    return returnValue;
+    return Math.round(returnValue);
   }
 
   function minimumValue(a, b) {
@@ -82,8 +89,8 @@
     var total = scenario.insuranceOption.premium;
     total += sumForProperty(scenario.performance, 'paidFromDeductible');
     total += sumForProperty(scenario.performance, 'paidFromCoinsurance');
-    total = Math.round(total * 100) / 100;
-    return 'Total Healthcare Spending: $' + total;
+
+    return 'Total Healthcare Spending: ' + numeral(total).format('$0,0');
   }
 
   function calculatePerformance(insuranceOption, healthcareCosts) {
@@ -165,22 +172,22 @@
           },
           {
             type: 'column',
-            name: 'insuredTotally',
+            name: 'Insured Totally',
             data: arrayForProperty(scenario.performance, 'insuredTotally'),
           },
           {
             type: 'column',
-            name: 'insuredByCoinsurance',
+            name: 'Insured By Coinsurance',
             data: arrayForProperty(scenario.performance, 'insuredByCoinsurance'),
           },
           {
             type: 'column',
-            name: 'paidFromCoinsurance',
+            name: 'Paid From Coinsurance',
             data: arrayForProperty(scenario.performance, 'paidFromCoinsurance'),
           },
           {
             type: 'column',
-            name: 'paidFromDeductible',
+            name: 'Paid From Deductible',
             data: arrayForProperty(scenario.performance, 'paidFromDeductible'),
           },
           // {
@@ -202,12 +209,12 @@
                 color: Highcharts.getOptions().colors[0],
               },
               {
-                name: 'paidFromDeductible',
+                name: 'Paid From Deductible',
                 y: sumForProperty(scenario.performance, 'paidFromDeductible'),
                 color: Highcharts.getOptions().colors[4],
               },
               {
-                name: 'paidFromCoinsurance',
+                name: 'Paid From Coinsurance',
                 y: sumForProperty(scenario.performance, 'paidFromCoinsurance'),
                 color: Highcharts.getOptions().colors[3],
               },
@@ -329,7 +336,7 @@
       return scenarios;
     },
     generateHealthcareCostsLabel(totalHealthcareCosts) {
-      var label = '$' + totalHealthcareCosts;
+      var label = numeral(totalHealthcareCosts).format('$0,0');
       if (totalHealthcareCosts > 100000) {
         label = '$100,000 or more';
       }
