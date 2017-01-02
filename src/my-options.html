@@ -7,6 +7,11 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 
+<script>
+/* global Highcharts numeral:true */
+</script>
+<link rel="import" href="../bower_components/numeral-js/numeral-js.html">
+
 <dom-module id="my-options">
   <template>
     <style include="shared-styles">
@@ -78,6 +83,10 @@
   </template>
 
   <script>
+    var currencyRenderer = function (cell) {
+      cell.element.innerHTML = numeral(cell.data).format('$0,0');
+    };
+
     function generateOption(plan, coverageLevel, incomeBracket, addons) {
       var option = {};
       var i = 0;
@@ -206,6 +215,9 @@
       },
       updateGrid(unrankedOptions) {
         var grid = this.$.optionGrid;
+        grid.columns[2].renderer = currencyRenderer;
+        grid.columns[3].renderer = currencyRenderer;
+        grid.columns[4].renderer = currencyRenderer;
         grid.items = unrankedOptions;
       },
     });

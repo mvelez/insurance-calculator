@@ -28,7 +28,8 @@
     "iron-form": "PolymerElements/iron-form#^1.1.4",
     "gold-email-input": "PolymerElements/gold-email-input#^1.0.9",
     "highcharts-chart": "^2.0.0",
-    "paper-slider": "PolymerElements/paper-slider#^1.0.12"
+    "paper-slider": "PolymerElements/paper-slider#^1.0.12",
+    "numeral-js": "^0.1.2"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
