@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <dom-module id="my-feedback">
   <template>
@@ -27,14 +28,19 @@
         If you have a github account, you can view, comment on, or create <a href="https://github.com/mvelez/insurance-calculator/issues">issues</a> directly.
         If you would just like to say thank you, I would appreciate an insight through <a href="https://pd.ge.com/insights/add/212430442">PD@GE</a>.
       </p>
-      <form is="iron-form" id="feedbackForm" method="post" action="https://docs.google.com/forms/d/e/1FAIpQLSeRZR4CdXEoyMEwhmtmGgkbonf8nZnG45xdODmc9n-rIfAqAQ/formResponse">
+      <form
+      is="iron-form"
+      id="feedbackForm"
+      method="post"
+      action="https://docs.google.com/forms/d/e/1FAIpQLSeRZR4CdXEoyMEwhmtmGgkbonf8nZnG45xdODmc9n-rIfAqAQ/formResponse">
         <gold-email-input label="Email address" name="entry.74524531" autovalidate="true" required></gold-email-input>
         <paper-input label="Name" name="entry.126692137"></paper-input>
         <paper-textarea name="entry.1003868494" label="Submit a bug or an improvement request" feedback="{{feedback}}" required></paper-textarea>
-        <div class="horizontal end-justified layout">
+        <div id="submissionContainer" class="horizontal end-justified layout">
           <paper-button raised on-tap="submitForm">Submit</paper-button>
         </div>
       </form>
+      <paper-toast id="thankYouToast" text="Thank you for your feedback."></paper-toast>
     </div>
   </template>
 
@@ -44,7 +50,13 @@
 
       submitForm: function(event) {
         var feedbackForm = this.$.feedbackForm;
-        feedbackForm.submit();
+        if (feedbackForm.validate()) {
+          feedbackForm.submit()
+          feedbackForm.reset();
+          var confirmation = this.$.thankYouToast;
+          confirmation.fitInto = this.$.submissionContainer;
+          confirmation.open();
+        }
       },
     });
 
