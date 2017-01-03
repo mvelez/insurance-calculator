@@ -25,10 +25,10 @@
       <h1>Feedback</h1>
       <p>Use the form below to provide feedback to the developer on this application.</p>
       <template is="dom-bind">
-      <form is="iron-form" id="feedbackForm" method="post" action="http://httpbin.org/post">
-        <gold-email-input label="Email address" name="email" autovalidate="true"></gold-email-input>
-        <paper-textarea name="feedback" label="Submit a bug or an improvement request" feedback="{{feedback}}"></paper-textarea>
-        <input type="hidden" id="test" value="test" />
+      <form is="iron-form" id="feedbackForm" method="post" action="https://docs.google.com/forms/d/e/1FAIpQLSeRZR4CdXEoyMEwhmtmGgkbonf8nZnG45xdODmc9n-rIfAqAQ/formResponse">
+        <gold-email-input label="Email address" name="entry.74524531" autovalidate="true" required></gold-email-input>
+        <paper-input label="Name" name="entry.126692137"></paper-input>
+        <paper-textarea name="entry.1003868494" label="Submit a bug or an improvement request" feedback="{{feedback}}" required></paper-textarea>
         <div class="horizontal end-justified layout">
           <paper-button raised onclick="submitForm(event)">Submit</paper-button>
         </div>
