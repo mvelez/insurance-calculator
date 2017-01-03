@@ -27,28 +27,26 @@
         If you have a github account, you can view, comment on, or create <a href="https://github.com/mvelez/insurance-calculator/issues">issues</a> directly.
         If you would just like to say thank you, I would appreciate an insight through <a href="https://pd.ge.com/insights/add/212430442">PD@GE</a>.
       </p>
-      <template is="dom-bind">
       <form is="iron-form" id="feedbackForm" method="post" action="https://docs.google.com/forms/d/e/1FAIpQLSeRZR4CdXEoyMEwhmtmGgkbonf8nZnG45xdODmc9n-rIfAqAQ/formResponse">
         <gold-email-input label="Email address" name="entry.74524531" autovalidate="true" required></gold-email-input>
         <paper-input label="Name" name="entry.126692137"></paper-input>
         <paper-textarea name="entry.1003868494" label="Submit a bug or an improvement request" feedback="{{feedback}}" required></paper-textarea>
         <div class="horizontal end-justified layout">
-          <paper-button raised onclick="submitForm(event)">Submit</paper-button>
+          <paper-button raised on-tap="submitForm">Submit</paper-button>
         </div>
       </form>
-    </template>
     </div>
   </template>
 
   <script>
     Polymer({
       is: 'my-feedback',
+
+      submitForm: function(event) {
+        var feedbackForm = this.$.feedbackForm;
+        feedbackForm.submit();
+      },
     });
-    function submitForm(event) {
-      // TODO: this navigation seems hacky and error prone.
-      var feedbackForm = Polymer.dom(event).localTarget.parentElement.parentElement;
-      feedbackForm.submit();
-    }
 
   </script>
 </dom-module>
