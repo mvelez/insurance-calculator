@@ -174,7 +174,7 @@
         'updateGrid(unrankedOptions)',
       ],
 
-      denormalizeOptions(rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions) {
+      denormalizeOptions: function(rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions) {
         var coverageLevel;
         var i = 0;
         var j = 0;
@@ -216,7 +216,7 @@
         }
         return unrankedOptions;
       },
-      updateGrid(unrankedOptions) {
+      updateGrid: function(unrankedOptions) {
         var grid = this.$.optionGrid;
         grid.columns[2].renderer = currencyRenderer;
         grid.columns[3].renderer = currencyRenderer;
