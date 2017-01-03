@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 
 <script>
 /* global Highcharts numeral:true */
@@ -34,16 +35,53 @@
       <p>
         Explore how this will help you cover potential health scenarios.
         Use the slider below to choose your expected healthcare costs.
-        Initial values are based on CDC statistics.
+        Initial value is based on CDC statistics for an adult age 18 to 44.
       </p>
-      <!--TODO: make this a table and verify the relevance of these statistics  -->
-      <p>
-        Under 6 years: $2,154 | 88.8%
-        6-17 years: $2,064 | 85.7%
-        18-44 years: $3,512 | 75.5%
-        45-64 years: $6,799 | 88.9%
-        <a href="https://www.cdc.gov/nchs/data/hus/hus15.pdf#097">Centers for Disease Control</a>
-      </p>
+
+      <vaadin-grid id="cdcCostGrid">
+        <table>
+          <colgroup>
+            <col>
+            <col>
+            <col>
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Age Range (years)</th>
+              <th>% with Expenses</th>
+              <th>Average (Mean) Expense of Those With Expenses</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0 - 6</td>
+              <td>88.8%</td>
+              <td>$2,154</td>
+            </tr>
+            <tr>
+              <td>6 - 17</td>
+              <td>85.7%</td>
+              <td>$2,064</td>
+            </tr>
+            <tr>
+              <td>18 - 44</td>
+              <td>75.5%</td>
+              <td>$3,512</td>
+            </tr>
+            <tr>
+              <td>45 - 64</td>
+              <td>88.9%</td>
+              <td>$6,799</td>
+            </tr>
+            <tr>
+              ...
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          <a href="https://www.cdc.gov/nchs/data/hus/hus15.pdf#097">Source</a>
+        </p>
+      </vaadin-grid>
       <div>Total Healthcare Costs:
          <span class="caption">{{totalHealthcareCostsLabel}}</span>
       </div>
