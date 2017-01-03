@@ -1,0 +1,66 @@
+<!doctype html>
+
+<dom-module id="google-analytics">
+  <template>
+  </template>
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    Polymer({
+      is: 'google-analytics',
+      properties: {
+        gaCode: {
+          type: String,
+          notify: true,
+        },
+        page: {
+          type: String,
+          notify: true,
+        },
+        eventCategory: {
+          type: String,
+          notify: true,
+        },
+        eventAction: {
+          type: String,
+          notify: true,
+        },
+        eventLabel: {
+          type: String,
+          notify: true,
+          value: null,
+        },
+        eventValue: {
+          type: Number,
+          notify: true,
+          value: null,
+        },
+        fieldsObject: {
+          type: Object,
+          notify: true,
+          value() {
+            var retVal = null;
+            return retVal;
+          },
+        }
+      },
+      observers: [
+        '_createGa(gaCode)',
+        '_sendPageview(page)',
+        '_sendEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject)'
+      ],
+      _createGa: function(gaCode){
+        ga('create', gaCode, 'auto');
+      },
+      _sendPageview: function(page){
+        ga('set', 'page', page);
+        ga('send', 'pageview');
+      },
+      _sendEvent: function(eventCategory, eventAction, eventLabel, eventValue, fieldsObject){
+        ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+      }
+
+
+    });
+  </script>
+  <script async src='https://www.google-analytics.com/analytics.js'></script>
+</dom-module>
