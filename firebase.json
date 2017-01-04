@@ -3,7 +3,14 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "build/bundled",
+    "public": "build/unbundled",
+    "headers": [ {
+        "source" : "**",
+        "headers" : [ {
+          "key" : "Access-Control-Allow-Origin",
+          "value" : "*"
+        } ]
+    } ],
     "rewrites": [
       {
         "source": "!/__/**",
