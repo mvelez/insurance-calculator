@@ -1,0 +1,8 @@
+#
+applications:
+  - name:
+      insurance-calculator
+    buildpack: predix_openresty_buildpack
+    path: build/unbundled
+    memory: 64M
+    stack: cflinuxfs2
