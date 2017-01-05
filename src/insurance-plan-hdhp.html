@@ -13,16 +13,16 @@
       }
     </style>
     <paper-card heading="{{planName}}">
-      <paper-input label="Annual Premium" type="number">
+      <paper-input label="Annual Premium" type="number" value="{{premium}}">
         <div prefix>$</div>
       </paper-input>
-      <paper-input label="Annual co-pay" type="number">
+      <paper-input label="Annual co-pay" type="number" value="{{copay}}">
         <div prefix>$</div>
       </paper-input>
-      <paper-input label="Annual coinsurance max" type="number">
+      <paper-input label="Annual coinsurance max" type="number" value="{{coinsuranceMax}}">
         <div prefix>$</div>
       </paper-input>
-      <paper-input label="Coinsurance rate" type="number">
+      <paper-input label="Coinsurance rate" type="number" value="{{coinsuranceRate}}">
         <div suffix>%</div>
       </paper-input>
     </paper-card>
@@ -35,6 +35,33 @@
           type: String,
           notify: true,
         },
+        coverageLevel: {
+          type: String,
+          notify: true,
+        },
+        premium: Number,
+        copay: Number,
+        coinsuranceMax: Number,
+        coinsuranceRate: Number,
+        customPlan: {
+          type: Object,
+          notify: true,
+          computed: '_buildCustomPlan(planName, coverageLevel, premium, copay, coinsuranceMax, coinsuranceRate)',
+        },
+      },
+      _buildCustomPlan: function (
+        planName, coverageLevel, premium, copay, coinsuranceMax, coinsuranceRate) {
+        var plan = null;
+        if (premium && copay && coinsuranceMax && coinsuranceRate) {
+          plan = {};
+          plan.name = planName;
+          plan.coverageLevel = coverageLevel;
+          plan.premium = parseInt(premium, 10);
+          plan.copay = parseInt(copay, 10);
+          plan.coinsuranceMax = parseInt(coinsuranceMax, 10);
+          plan.coinsuranceRate = coinsuranceRate / 100;
+        }
+        return plan;
       },
     });
   </script>
