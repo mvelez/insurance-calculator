@@ -11,6 +11,8 @@
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="insurance-plan-hdhp.html">
+insurance-plan-hdhp
 
 <dom-module id="my-questions">
   <template>
@@ -92,43 +94,9 @@
             </div>
 
             <div hidden$="{{hideSpousalCoverageCosts}}">
-              <h4>Spouse Only Coverage</h4>
-              <paper-input label="Annual Premium?" type="number">
-                <div prefix>$</div>
-              </paper-input>
-              <paper-input label="Annual co-pay?" type="number">
-                <div prefix>$</div>
-              </paper-input>
-              <paper-input label="Annual coinsurance max?" type="number">
-                <div prefix>$</div>
-              </paper-input>
-            </div>
-
-            <div hidden$="{{hideSpousalCoverageCosts}}">
-              <h4>Spouse and Children Coverage</h4>
-              <paper-input label="Annual Premium?" type="number">
-                <div prefix>$</div>
-              </paper-input>
-              <paper-input label="Annual co-pay?" type="number">
-                <div prefix>$</div>
-              </paper-input>
-              <paper-input label="Annual coinsurance max?" type="number">
-                <div prefix>$</div>
-              </paper-input>
-            </div>
-
-
-            <div hidden$="{{hideSpousalCoverageCosts}}">
-              <h4>Whole Family Coverage</h4>
-              <paper-input label="Annual Premium?" type="number">
-                <div prefix>$</div>
-              </paper-input>
-              <paper-input label="Annual co-pay?" type="number">
-                <div prefix>$</div>
-              </paper-input>
-              <paper-input label="Annual coinsurance max?" type="number">
-                <div prefix>$</div>
-              </paper-input>
+              <insurance-plan-hdhp plan-name="Spouse Only" hidden$="{{hideSpousalCoverageCosts}}"></insurance-plan-hdhp>
+              <insurance-plan-hdhp plan-name="Spouse and Children" hidden$="{{hideSpousalCoverageCosts}}"></insurance-plan-hdhp>
+              <insurance-plan-hdhp plan-name="Whole Family" hidden$="{{hideSpousalCoverageCosts}}"></insurance-plan-hdhp>
             </div>
 
           </div>
