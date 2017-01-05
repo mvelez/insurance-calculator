@@ -73,15 +73,64 @@
       </div>
 
       <div hidden$="{{hideSpousalOptions}}">
-        <paper-card heading="Does their employer offer coverage?">
+        <paper-card heading="Does your spouse's employer offer healthcare coverage?">
           <div class="card-content">
-            <paper-toggle-button on-click="_showSpousalCoverageCosts">Yes</paper-toggle-button>
-            <paper-input label="Annual co-pay a single person?" type="number" hidden$="{{hideSpousalCoverageCosts}}">
-              <div prefix>$</div>
-            </paper-input>
-            <paper-input label="Annual co-pay for a plan that covers everyone?" type="number" hidden$="{{hideSpousalCoverageCosts}}">
-              <div prefix>$</div>
-            </paper-input>
+            <paper-toggle-button on-tap="_showSpousalCoverageCosts">{{hasSpousalCoverage}}</paper-toggle-button>
+            <div hidden$="{{hideSpousalCoverageCosts}}">
+              <p>Based on your income, if your spouse declines their employer's
+              insurance there is an additional charge of ${{spouseAddon}}
+              to extend coverage to them.</p>
+
+              <p>It can be beneficial to have everyone paying against the same
+              deductible and co-insurance though, so enter some information
+              about the plan that there employer offers and see what the best
+              strategy is for your family.</p>
+
+              <p>If their companies insurance is not a High Deductible Health Plan,
+              unfortunately this tool is not set up to support other types of
+              plans such as PPO or HMO plans.</p>
+            </div>
+
+            <div hidden$="{{hideSpousalCoverageCosts}}">
+              <h4>Spouse Only Coverage</h4>
+              <paper-input label="Annual Premium?" type="number">
+                <div prefix>$</div>
+              </paper-input>
+              <paper-input label="Annual co-pay?" type="number">
+                <div prefix>$</div>
+              </paper-input>
+              <paper-input label="Annual coinsurance max?" type="number">
+                <div prefix>$</div>
+              </paper-input>
+            </div>
+
+            <div hidden$="{{hideSpousalCoverageCosts}}">
+              <h4>Spouse and Children Coverage</h4>
+              <paper-input label="Annual Premium?" type="number">
+                <div prefix>$</div>
+              </paper-input>
+              <paper-input label="Annual co-pay?" type="number">
+                <div prefix>$</div>
+              </paper-input>
+              <paper-input label="Annual coinsurance max?" type="number">
+                <div prefix>$</div>
+              </paper-input>
+            </div>
+
+
+            <div hidden$="{{hideSpousalCoverageCosts}}">
+              <h4>Whole Family Coverage</h4>
+              <paper-input label="Annual Premium?" type="number">
+                <div prefix>$</div>
+              </paper-input>
+              <paper-input label="Annual co-pay?" type="number">
+                <div prefix>$</div>
+              </paper-input>
+              <paper-input label="Annual coinsurance max?" type="number">
+                <div prefix>$</div>
+              </paper-input>
+            </div>
+
           </div>
         </paper-card>
       </div>
@@ -150,15 +199,24 @@
           notify: true,
           computed: 'buildFilterOptions(selectedIncomeBracket, selectedChildren, selectedAdults, useTobacco, surchargeState)',
         },
+        hasSpousalCoverage: {
+          type: String,
+          value: 'No',
+        },
       },
       _showSpousalCoverageCosts: function () {
-        // this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
+        this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
+        if (this.hideSpousalCoverageCosts) {
+          this.hasSpousalCoverage = 'No';
+        } else {
+          this.hasSpousalCoverage = 'Yes';
+        }
       },
       _toggleTobacco: function () {
         this.useTobacco = !this.useTobacco;
       },
       _selectedAdultsChanged: function (newIndex) {
-        // this.set('hideSpousalOptions', newIndex === '1');
+        this.set('hideSpousalOptions', newIndex === '1');
       },
       buildFilterOptions: function (selectedIncomeBracket, selectedChildren,
         selectedAdults, useTobacco, surchargeState) {
