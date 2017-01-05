@@ -312,7 +312,7 @@
       chartOptions: {
         type: Array,
         notify: true,
-        value: function() {
+        value: function () {
           var retVal = [];
           return retVal;
         },
@@ -360,10 +360,10 @@
     observers: [
       'buildChartOptions(scenarios)',
     ],
-    exponent: function(value) {
+    exponent: function (value) {
       return Math.exp(value);
     },
-    buildChartOptions: function(scenarios) {
+    buildChartOptions: function (scenarios) {
       var i = 0;
       this.set('chartOptions', []);
       this.$.scenarioCharts.render();
@@ -371,7 +371,7 @@
         this.push('chartOptions', buildCustomChartOptions(scenarios[i]));
       }
     },
-    calculateAll: function(insuranceOptions, healthcareCosts) {
+    calculateAll: function (insuranceOptions, healthcareCosts) {
       var i = 0;
       var scenario = {};
       var scenarios = [];
@@ -386,14 +386,14 @@
 
       return scenarios;
     },
-    generateHealthcareCostsLabel: function(totalHealthcareCosts) {
+    generateHealthcareCostsLabel: function (totalHealthcareCosts) {
       var label = numeral(totalHealthcareCosts).format('$0,0');
       if (totalHealthcareCosts > 100000) {
         label = '$100,000 or more';
       }
       return label;
     },
-    generateCostCurve: function(totalHealthcareCosts) {
+    generateCostCurve: function (totalHealthcareCosts) {
       var costCurve = [];
       costCurve.push(totalHealthcareCosts * (1 / 42));
       costCurve.push(totalHealthcareCosts * (2 / 42));

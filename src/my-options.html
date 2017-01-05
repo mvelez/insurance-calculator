@@ -174,7 +174,7 @@
         'updateGrid(unrankedOptions)',
       ],
 
-      denormalizeOptions: function(rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions) {
+      denormalizeOptions: function (rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions) {
         var coverageLevel;
         var i = 0;
         var j = 0;
@@ -196,7 +196,6 @@
                 rateSheet.coverageLevels[i].coverageLevel,
                 coverageLevels.coverageLevels);
               for (k = 0; k < rateSheet.coverageLevels[i].plans.length; k += 1) {
-
                 addons += lookupStateSurcharge(filterOptions.value.surchargeState,
                   rateSheet.coverageLevels[i].coverageLevel,
                   addonsSheet.stateSurcharge);
@@ -216,7 +215,7 @@
         }
         return unrankedOptions;
       },
-      updateGrid: function(unrankedOptions) {
+      updateGrid: function (unrankedOptions) {
         var grid = this.$.optionGrid;
         grid.columns[2].renderer = currencyRenderer;
         grid.columns[3].renderer = currencyRenderer;

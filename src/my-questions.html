@@ -151,16 +151,16 @@
           computed: 'buildFilterOptions(selectedIncomeBracket, selectedChildren, selectedAdults, useTobacco, surchargeState)',
         },
       },
-      _showSpousalCoverageCosts: function() {
+      _showSpousalCoverageCosts: function () {
         // this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
       },
-      _toggleTobacco: function() {
+      _toggleTobacco: function () {
         this.useTobacco = !this.useTobacco;
       },
-      _selectedAdultsChanged: function(newIndex) {
+      _selectedAdultsChanged: function (newIndex) {
         // this.set('hideSpousalOptions', newIndex === '1');
       },
-      buildFilterOptions: function(selectedIncomeBracket, selectedChildren,
+      buildFilterOptions: function (selectedIncomeBracket, selectedChildren,
         selectedAdults, useTobacco, surchargeState) {
         var filterOptions = {};
         filterOptions.incomeBracket = selectedIncomeBracket;
