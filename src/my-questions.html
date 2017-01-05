@@ -93,9 +93,23 @@
             </div>
 
             <div layout="horizontal" hidden$="{{hideSpousalCoverageCosts}}">
-              <insurance-plan-hdhp plan-name="Spouse Only" coverage-level="1" hidden$="{{hideSpousalCoverageCosts}}"></insurance-plan-hdhp>
-              <insurance-plan-hdhp plan-name="Spouse and Children" coverage-level="2" hidden$="{{hideSpousalCoverageCosts}}"></insurance-plan-hdhp>
-              <insurance-plan-hdhp plan-name="Whole Family" coverage-level="3+" hidden$="{{hideSpousalCoverageCosts}}"></insurance-plan-hdhp>
+              <insurance-plan-hdhp
+              plan-name="Spouse Only"
+              coverage-level="1"
+              hidden$="{{hideSpousalCoverageCosts}}"
+              custom-plan="{{customSingle}}"></insurance-plan-hdhp>
+
+              <insurance-plan-hdhp
+              plan-name="Spouse and Children"
+              coverage-level="2"
+              hidden$="{{hideSpousalCoverageCosts}}"
+              custom-plan="{{customChildren}}"></insurance-plan-hdhp>
+
+              <insurance-plan-hdhp
+              plan-name="Whole Family"
+              coverage-level="3+"
+              hidden$="{{hideSpousalCoverageCosts}}"
+              custom-plan="{{customFamily}}"></insurance-plan-hdhp>
             </div>
 
           </div>
@@ -174,6 +188,10 @@
           type: Number,
           computed: '_lookupSpouseAddon(selectedIncomeBracket, addons)',
         },
+        customPlans: {
+          type: Array,
+          notify: true,
+        },
       },
       _showSpousalCoverageCosts: function () {
         this.hideSpousalCoverageCosts = !this.hideSpousalCoverageCosts;
@@ -205,6 +223,20 @@
         filterOptions.useTobacco = useTobacco;
         filterOptions.surchargeState = surchargeState;
         filterOptions.coverageLevels = [];
+
+        if (this.customSingle || this.customChildren || this.customFamily) {
+          this.set('customPlans', []);
+        }
+
+        if (this.customSingle) {
+          this.push('customPlans', this.customSingle);
+        }
+        if (this.customChildren) {
+          this.push('customPlans', this.customChildren);
+        }
+        if (this.customFamily) {
+          this.push('customPlans', this.customFamily);
+        }
 
         // simple options based on number of people
         if (selectedAdults === '1' && selectedChildren === '0') {
