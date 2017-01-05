@@ -1,0 +1,29 @@
+<!doctype html>
+
+<dom-module id="insurance-plan-hdhp">
+  <template>
+    <div>
+      <h4>{{planName}}</h4>
+      <paper-input label="Annual Premium" type="number">
+        <div prefix>$</div>
+      </paper-input>
+      <paper-input label="Annual co-pay" type="number">
+        <div prefix>$</div>
+      </paper-input>
+      <paper-input label="Annual coinsurance max" type="number">
+        <div prefix>$</div>
+      </paper-input>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'insurance-plan-hdhp',
+      properties: {
+        planName: {
+          type: String,
+          notify: true,
+        },
+      },
+    });
+  </script>
+</dom-module>
