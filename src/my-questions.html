@@ -12,7 +12,6 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="insurance-plan-hdhp.html">
-insurance-plan-hdhp
 
 <dom-module id="my-questions">
   <template>
@@ -93,7 +92,7 @@ insurance-plan-hdhp
               plans such as PPO or HMO plans.</p>
             </div>
 
-            <div hidden$="{{hideSpousalCoverageCosts}}">
+            <div layout="horizontal" hidden$="{{hideSpousalCoverageCosts}}">
               <insurance-plan-hdhp plan-name="Spouse Only" hidden$="{{hideSpousalCoverageCosts}}"></insurance-plan-hdhp>
               <insurance-plan-hdhp plan-name="Spouse and Children" hidden$="{{hideSpousalCoverageCosts}}"></insurance-plan-hdhp>
               <insurance-plan-hdhp plan-name="Whole Family" hidden$="{{hideSpousalCoverageCosts}}"></insurance-plan-hdhp>

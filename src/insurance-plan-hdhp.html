@@ -1,9 +1,18 @@
 <!doctype html>
 
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+
 <dom-module id="insurance-plan-hdhp">
   <template>
-    <div>
-      <h4>{{planName}}</h4>
+    <style>
+      paper-card {
+        box-sizing: border-box;
+        max-width: 275px;
+        margin: 4px;
+        flex: 0 0 auto;
+      }
+    </style>
+    <paper-card heading="{{planName}}">
       <paper-input label="Annual Premium" type="number">
         <div prefix>$</div>
       </paper-input>
@@ -13,7 +22,10 @@
       <paper-input label="Annual coinsurance max" type="number">
         <div prefix>$</div>
       </paper-input>
-    </div>
+      <paper-input label="Coinsurance rate" type="number">
+        <div suffix>%</div>
+      </paper-input>
+    </paper-card>
   </template>
   <script>
     Polymer({
