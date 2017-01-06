@@ -90,6 +90,22 @@
       cell.element.innerHTML = numeral(cell.data).format('$0,0');
     };
 
+    function generateCustomOption(plan, coverageLevel) {
+      var option = {};
+      var i = 0;
+      option.planName = plan.name;
+      option.deductible = plan.deductible;
+      option.savingsAccountContribution = plan.savingsAccountContribution;
+      option.coverageLevel = coverageLevel;
+      option.incomeBracket = "n/a";
+      option.coinsuranceRate = plan.coinsuranceRate;
+      option.savingsAccountType = plan.savingsAccountType;
+      option.savingsAccountContribution = plan.savingsAccountContribution;
+      option.premium = plan.premium;
+      option.coinsuranceMax = plan.coinsuranceMax;
+      return option;
+    }
+
     function generateOption(plan, coverageLevel, incomeBracket, addons) {
       var option = {};
       var i = 0;
@@ -220,10 +236,8 @@
 
         for (i = 0; i < customPlans.length; i += 1) {
           unrankedOptions.push(
-          generateOption(customPlans[i],
-            customPlans[i].coverageLevel,
-            "n/a",
-            0));
+          generateCustomOption(customPlans[i],
+            customPlans[i].coverageLevel));
         }
         return unrankedOptions;
       },
