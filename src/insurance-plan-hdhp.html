@@ -56,27 +56,27 @@
           type: String,
           notify: true,
         },
-        premium: { 
+        premium: {
           type: Number,
           value: 1000,
         },
-        deductible:{ 
+        deductible: {
           type: Number,
           value: 2000,
         },
-        coinsuranceMax: { 
+        coinsuranceMax: {
           type: Number,
           value: 2000,
         },
-        coinsuranceRate: { 
+        coinsuranceRate: {
           type: Number,
           value: 20,
         },
         savingsAccountType: {
           type: String,
-          value: "HSA",
+          value: 'HSA',
         },
-        savingsAccountContribution: { 
+        savingsAccountContribution: {
           type: Number,
           value: 1000,
         },
@@ -87,9 +87,11 @@
         },
       },
       _buildCustomPlan: function (
-        planName, coverageLevel, premium, deductible, coinsuranceMax, coinsuranceRate, savingsAccountType, savingsAccountContribution) {
+        planName, coverageLevel, premium, deductible, coinsuranceMax,
+        coinsuranceRate, savingsAccountType, savingsAccountContribution) {
         var plan = null;
-        if (premium && deductible && coinsuranceMax && coinsuranceRate && savingsAccountType && savingsAccountContribution) {
+        if (premium && deductible && coinsuranceMax && coinsuranceRate &&
+          savingsAccountType && savingsAccountContribution) {
           plan = {};
           plan.name = planName;
           plan.coverageLevel = coverageLevel;

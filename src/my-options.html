@@ -92,12 +92,11 @@
 
     function generateCustomOption(plan, coverageLevel) {
       var option = {};
-      var i = 0;
       option.planName = plan.name;
       option.deductible = plan.deductible;
       option.savingsAccountContribution = plan.savingsAccountContribution;
       option.coverageLevel = coverageLevel;
-      option.incomeBracket = "n/a";
+      option.incomeBracket = 'n/a';
       option.coinsuranceRate = plan.coinsuranceRate;
       option.savingsAccountType = plan.savingsAccountType;
       option.savingsAccountContribution = plan.savingsAccountContribution;
@@ -194,7 +193,8 @@
         'updateGrid(unrankedOptions)',
       ],
 
-      denormalizeOptions: function (rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions, customPlans) {
+      denormalizeOptions: function (rateSheet, coverageLevels, addonsSheet,
+        planSheet, filterOptions, customPlans) {
         var coverageLevel;
         var i = 0;
         var j = 0;
@@ -235,9 +235,12 @@
         }
 
         for (i = 0; i < customPlans.length; i += 1) {
+          coverageLevel = lookupCoverageLevel(
+                customPlans[i].coverageLevel,
+                coverageLevels.coverageLevels);
           unrankedOptions.push(
           generateCustomOption(customPlans[i],
-            customPlans[i].coverageLevel));
+            coverageLevel));
         }
         return unrankedOptions;
       },

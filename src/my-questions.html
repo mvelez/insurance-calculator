@@ -93,7 +93,7 @@
 
               <p>
                 This tool is currently only considering single income households of
-                any size or dual income households with no children.  Appropriate 
+                any size or dual income households with no children.  Appropriate
                 support for dual income households with children will be coming soon.
               </p>
             </div>
@@ -114,8 +114,8 @@
               <insurance-plan-hdhp
               plan-name="Whole Family"
               coverage-level="3+"
-              custom-plan="{{customFamily}}"></insurance-plan-hdhp>
-            </div>-->
+              custom-plan="{{customFamily}}"></insurance-plan-hdhp>-->
+            </div>
 
           </div>
         </paper-card>
@@ -183,7 +183,7 @@
         filterOptions: {
           type: Object,
           notify: true,
-          computed: '_buildFilterOptions(selectedIncomeBracket, selectedChildren, selectedAdults, useTobacco, surchargeState)',
+          computed: '_buildFilterOptions(selectedIncomeBracket, selectedChildren, selectedAdults, useTobacco, surchargeState, hideSpousalCoverageCosts, customSingle)',
         },
         hasSpousalCoverage: {
           type: String,
@@ -222,30 +222,30 @@
         return null;
       },
       _buildFilterOptions: function (selectedIncomeBracket, selectedChildren,
-        selectedAdults, useTobacco, surchargeState) {
+        selectedAdults, useTobacco, surchargeState, hideSpousalCoverageCosts,
+        customSingle) {
         var filterOptions = {};
         filterOptions.incomeBracket = selectedIncomeBracket;
         filterOptions.useTobacco = useTobacco;
         filterOptions.surchargeState = surchargeState;
-        if (!this.hideSpousalCoverageCosts) {
+
+        this.set('customPlans', []);
+        if (!hideSpousalCoverageCosts) {
           filterOptions.spouseAddon = this.spouseAddon;
+
+          if (customSingle) {
+            this.push('customPlans', customSingle);
+          }
+          if (this.customChildren) {
+            this.push('customPlans', this.customChildren);
+          }
+          if (this.customFamily) {
+            this.push('customPlans', this.customFamily);
+          }
         }
 
         filterOptions.coverageLevels = [];
 
-        if (this.customSingle || this.customChildren || this.customFamily) {
-          this.set('customPlans', []);
-        }
-
-        if (this.customSingle) {
-          this.push('customPlans', this.customSingle);
-        }
-        if (this.customChildren) {
-          this.push('customPlans', this.customChildren);
-        }
-        if (this.customFamily) {
-          this.push('customPlans', this.customFamily);
-        }
 
         // simple options based on number of people
         if (selectedAdults === '1' && selectedChildren === '0') {

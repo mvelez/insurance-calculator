@@ -48,12 +48,13 @@
     Polymer({
       is: 'my-feedback',
 
-      submitForm: function(event) {
+      submitForm: function (event) {
         var feedbackForm = this.$.feedbackForm;
+        var confirmation = null;
         if (feedbackForm.validate()) {
-          feedbackForm.submit()
+          feedbackForm.submit();
           feedbackForm.reset();
-          var confirmation = this.$.thankYouToast;
+          confirmation = this.$.thankYouToast;
           confirmation.fitInto = this.$.submissionContainer;
           confirmation.open();
         }
