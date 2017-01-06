@@ -1,6 +1,9 @@
 <!doctype html>
 
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 
 <dom-module id="insurance-plan-hdhp">
   <template>
@@ -9,6 +12,7 @@
         box-sizing: border-box;
         max-width: 275px;
         margin: 4px;
+        padding: 4px;
         flex: 0 0 auto;
       }
     </style>
@@ -16,7 +20,7 @@
       <paper-input label="Annual Premium" type="number" value="{{premium}}">
         <div prefix>$</div>
       </paper-input>
-      <paper-input label="Annual co-pay" type="number" value="{{copay}}">
+      <paper-input label="Annual deductible" type="number" value="{{deductible}}">
         <div prefix>$</div>
       </paper-input>
       <paper-input label="Annual coinsurance max" type="number" value="{{coinsuranceMax}}">
@@ -25,6 +29,19 @@
       <paper-input label="Coinsurance rate" type="number" value="{{coinsuranceRate}}">
         <div suffix>%</div>
       </paper-input>
+
+      <div>
+        <paper-dropdown-menu label="Savings Account Type">
+          <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{savingsAccountType}}">
+            <paper-item value="HSA">HSA</paper-item>
+            <paper-item value="HRA">HRA</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </div>
+      <paper-input label="Employer Savings Contribution" type="number" value="{{savingsAccountContribution}}">
+        <div prefix>$</div>
+      </paper-input>
+
     </paper-card>
   </template>
   <script>
@@ -39,27 +56,49 @@
           type: String,
           notify: true,
         },
-        premium: Number,
-        copay: Number,
-        coinsuranceMax: Number,
-        coinsuranceRate: Number,
+        premium: { 
+          type: Number,
+          value: 1000,
+        },
+        deductible:{ 
+          type: Number,
+          value: 2000,
+        },
+        coinsuranceMax: { 
+          type: Number,
+          value: 2000,
+        },
+        coinsuranceRate: { 
+          type: Number,
+          value: 20,
+        },
+        savingsAccountType: {
+          type: String,
+          value: "HSA",
+        },
+        savingsAccountContribution: { 
+          type: Number,
+          value: 1000,
+        },
         customPlan: {
           type: Object,
           notify: true,
-          computed: '_buildCustomPlan(planName, coverageLevel, premium, copay, coinsuranceMax, coinsuranceRate)',
+          computed: '_buildCustomPlan(planName, coverageLevel, premium, deductible, coinsuranceMax, coinsuranceRate, savingsAccountType, savingsAccountContribution)',
         },
       },
       _buildCustomPlan: function (
-        planName, coverageLevel, premium, copay, coinsuranceMax, coinsuranceRate) {
+        planName, coverageLevel, premium, deductible, coinsuranceMax, coinsuranceRate, savingsAccountType, savingsAccountContribution) {
         var plan = null;
-        if (premium && copay && coinsuranceMax && coinsuranceRate) {
+        if (premium && deductible && coinsuranceMax && coinsuranceRate && savingsAccountType && savingsAccountContribution) {
           plan = {};
           plan.name = planName;
           plan.coverageLevel = coverageLevel;
           plan.premium = parseInt(premium, 10);
-          plan.copay = parseInt(copay, 10);
+          plan.deductible = parseInt(deductible, 10);
           plan.coinsuranceMax = parseInt(coinsuranceMax, 10);
           plan.coinsuranceRate = coinsuranceRate / 100;
+          plan.savingsAccountType = savingsAccountType;
+          plan.savingsAccountContribution = savingsAccountContribution;
         }
         return plan;
       },

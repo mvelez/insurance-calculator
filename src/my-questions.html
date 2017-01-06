@@ -90,27 +90,32 @@
               <p>If their companies insurance is not a High Deductible Health Plan,
               unfortunately this tool is not set up to support other types of
               plans such as PPO or HMO plans.</p>
+
+              <p>
+                This tool is currently only considering single income households of
+                any size or dual income households with no children.  Appropriate 
+                support for dual income households with children will be coming soon.
+              </p>
             </div>
 
             <div layout="horizontal" hidden$="{{hideSpousalCoverageCosts}}">
               <insurance-plan-hdhp
               plan-name="Spouse Only"
               coverage-level="1"
-              hidden$="{{hideSpousalCoverageCosts}}"
               custom-plan="{{customSingle}}"></insurance-plan-hdhp>
-
-              <insurance-plan-hdhp
-              plan-name="Spouse and Children"
-              coverage-level="2"
-              hidden$="{{hideSpousalCoverageCosts}}"
-              custom-plan="{{customChildren}}"></insurance-plan-hdhp>
+<!--
+              <div hidden$='{{selectedChildren}} !== "0"'>
+                <insurance-plan-hdhp
+                plan-name="Spouse and Children"
+                coverage-level="2"
+                custom-plan="{{customChildren}}"></insurance-plan-hdhp>
+              </div>
 
               <insurance-plan-hdhp
               plan-name="Whole Family"
               coverage-level="3+"
-              hidden$="{{hideSpousalCoverageCosts}}"
               custom-plan="{{customFamily}}"></insurance-plan-hdhp>
-            </div>
+            </div>-->
 
           </div>
         </paper-card>
@@ -222,6 +227,10 @@
         filterOptions.incomeBracket = selectedIncomeBracket;
         filterOptions.useTobacco = useTobacco;
         filterOptions.surchargeState = surchargeState;
+        if (!this.hideSpousalCoverageCosts) {
+          filterOptions.spouseAddon = this.spouseAddon;
+        }
+
         filterOptions.coverageLevels = [];
 
         if (this.customSingle || this.customChildren || this.customFamily) {
