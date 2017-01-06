@@ -196,6 +196,7 @@
       denormalizeOptions: function (rateSheet, coverageLevels, addonsSheet,
         planSheet, filterOptions, customPlans) {
         var coverageLevel;
+        var customCoverageLevel;
         var i = 0;
         var j = 0;
         var k = 0;
@@ -209,16 +210,29 @@
         }
 
         for (i = 0; i < rateSheet.coverageLevels.length; i += 1) {
-          for (j = 0; j < filterOptions.value.coverageLevels.length; j += 1) {
+          for (j = 0; j < filterOptions.value.suitablePlans.length; j += 1) {
             // eliminate coverageLevels that don't need to be considered
-            if (rateSheet.coverageLevels[i].coverageLevel === filterOptions.value.coverageLevels[j]) {
+            if (rateSheet.coverageLevels[i].coverageLevel === filterOptions.value.suitablePlans[j].coverageLevel) {
               coverageLevel = lookupCoverageLevel(
                 rateSheet.coverageLevels[i].coverageLevel,
                 coverageLevels.coverageLevels);
               for (k = 0; k < rateSheet.coverageLevels[i].plans.length; k += 1) {
+
                 addons += lookupStateSurcharge(filterOptions.value.surchargeState,
                   rateSheet.coverageLevels[i].coverageLevel,
                   addonsSheet.stateSurcharge);
+
+                // handle if there is a spouse and there are custom plans being considered
+                if (filterOptions.value.spouseAddon && !filterOptions.value.suitablePlans[j].custom) {
+                  addons += filterOptions.value.spouseAddon;
+                } else if (filterOptions.value.spouseAddon && filterOptions.value.suitablePlans[j].custom) {
+                  customCoverageLevel = lookupCoverageLevel(
+                        filterOptions.value.suitablePlans[j].custom.coverageLevel,
+                        coverageLevels.coverageLevels);
+                  unrankedOptions.push(
+                  generateCustomOption(filterOptions.value.suitablePlans[j].custom,
+                    customCoverageLevel));
+                }
 
                 plan = rateSheet.coverageLevels[i].plans[k];
                 planDescription = lookupPlanDescription(plan.name, planSheet.plans);
@@ -234,14 +248,6 @@
           }
         }
 
-        for (i = 0; i < customPlans.length; i += 1) {
-          coverageLevel = lookupCoverageLevel(
-                customPlans[i].coverageLevel,
-                coverageLevels.coverageLevels);
-          unrankedOptions.push(
-          generateCustomOption(customPlans[i],
-            coverageLevel));
-        }
         return unrankedOptions;
       },
       updateGrid: function (unrankedOptions) {

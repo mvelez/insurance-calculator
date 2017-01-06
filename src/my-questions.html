@@ -68,7 +68,6 @@
           <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{selectedAdults}}">
             <paper-item value="1">One (Employee)</paper-item>
             <paper-item value="2">Two</paper-item>
-            <paper-item value="3">Three or more</paper-item>
           </paper-listbox>
         </paper-dropdown-menu>
       </div>
@@ -223,7 +222,7 @@
       },
       _buildFilterOptions: function (selectedIncomeBracket, selectedChildren,
         selectedAdults, useTobacco, surchargeState, hideSpousalCoverageCosts,
-        customSingle) {
+        customSingle, customChildren, customFamily) {
         var filterOptions = {};
         filterOptions.incomeBracket = selectedIncomeBracket;
         filterOptions.useTobacco = useTobacco;
@@ -236,51 +235,56 @@
           if (customSingle) {
             this.push('customPlans', customSingle);
           }
-          if (this.customChildren) {
-            this.push('customPlans', this.customChildren);
+          if (customChildren) {
+            this.push('customPlans', customChildren);
           }
-          if (this.customFamily) {
-            this.push('customPlans', this.customFamily);
+          if (customFamily) {
+            this.push('customPlans', customFamily);
           }
         }
 
-        filterOptions.coverageLevels = [];
-
+        filterOptions.suitablePlans = [];
 
         // simple options based on number of people
         if (selectedAdults === '1' && selectedChildren === '0') {
           // Single person only needs single coverage.
-          filterOptions.coverageLevels.push('1');
+          filterOptions.suitablePlans.push({coverageLevel: '1'});
         } else if (selectedAdults === '1' && selectedChildren === '1') {
           // Single parent needs coverage for themself and their child.
-          filterOptions.coverageLevels.push('2');
+          filterOptions.suitablePlans.push({coverageLevel: '2'});
         } else if (selectedAdults === '1' && selectedChildren === '2') {
           // Single parent needs coverage for themself and their children.
-          filterOptions.coverageLevels.push('3+');
+          filterOptions.suitablePlans.push({coverageLevel: '3+'});
         } else if (selectedAdults === '2' && selectedChildren === '0') {
-          // TODO: Split this condition on whether or not spouse has coverage.
           // Childless couple, spouse may have coverage from their employer
-          filterOptions.coverageLevels.push('1');
-          filterOptions.coverageLevels.push('2');
-        // } else if (selectedAdults === '3' && selectedChildren === '0') {
-        //   // TODO: Split this condition on whether or not spouse has coverage.
-        //   // Multiple adults may have coverage from their employers
-        //   filterOptions.coverageLevels.push('1');
-        //   filterOptions.coverageLevels.push('2');
-        //   filterOptions.coverageLevels.push('3+');
-        // } else if (selectedAdults !== '1' && selectedChildren !== '0') {
-        //   // TODO: Split this condition on whether or not spouse has coverage.
-        //   // Multiple adults with children. Adults may have other options.
-        //   filterOptions.coverageLevels.push('1');
-        //   filterOptions.coverageLevels.push('2');
-        //   filterOptions.coverageLevels.push('3+');
-        // }
-        } else {
-          // These are more complicated situations where the user needs to see all options.
-          filterOptions.coverageLevels.push('1');
-          filterOptions.coverageLevels.push('2');
-          filterOptions.coverageLevels.push('3+');
+          filterOptions.suitablePlans.push({coverageLevel: '1', custom: customSingle});
+          filterOptions.suitablePlans.push({coverageLevel: '2'});
+          // filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
+        } else if (selectedAdults !== '1' && selectedChildren === '1') {
+          // employee only with spouse and children on spouse's plan
+          filterOptions.suitablePlans.push({coverageLevel: '1', custom: customChildren});
+          // employee and children on company plan, spouse on their company's plan
+          filterOptions.suitablePlans.push({coverageLevel: '2', custom: customSingle});
+          // whole family on the company's plan
+          filterOptions.suitablePlans.push({coverageLevel: '3+'});
+          // whole family on the spouse's plan
+          filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
+        } else if (selectedAdults !== '1' && selectedChildren === '2') {
+          // employee only with spouse and children on spouse's plan
+          filterOptions.suitablePlans.push({coverageLevel: '1', custom: customChildren});
+          // employee and children on company plan, spouse on their company's plan
+          filterOptions.suitablePlans.push({coverageLevel: '3+', custom: customSingle});
+          // whole family on the company's plan
+          filterOptions.suitablePlans.push({coverageLevel: '3+'});
+          // whole family on the spouse's plan
+          filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
+        }else {
+          // Something was missed, just show company plans.
+          filterOptions.suitablePlans.push({coverageLevel: '1'});
+          filterOptions.suitablePlans.push({coverageLevel: '2'});
+          filterOptions.suitablePlans.push({coverageLevel: '3+'});
         }
+
 
         return filterOptions;
       },
