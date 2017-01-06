@@ -164,17 +164,21 @@
           type: Object,
           notify: true,
         },
+        customPlans: {
+          type: Array,
+          notify: true,
+        },
         unrankedOptions: {
           type: Array,
           notify: true,
-          computed: 'denormalizeOptions(rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions.*)',
+          computed: 'denormalizeOptions(rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions.*, customPlans)',
         },
       },
       observers: [
         'updateGrid(unrankedOptions)',
       ],
 
-      denormalizeOptions: function (rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions) {
+      denormalizeOptions: function (rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions, customPlans) {
         var coverageLevel;
         var i = 0;
         var j = 0;
@@ -212,6 +216,14 @@
               }
             }
           }
+        }
+
+        for (i = 0; i < customPlans.length; i += 1) {
+          unrankedOptions.push(
+          generateOption(customPlans[i],
+            customPlans[i].coverageLevel,
+            "n/a",
+            0));
         }
         return unrankedOptions;
       },

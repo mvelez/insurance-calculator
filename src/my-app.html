@@ -87,9 +87,22 @@
             fallback-selection="view404"
             role="main">
           <my-overview name="overview"></my-overview>
-          <my-questions name="questions" filter-options="{{myFilterOption}}"></my-questions>
-          <my-options name="options" unranked-options="{{myOptions}}" filter-options="{{myFilterOption}}"></my-options>
-          <my-scenarios name="scenarios" insurance-options="{{myOptions}}"></my-scenarios>
+
+          <my-questions name="questions"
+            filter-options="{{myFilterOption}}"
+            custom-plans="{{myCustomPlans}}">
+          </my-questions>
+
+          <my-options name="options"
+            unranked-options="{{myOptions}}"
+            filter-options="{{myFilterOption}}"
+            custom-plans="[[myCustomPlans]]">
+          </my-options>
+
+          <my-scenarios name="scenarios"
+            insurance-options="{{myOptions}}">
+          </my-scenarios>
+
           <my-feedback name="feedback"></my-feedback>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
@@ -116,6 +129,14 @@
           type: Array,
           notify: true,
         },
+        myCustomPlans: {
+          type: Array,
+          notify: true,
+          value: function () {
+            var returnValue = [];
+            return returnValue;
+          }
+        }
       },
 
       observers: [
