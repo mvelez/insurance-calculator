@@ -257,28 +257,47 @@
           filterOptions.suitablePlans.push({coverageLevel: '3+'});
         } else if (selectedAdults === '2' && selectedChildren === '0') {
           // Childless couple, spouse may have coverage from their employer
-          filterOptions.suitablePlans.push({coverageLevel: '1', custom: customSingle});
           filterOptions.suitablePlans.push({coverageLevel: '2'});
-          // filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
+          if (customSingle) {
+            filterOptions.suitablePlans.push({coverageLevel: '1', custom: customSingle});
+          }
+          if (customFamily) {
+            filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
+          }
         } else if (selectedAdults !== '1' && selectedChildren === '1') {
-          // employee only with spouse and children on spouse's plan
-          filterOptions.suitablePlans.push({coverageLevel: '1', custom: customChildren});
-          // employee and children on company plan, spouse on their company's plan
-          filterOptions.suitablePlans.push({coverageLevel: '2', custom: customSingle});
           // whole family on the company's plan
           filterOptions.suitablePlans.push({coverageLevel: '3+'});
-          // whole family on the spouse's plan
-          filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
+          if (customSingle) {
+            // employee and children on company plan, spouse on their company's plan
+            filterOptions.suitablePlans.push({coverageLevel: '2', custom: customSingle});
+          }
+          if (customChildren) {
+            // employee only with spouse and children on spouse's plan
+            filterOptions.suitablePlans.push({coverageLevel: '1', custom: customChildren});
+          }
+          if (customFamily) {
+            // whole family on the spouse's plan
+            filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
+          }
+
         } else if (selectedAdults !== '1' && selectedChildren === '2') {
-          // employee only with spouse and children on spouse's plan
-          filterOptions.suitablePlans.push({coverageLevel: '1', custom: customChildren});
-          // employee and children on company plan, spouse on their company's plan
-          filterOptions.suitablePlans.push({coverageLevel: '3+', custom: customSingle});
           // whole family on the company's plan
           filterOptions.suitablePlans.push({coverageLevel: '3+'});
-          // whole family on the spouse's plan
-          filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
-        }else {
+
+          if (customSingle) {
+            // employee only with spouse and children on spouse's plan
+            filterOptions.suitablePlans.push({coverageLevel: '1', custom: customChildren});
+          }
+          if (customChildren) {
+            // employee and children on company plan, spouse on their company's plan
+            filterOptions.suitablePlans.push({coverageLevel: '3+', custom: customSingle});
+          }
+          if (customFamily) {
+            // whole family on the spouse's plan
+            filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
+          }
+
+        } else {
           // Something was missed, just show company plans.
           filterOptions.suitablePlans.push({coverageLevel: '1'});
           filterOptions.suitablePlans.push({coverageLevel: '2'});
