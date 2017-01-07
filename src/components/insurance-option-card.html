@@ -1,0 +1,44 @@
+<!doctype html>
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+
+<script>
+/* global Highcharts numeral:true */
+</script>
+<link rel="import" href="../../bower_components/numeral-js/numeral-js.html">
+
+<dom-module id="insurance-option-card">
+  <template>
+    <style>
+      paper-card {
+        box-sizing: border-box;
+        max-width: 300px;
+        margin: 4px;
+        padding: 4px;
+        flex: 0 0 auto;
+      }
+    </style>
+    <paper-card heading="{{plan.planName}}">
+      <div id="employerPlan">
+        <ul>
+          <li>Premium: <numeral-js number="{{plan.premium}}" format="$0,0" print></numeral-js></li>
+          <li>Deductible: <numeral-js number="{{plan.deductible}}" format="$0,0" print></numeral-js></li>
+          <li>Coinsurance: <numeral-js number="{{plan.coinsuranceMax}}" format="$0,0" print></numeral-js> @ <numeral-js number="{{plan.coinsuranceRate}}" format="0%" print></numeral-js></li>
+          <li>Savings Account: {{plan.savingsAccountType}} with <numeral-js number="{{plan.savingsAccountContribution}}" format="$0,0" print></numeral-js></li>
+          <li>Coverage Level: {{plan.coverageLevel}}</li>
+          <li>Plan Name: {{plan.planName}}</li>
+        </ul>
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    Polymer({
+      is: 'insurance-option-card',
+      properties: {
+        plan: {
+          type: Object,
+          notify: true,
+        },
+      },
+    });
+  </script>
+</dom-module>

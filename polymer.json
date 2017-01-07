@@ -9,7 +9,8 @@
     "src/my-feedback.html",
     "src/my-view404.html",
     "src/components/google-analytics.html",
-    "src/components/insurance-plan-hdhp.html"
+    "src/components/insurance-plan-hdhp.html",
+    "src/components/insurance-option-card.html"
   ],
   "sourceGlobs": [
     "src/**/*",

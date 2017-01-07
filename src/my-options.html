@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="components/insurance-option-card.html">
 
 <script>
 /* global Highcharts numeral:true */
@@ -36,7 +37,7 @@
         does not account for that additional charge yet.
       </p>
 
-      <vaadin-grid id="optionGrid">
+      <!-- <vaadin-grid id="optionGrid">
         <table>
           <colgroup>
             <col name="planName" sortable>
@@ -48,7 +49,12 @@
             <col name="incomeBracket" sortable>
           </colgroup>
         </table>
-      </vaadin-grid>
+      </vaadin-grid> -->
+
+      <template id="insuranceOptionCards" is="dom-repeat" items="{{unrankedOptions}}" as="option">
+        <insurance-option-card plan="[[option]]" />
+      </template>
+
       <div class="container">
         <a href="/questions"><paper-button raised>Back</paper-button></a>
         <a href="/scenarios"><paper-button raised>Next</paper-button></a>
@@ -86,9 +92,9 @@
   </template>
 
   <script>
-    var currencyRenderer = function (cell) {
-      cell.element.innerHTML = numeral(cell.data).format('$0,0');
-    };
+    // var currencyRenderer = function (cell) {
+    //   cell.element.innerHTML = numeral(cell.data).format('$0,0');
+    // };
 
     function generateCustomOption(plan, coverageLevel) {
       var option = {};
@@ -179,22 +185,18 @@
           type: Object,
           notify: true,
         },
-        customPlans: {
-          type: Array,
-          notify: true,
-        },
         unrankedOptions: {
           type: Array,
           notify: true,
-          computed: 'denormalizeOptions(rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions.*, customPlans)',
+          computed: 'denormalizeOptions(rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions.*)',
         },
       },
-      observers: [
-        'updateGrid(unrankedOptions)',
-      ],
+      // observers: [
+      //   'updateGrid(unrankedOptions)',
+      // ],
 
       denormalizeOptions: function (rateSheet, coverageLevels, addonsSheet,
-        planSheet, filterOptions, customPlans) {
+        planSheet, filterOptions) {
         var coverageLevel;
         var customCoverageLevel;
         var i = 0;
@@ -212,20 +214,22 @@
         for (i = 0; i < rateSheet.coverageLevels.length; i += 1) {
           for (j = 0; j < filterOptions.value.suitablePlans.length; j += 1) {
             // eliminate coverageLevels that don't need to be considered
-            if (rateSheet.coverageLevels[i].coverageLevel === filterOptions.value.suitablePlans[j].coverageLevel) {
+            if (rateSheet.coverageLevels[i].coverageLevel ===
+                filterOptions.value.suitablePlans[j].coverageLevel) {
               coverageLevel = lookupCoverageLevel(
                 rateSheet.coverageLevels[i].coverageLevel,
                 coverageLevels.coverageLevels);
               for (k = 0; k < rateSheet.coverageLevels[i].plans.length; k += 1) {
-
                 addons += lookupStateSurcharge(filterOptions.value.surchargeState,
                   rateSheet.coverageLevels[i].coverageLevel,
                   addonsSheet.stateSurcharge);
 
                 // handle if there is a spouse and there are custom plans being considered
-                if (filterOptions.value.spouseAddon && !filterOptions.value.suitablePlans[j].custom) {
+                if (filterOptions.value.spouseAddon &&
+                    !filterOptions.value.suitablePlans[j].custom) {
                   addons += filterOptions.value.spouseAddon;
-                } else if (filterOptions.value.spouseAddon && filterOptions.value.suitablePlans[j].custom) {
+                } else if (filterOptions.value.spouseAddon &&
+                           filterOptions.value.suitablePlans[j].custom) {
                   customCoverageLevel = lookupCoverageLevel(
                         filterOptions.value.suitablePlans[j].custom.coverageLevel,
                         coverageLevels.coverageLevels);
@@ -250,13 +254,13 @@
 
         return unrankedOptions;
       },
-      updateGrid: function (unrankedOptions) {
-        var grid = this.$.optionGrid;
-        grid.columns[2].renderer = currencyRenderer;
-        grid.columns[3].renderer = currencyRenderer;
-        grid.columns[4].renderer = currencyRenderer;
-        grid.items = unrankedOptions;
-      },
+      // updateGrid: function (unrankedOptions) {
+      //   var grid = this.$.optionGrid;
+      //   grid.columns[2].renderer = currencyRenderer;
+      //   grid.columns[3].renderer = currencyRenderer;
+      //   grid.columns[4].renderer = currencyRenderer;
+      //   grid.items = unrankedOptions;
+      // },
     });
   </script>
 </dom-module>
