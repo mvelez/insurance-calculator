@@ -8,7 +8,8 @@
     "src/my-scenarios.html",
     "src/my-feedback.html",
     "src/my-view404.html",
-    "src/google-analytics.html"
+    "src/components/google-analytics.html",
+    "src/components/insurance-plan-hdhp.html"
   ],
   "sourceGlobs": [
     "src/**/*",
