@@ -97,20 +97,20 @@
 
   <script>
 
-  function arrayForProperty(objectArray, property) {
+  function arrayForProperty(objectArray, property, subproperty) {
     var returnValue = [];
     var i = 0;
     for (i = 0; i < objectArray.length; i += 1) {
-      returnValue.push(objectArray[i][property]);
+      returnValue.push(objectArray[i][property][subproperty]);
     }
     return returnValue;
   }
 
-  function sumForProperty(objectArray, property) {
+  function sumForProperty(objectArray, property, subproperty) {
     var returnValue = 0;
     var i = 0;
     for (i = 0; i < objectArray.length; i += 1) {
-      returnValue += objectArray[i][property];
+      returnValue += objectArray[i][property][subproperty];
     }
     return Math.round(returnValue);
   }
@@ -124,8 +124,8 @@
 
   function calculateTotalHealthcareSpending(scenario) {
     var total = scenario.insuranceOption.employeePlan.premium;
-    total += sumForProperty(scenario.performance, 'paidFromDeductible');
-    total += sumForProperty(scenario.performance, 'paidFromCoinsurance');
+    total += sumForProperty(scenario.performance, 'employee', 'paidFromDeductible');
+    total += sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance');
 
     return 'Total Healthcare Spending: ' + numeral(total).format('$0,0');
   }
@@ -176,22 +176,47 @@
 
   function calculatePerformance(insuranceOption, healthcareCosts) {
     var paymentShares = [];
-    var paymentShare = {};
     var i = 0;
-    var savingsContributionRemaining = insuranceOption.employeePlan.savingsAccountContribution;
-    var deductibleRemaining = insuranceOption.employeePlan.deductible;
-    var coinsuranceRemaining = insuranceOption.employeePlan.coinsuranceMax;
+    var costEmployee;
+    var costSpouse;
+
+    var savingsContributionRemainingEmployee = insuranceOption.employeePlan.savingsAccountContribution;
+    var deductibleRemainingEmployee = insuranceOption.employeePlan.deductible;
+    var coinsuranceRemainingEmployee = insuranceOption.employeePlan.coinsuranceMax;
+
+    var savingsContributionRemainingSpouse = insuranceOption.employeePlan.savingsAccountContribution;
+    var deductibleRemainingSpouse = insuranceOption.employeePlan.deductible;
+    var coinsuranceRemainingSpouse = insuranceOption.employeePlan.coinsuranceMax;
 
     for (i = 0; i < healthcareCosts.length; i += 1) {
-      paymentShare = allocateCosts(healthcareCosts[i].employee, deductibleRemaining,
-        savingsContributionRemaining, coinsuranceRemaining,
-        insuranceOption.employeePlan.coinsuranceRate);
+      paymentShares.push({});
+      if (insuranceOption.employeePlan && insuranceOption.spousePlan) {
+        costEmployee = healthcareCosts[i].employee;
+        costSpouse = healthcareCosts[i].spouse;
+      } else if (insuranceOption.employeePlan) {
+        costEmployee = healthcareCosts[i].employee + healthcareCosts[i].spouse;
+      } else if (insuranceOption.spousePlan) {
+        costSpouse = healthcareCosts[i].spouse + healthcareCosts[i].employee;
+      }
+      if (insuranceOption.employeePlan) {
+        paymentShares[i].employee = allocateCosts(costEmployee, deductibleRemainingEmployee,
+          savingsContributionRemainingEmployee, coinsuranceRemainingEmployee,
+          insuranceOption.employeePlan.coinsuranceRate);
 
-      savingsContributionRemaining -= paymentShare.paidFromSavingsContribution;
-      deductibleRemaining -= paymentShare.paidFromDeductible;
-      coinsuranceRemaining -= paymentShare.paidFromCoinsurance;
+        savingsContributionRemainingEmployee -= paymentShares[i].employee.paidFromSavingsContribution;
+        deductibleRemainingEmployee -= paymentShares[i].employee.paidFromDeductible;
+        coinsuranceRemainingEmployee -= paymentShares[i].employee.paidFromCoinsurance;
+      }
 
-      paymentShares.push(paymentShare);
+      if (insuranceOption.spousePlan) {
+        paymentShares[i].spouse = allocateCosts(costSpouse, deductibleRemainingSpouse,
+          savingsContributionRemainingSpouse, coinsuranceRemainingSpouse,
+          insuranceOption.spousePlan.coinsuranceRate);
+
+        savingsContributionRemainingSpouse -= paymentShares[i].spouse.paidFromSavingsContribution;
+        deductibleRemainingSpouse -= paymentShares[i].spouse.paidFromDeductible;
+        coinsuranceRemainingSpouse -= paymentShares[i].spouse.paidFromCoinsurance;
+      }
     }
     return paymentShares;
   }
@@ -234,27 +259,27 @@
           {
             type: 'column',
             name: 'Insured Totally',
-            data: arrayForProperty(scenario.performance, 'insuredTotally'),
+            data: arrayForProperty(scenario.performance, 'employee', 'insuredTotally'),
           },
           {
             type: 'column',
             name: 'Insured By Coinsurance',
-            data: arrayForProperty(scenario.performance, 'insuredByCoinsurance'),
+            data: arrayForProperty(scenario.performance, 'employee', 'insuredByCoinsurance'),
           },
           {
             type: 'column',
             name: 'Paid From Coinsurance',
-            data: arrayForProperty(scenario.performance, 'paidFromCoinsurance'),
+            data: arrayForProperty(scenario.performance, 'employee', 'paidFromCoinsurance'),
           },
           {
             type: 'column',
             name: 'Paid From Deductible',
-            data: arrayForProperty(scenario.performance, 'paidFromDeductible'),
+            data: arrayForProperty(scenario.performance, 'employee', 'paidFromDeductible'),
           },
           {
             type: 'column',
             name: 'Paid From Savings Account Contribution',
-            data: arrayForProperty(scenario.performance, 'paidFromSavingsContribution'),
+            data: arrayForProperty(scenario.performance, 'employee', 'paidFromSavingsContribution'),
           },
           // {
           //   type: 'spline',
@@ -276,12 +301,12 @@
               },
               {
                 name: 'Paid From Deductible',
-                y: sumForProperty(scenario.performance, 'paidFromDeductible'),
+                y: sumForProperty(scenario.performance, 'employee', 'paidFromDeductible'),
                 color: Highcharts.getOptions().colors[4],
               },
               {
                 name: 'Paid From Coinsurance',
-                y: sumForProperty(scenario.performance, 'paidFromCoinsurance'),
+                y: sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance'),
                 color: Highcharts.getOptions().colors[3],
               },
             ],
@@ -321,7 +346,7 @@
         type: Array,
         notify: true,
         // An array of 12 integers representing costs broken down by month
-        computed: 'generateCostCurve(totalHealthcareCosts)',
+        computed: 'generateCostCurve(totalHealthcareCosts,totalHealthcareCosts,totalHealthcareCosts)',
       },
       chartOptions: {
         type: Array,
