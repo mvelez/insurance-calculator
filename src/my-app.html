@@ -100,7 +100,7 @@
           </my-options>
 
           <my-scenarios name="scenarios"
-            insurance-options="{{myOptions}}">
+            insurance-options="{{hardCodedOptions}}">
           </my-scenarios>
 
           <my-feedback name="feedback"></my-feedback>
@@ -156,10 +156,10 @@
       _pageChanged: function (page) {
         var resolvedPageUrl;
         // If they are reuesting a page that depends on answering uestions, forward them to questions
-        if ((page === 'options' || page === 'scenarios') && !this.myFilterOption) {
-          this.set('route.path', 'questions');
-          this.set('page', 'questions');
-        }
+        // if ((page === 'options' || page === 'scenarios') && !this.myFilterOption) {
+        //   this.set('route.path', 'questions');
+        //   this.set('page', 'questions');
+        // }
 
         // Load page import on demand. Show 404 page if fails
         resolvedPageUrl = this.resolveUrl('my-' + page + '.html');

@@ -143,8 +143,8 @@
 
     for (i = 0; i < healthcareCosts.length; i += 1) {
       paymentShare = {};
-      toAllocate = healthcareCosts[i];
-      paymentShare.healthcareCost = healthcareCosts[i];
+      toAllocate = healthcareCosts[i].employee;
+      paymentShare.healthcareCost = healthcareCosts[i].employee;
       paymentShare.paidFromSavingsContribution = 0;
       paymentShare.paidFromDeductible = 0;
       paymentShare.paidFromCoinsurance = 0;
@@ -361,20 +361,26 @@
       }
       return label;
     },
-    generateCostCurve: function (totalHealthcareCosts) {
+    generateCostCurve: function (totalHealthcareCostsEmployee,
+      totalHealthcareCostsSpouse, totalHealthcareCostsChildren) {
       var costCurve = [];
-      costCurve.push(totalHealthcareCosts * (1 / 42));
-      costCurve.push(totalHealthcareCosts * (2 / 42));
-      costCurve.push(totalHealthcareCosts * (3 / 42));
-      costCurve.push(totalHealthcareCosts * (4 / 42));
-      costCurve.push(totalHealthcareCosts * (5 / 42));
-      costCurve.push(totalHealthcareCosts * (6 / 42));
-      costCurve.push(totalHealthcareCosts * (6 / 42));
-      costCurve.push(totalHealthcareCosts * (5 / 42));
-      costCurve.push(totalHealthcareCosts * (4 / 42));
-      costCurve.push(totalHealthcareCosts * (3 / 42));
-      costCurve.push(totalHealthcareCosts * (2 / 42));
-      costCurve.push(totalHealthcareCosts * (1 / 42));
+      var i = 1;
+      var segments = 42;
+      for (i = 1; i <= 6; i += 1) {
+        costCurve.push({
+          employee: totalHealthcareCostsEmployee * (i / segments),
+          spouse: totalHealthcareCostsSpouse * (i / segments),
+          children: totalHealthcareCostsChildren * (i / segments),
+        });
+      }
+
+      for (i = 6; i >= 1; i -= 1) {
+        costCurve.push({
+          employee: totalHealthcareCostsEmployee * (i / segments),
+          spouse: totalHealthcareCostsSpouse * (i / segments),
+          children: totalHealthcareCostsChildren * (i / segments),
+        });
+      }
 
       return costCurve;
     },
