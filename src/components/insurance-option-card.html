@@ -17,15 +17,25 @@
         flex: 0 0 auto;
       }
     </style>
-    <paper-card heading="{{plan.planName}}">
-      <div id="employerPlan">
+    <paper-card heading="{{planName}}">
+      <div id="employerPlan" hidden$="{{hideEmployeePlan}}">
         <ul>
-          <li>Premium: <numeral-js number="{{plan.premium}}" format="$0,0" print></numeral-js></li>
-          <li>Deductible: <numeral-js number="{{plan.deductible}}" format="$0,0" print></numeral-js></li>
-          <li>Coinsurance: <numeral-js number="{{plan.coinsuranceMax}}" format="$0,0" print></numeral-js> @ <numeral-js number="{{plan.coinsuranceRate}}" format="0%" print></numeral-js></li>
-          <li>Savings Account: {{plan.savingsAccountType}} with <numeral-js number="{{plan.savingsAccountContribution}}" format="$0,0" print></numeral-js></li>
-          <li>Coverage Level: {{plan.coverageLevel}}</li>
-          <li>Plan Name: {{plan.planName}}</li>
+          <li>Premium: <numeral-js number="{{plan.employeePlan.premium}}" format="$0,0" print></numeral-js></li>
+          <li>Deductible: <numeral-js number="{{plan.employeePlan.deductible}}" format="$0,0" print></numeral-js></li>
+          <li>Coinsurance: <numeral-js number="{{plan.employeePlan.coinsuranceMax}}" format="$0,0" print></numeral-js> @ <numeral-js number="{{plan.employeePlan.coinsuranceRate}}" format="0%" print></numeral-js></li>
+          <li>Savings Account: {{plan.employeePlan.savingsAccountType}} with <numeral-js number="{{plan.employeePlan.savingsAccountContribution}}" format="$0,0" print></numeral-js></li>
+          <li>Coverage Level: {{plan.employeePlan.coverageLevel}}</li>
+          <li>Plan Name: {{plan.employeePlan.planName}}</li>
+        </ul>
+      </div>
+      <div id="spousePlan" hidden$="{{hideSpousePlan}}">
+        <ul>
+          <li>Premium: <numeral-js number="{{plan.spousePlan.premium}}" format="$0,0" print></numeral-js></li>
+          <li>Deductible: <numeral-js number="{{plan.spousePlan.deductible}}" format="$0,0" print></numeral-js></li>
+          <li>Coinsurance: <numeral-js number="{{plan.spousePlan.coinsuranceMax}}" format="$0,0" print></numeral-js> @ <numeral-js number="{{plan.spousePlan.coinsuranceRate}}" format="0%" print></numeral-js></li>
+          <li>Savings Account: {{plan.spousePlan.savingsAccountType}} with <numeral-js number="{{plan.spousePlan.savingsAccountContribution}}" format="$0,0" print></numeral-js></li>
+          <li>Coverage Level: {{plan.spousePlan.coverageLevel}}</li>
+          <li>Plan Name: {{plan.spousePlan.planName}}</li>
         </ul>
       </div>
     </paper-card>
@@ -38,6 +48,35 @@
           type: Object,
           notify: true,
         },
+        planName: {
+          type: String,
+          computed: '_planName(plan)',
+        },
+        hideSpousePlan: {
+          type: Boolean,
+          computed: '_hideSpousePlan(plan)',
+        },
+        hideEmployeePlan: {
+          type: Boolean,
+          computed: '_hideEmployeePlan(plan)',
+        },
+      },
+      _planName: function (plan) {
+        var name;
+        if (plan.employeePlan && plan.spousePlan) {
+          name = plan.employeePlan.planName + ' + ' + plan.spousePlan.planName;
+        } else if (plan.employeePlan) {
+          name = plan.employeePlan.planName;
+        } else {
+          name = name = plan.spousePlan.planName;
+        }
+        return name;
+      },
+      _hideSpousePlan: function (plan) {
+        return !plan.spousePlan;
+      },
+      _hideEmployeePlan: function (plan) {
+        return !plan.employeePlan;
       },
     });
   </script>

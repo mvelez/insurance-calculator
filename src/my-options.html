@@ -8,10 +8,6 @@
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="components/insurance-option-card.html">
 
-<script>
-/* global Highcharts numeral:true */
-</script>
-<link rel="import" href="../bower_components/numeral-js/numeral-js.html">
 
 <dom-module id="my-options">
   <template>
@@ -202,6 +198,7 @@
         var i = 0;
         var j = 0;
         var k = 0;
+        var option;
         var plan;
         var planDescription;
         var unrankedOptions = [];
@@ -220,6 +217,7 @@
                 rateSheet.coverageLevels[i].coverageLevel,
                 coverageLevels.coverageLevels);
               for (k = 0; k < rateSheet.coverageLevels[i].plans.length; k += 1) {
+                option = {};
                 addons += lookupStateSurcharge(filterOptions.value.surchargeState,
                   rateSheet.coverageLevels[i].coverageLevel,
                   addonsSheet.stateSurcharge);
@@ -233,20 +231,20 @@
                   customCoverageLevel = lookupCoverageLevel(
                         filterOptions.value.suitablePlans[j].custom.coverageLevel,
                         coverageLevels.coverageLevels);
-                  unrankedOptions.push(
-                  generateCustomOption(filterOptions.value.suitablePlans[j].custom,
-                    customCoverageLevel));
+                  option.spousePlan = generateCustomOption(
+                    filterOptions.value.suitablePlans[j].custom,
+                    customCoverageLevel);
                 }
 
                 plan = rateSheet.coverageLevels[i].plans[k];
                 planDescription = lookupPlanDescription(plan.name, planSheet.plans);
                 plan.coinsuranceRate = planDescription.coinsuranceRate;
                 plan.savingsAccountType = planDescription.hraOrHsa;
-                unrankedOptions.push(
-                  generateOption(plan,
-                    coverageLevel,
-                    filterOptions.value.incomeBracket,
-                    addons));
+                option.employeePlan = generateOption(plan,
+                  coverageLevel,
+                  filterOptions.value.incomeBracket,
+                  addons);
+                unrankedOptions.push(option);
               }
             }
           }
