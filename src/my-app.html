@@ -13,7 +13,7 @@
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="my-icons.html">
-<link rel="import" href="google-analytics.html">
+<link rel="import" href="components/google-analytics.html">
 
 <dom-module id="my-app">
   <template>
@@ -87,9 +87,22 @@
             fallback-selection="view404"
             role="main">
           <my-overview name="overview"></my-overview>
-          <my-questions name="questions" filter-options="{{myFilterOption}}"></my-questions>
-          <my-options name="options" unranked-options="{{myOptions}}" filter-options="{{myFilterOption}}"></my-options>
-          <my-scenarios name="scenarios" insurance-options="{{myOptions}}"></my-scenarios>
+
+          <my-questions name="questions"
+            filter-options="{{myFilterOption}}"
+            custom-plans="{{myCustomPlans}}">
+          </my-questions>
+
+          <my-options name="options"
+            unranked-options="{{myOptions}}"
+            filter-options="{{myFilterOption}}"
+            custom-plans="[[myCustomPlans]]">
+          </my-options>
+
+          <my-scenarios name="scenarios"
+            insurance-options="{{myOptions}}">
+          </my-scenarios>
+
           <my-feedback name="feedback"></my-feedback>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
@@ -115,6 +128,17 @@
         myOptions: {
           type: Array,
           notify: true,
+        },
+        myCustomPlans: {
+          type: Array,
+          notify: true,
+        },
+        hardCodedOptions: {
+          type: Array,
+          value: function () {
+            var dualIncomeSingleCouple = [{"spousePlan":{"planName":"Spouse Only","deductible":2000,"savingsAccountContribution":"800","coverageLevel":"1-person (employee only)","incomeBracket":"n/a","coinsuranceRate":0.2,"savingsAccountType":"HSA","premium":1000,"coinsuranceMax":2000},"employeePlan":{"planName":"Option 1","deductible":1000,"savingsAccountContribution":500,"coverageLevel":"1-person (employee only)","incomeBracket":"$50,000-$74,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":1510,"coinsuranceMax":1750}},{"spousePlan":{"planName":"Spouse Only","deductible":2000,"savingsAccountContribution":"800","coverageLevel":"1-person (employee only)","incomeBracket":"n/a","coinsuranceRate":0.2,"savingsAccountType":"HSA","premium":1000,"coinsuranceMax":2000},"employeePlan":{"planName":"Option 2","deductible":1500,"savingsAccountContribution":500,"coverageLevel":"1-person (employee only)","incomeBracket":"$50,000-$74,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":1146,"coinsuranceMax":2250}},{"spousePlan":{"planName":"Spouse Only","deductible":2000,"savingsAccountContribution":"800","coverageLevel":"1-person (employee only)","incomeBracket":"n/a","coinsuranceRate":0.2,"savingsAccountType":"HSA","premium":1000,"coinsuranceMax":2000},"employeePlan":{"planName":"Option 3","deductible":2000,"savingsAccountContribution":0,"coverageLevel":"1-person (employee only)","incomeBracket":"$50,000-$74,999","coinsuranceRate":0.1,"savingsAccountType":"HSA","premium":373,"coinsuranceMax":2750}},{"employeePlan":{"planName":"Option 1","deductible":2000,"savingsAccountContribution":750,"coverageLevel":"2-persons","incomeBracket":"$50,000-$74,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":5107,"coinsuranceMax":2625}},{"employeePlan":{"planName":"Option 2","deductible":3000,"savingsAccountContribution":750,"coverageLevel":"2-persons","incomeBracket":"$50,000-$74,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":6466,"coinsuranceMax":3375}},{"employeePlan":{"planName":"Option 3","deductible":4000,"savingsAccountContribution":0,"coverageLevel":"2-persons","incomeBracket":"$50,000-$74,999","coinsuranceRate":0.1,"savingsAccountType":"HSA","premium":7008,"coinsuranceMax":4125}}];
+            return dualIncomeSingleCouple;
+          },
         },
       },
 

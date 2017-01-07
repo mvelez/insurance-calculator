@@ -4,7 +4,10 @@
   <template>
   </template>
   <script>
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+  /* global ga: true */
+  /* eslint prefer-rest-params: "off"*/
+    window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments); };
+    ga.l = (new Date()).getTime();
     Polymer({
       is: 'google-analytics',
       properties: {
@@ -37,30 +40,30 @@
         fieldsObject: {
           type: Object,
           notify: true,
-          value: function() {
+          value: function () {
             var retVal = null;
             return retVal;
           },
-        }
+        },
       },
       observers: [
         '_createGa(gaCode)',
         '_sendPageview(page)',
-        '_sendEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject)'
+        '_sendEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject)',
       ],
-      _createGa: function(gaCode){
+      _createGa: function (gaCode) {
         ga('create', gaCode, 'auto');
       },
-      _sendPageview: function(page){
+      _sendPageview: function (page) {
         ga('set', 'page', page);
         ga('send', 'pageview');
       },
-      _sendEvent: function(eventCategory, eventAction, eventLabel, eventValue, fieldsObject){
+      _sendEvent: function (eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
         ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
-      }
+      },
 
 
     });
   </script>
-  <script async src='https://www.google-analytics.com/analytics.js'></script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
 </dom-module>

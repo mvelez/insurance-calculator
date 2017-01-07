@@ -123,7 +123,7 @@
   }
 
   function calculateTotalHealthcareSpending(scenario) {
-    var total = scenario.insuranceOption.premium;
+    var total = scenario.insuranceOption.employeePlan.premium;
     total += sumForProperty(scenario.performance, 'paidFromDeductible');
     total += sumForProperty(scenario.performance, 'paidFromCoinsurance');
 
@@ -135,9 +135,10 @@
     var paymentShare = {};
     var i = 0;
     var toAllocate;
-    var savingsContributionRemaining = insuranceOption.savingsAccountContribution;
-    var deductibleRemaining = insuranceOption.deductible;
-    var coinsuranceRemaining = insuranceOption.coinsuranceMax;
+    var savingsContributionRemaining = insuranceOption.employeePlan.savingsAccountContribution;
+    var deductibleRemaining = insuranceOption.employeePlan.deductible;
+    var coinsuranceRemaining = insuranceOption.employeePlan.coinsuranceMax;
+    var coinsuranceRate = insuranceOption.employeePlan.coinsuranceRate;
     var appliedAmount = 0;
 
     for (i = 0; i < healthcareCosts.length; i += 1) {
@@ -167,12 +168,12 @@
 
       if (toAllocate > 0 && coinsuranceRemaining > 0) {
         appliedAmount = minimumValue(
-          (coinsuranceRemaining * (1 / insuranceOption.coinsuranceRate)), toAllocate);
+          (coinsuranceRemaining * (1 / coinsuranceRate)), toAllocate);
         paymentShare.paidFromCoinsurance = Math.round(
-          (appliedAmount * insuranceOption.coinsuranceRate) * 100) / 100;
+          (appliedAmount * coinsuranceRate) * 100) / 100;
         paymentShare.insuredByCoinsurance = Math.round(
-          (appliedAmount * (1 - insuranceOption.coinsuranceRate) * 100)) / 100;
-        coinsuranceRemaining -= appliedAmount * insuranceOption.coinsuranceRate;
+          (appliedAmount * (1 - coinsuranceRate) * 100)) / 100;
+        coinsuranceRemaining -= appliedAmount * coinsuranceRate;
         toAllocate -= appliedAmount;
       }
 
@@ -185,10 +186,12 @@
   }
 
   function buildCustomChartOptions(scenario) {
+    var chartTitle = scenario.insuranceOption.employeePlan.planName + ' - ' + scenario.insuranceOption.employeePlan.coverageLevel;
+    var premium = scenario.insuranceOption.employeePlan.premium;
     var highChartOptionObject =
       {
         title: {
-          text: scenario.insuranceOption.planName + ' - ' + scenario.insuranceOption.coverageLevel,
+          text: chartTitle,
         },
         xAxis: {
           categories: ['Jan', 'Feb', 'Mar',
@@ -257,7 +260,7 @@
             data: [
               {
                 name: 'Premium',
-                y: scenario.insuranceOption.premium,
+                y: premium,
                 color: Highcharts.getOptions().colors[0],
               },
               {
@@ -312,7 +315,7 @@
       chartOptions: {
         type: Array,
         notify: true,
-        value: function() {
+        value: function () {
           var retVal = [];
           return retVal;
         },
@@ -320,50 +323,15 @@
       insuranceOptions: {
         type: Array,
         notify: true,
-        // bound from previous screen.  Uncomment to help with speeding up development on this screen.
-        // value() {
-        //   var options = [];
-        //   options.push({
-        //     planName: 'Option 1',
-        //     deductible: 10,
-        //     savingsAccountContribution: 5,
-        //     coverageLevel: '1-person (employee only)',
-        //     incomeBracket: '$75,000-$99,999',
-        //     premium: 18,
-        //     coinsuranceRate: 0.1,
-        //     coinsuranceMax: 17,
-        //   });
-        //   options.push({
-        //     planName: 'Option 2',
-        //     deductible: 15,
-        //     savingsAccountContribution: 5,
-        //     coverageLevel: '1-person (employee only)',
-        //     incomeBracket: '$75,000-$99,999',
-        //     premium: 15,
-        //     coinsuranceRate: 0.1,
-        //     coinsuranceMax: 22,
-        //   });
-        //   options.push({
-        //     planName: 'Option 3',
-        //     deductible: 20,
-        //     savingsAccountContribution: 0,
-        //     coverageLevel: '1-person (employee only)',
-        //     incomeBracket: '$75,000-$99,999',
-        //     premium: 6,
-        //     coinsuranceRate: 0.1,
-        //     coinsuranceMax: 27,
-        //   });
-        //   return options;
-        // },
       },
     },
     observers: [
       'buildChartOptions(scenarios)',
     ],
-    exponent: function(value) {
+    exponent: function (value) {
       return Math.exp(value);
     },
-    buildChartOptions: function(scenarios) {
+    buildChartOptions: function (scenarios) {
       var i = 0;
       this.set('chartOptions', []);
       this.$.scenarioCharts.render();
@@ -371,7 +339,7 @@
         this.push('chartOptions', buildCustomChartOptions(scenarios[i]));
       }
     },
-    calculateAll: function(insuranceOptions, healthcareCosts) {
+    calculateAll: function (insuranceOptions, healthcareCosts) {
       var i = 0;
       var scenario = {};
       var scenarios = [];
@@ -386,14 +354,14 @@
 
       return scenarios;
     },
-    generateHealthcareCostsLabel: function(totalHealthcareCosts) {
+    generateHealthcareCostsLabel: function (totalHealthcareCosts) {
       var label = numeral(totalHealthcareCosts).format('$0,0');
       if (totalHealthcareCosts > 100000) {
         label = '$100,000 or more';
       }
       return label;
     },
-    generateCostCurve: function(totalHealthcareCosts) {
+    generateCostCurve: function (totalHealthcareCosts) {
       var costCurve = [];
       costCurve.push(totalHealthcareCosts * (1 / 42));
       costCurve.push(totalHealthcareCosts * (2 / 42));
