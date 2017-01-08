@@ -12,6 +12,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="components/insurance-plan-hdhp.html">
+<link rel="import" href="../bower_components/numeral-js/numeral-js.html">
 
 <dom-module id="my-questions">
   <template>
@@ -78,7 +79,7 @@
             <paper-toggle-button on-tap="_showSpousalCoverageCosts">{{hasSpousalCoverage}}</paper-toggle-button>
             <div hidden$="{{hideSpousalCoverageCosts}}">
               <p>Based on your income, if your spouse declines their employer's
-              insurance there is an additional charge of <b>${{spouseAddon}}</b>
+              insurance there is an additional charge of <b><numeral-js number="{{spouseAddon}}" format="$0,0" print></numeral-js></b>
               to extend coverage to them.</p>
 
               <p>It can be beneficial to have everyone paying against the same
@@ -89,12 +90,6 @@
               <p>If their companies insurance is not a High Deductible Health Plan,
               unfortunately this tool is not set up to support other types of
               plans such as PPO or HMO plans.</p>
-
-              <p>
-                This tool is currently only considering single income households of
-                any size or dual income households with no children.  Appropriate
-                support for dual income households with children will be coming soon.
-              </p>
             </div>
 
             <div layout="horizontal" hidden$="{{hideSpousalCoverageCosts}}">
@@ -102,18 +97,19 @@
               plan-name="Spouse Only"
               coverage-level="1"
               custom-plan="{{customSingle}}"></insurance-plan-hdhp>
-<!--
-              <div hidden$='{{selectedChildren}} !== "0"'>
-                <insurance-plan-hdhp
-                plan-name="Spouse and Children"
-                coverage-level="2"
-                custom-plan="{{customChildren}}"></insurance-plan-hdhp>
-              </div>
+
+
+              <insurance-plan-hdhp
+              plan-name="Spouse and Children"
+              coverage-level="2"
+              custom-plan="{{customChildren}}"
+              hidden$="{{hideCustomChildren}}"></insurance-plan-hdhp>
+
 
               <insurance-plan-hdhp
               plan-name="Whole Family"
               coverage-level="3+"
-              custom-plan="{{customFamily}}"></insurance-plan-hdhp>-->
+              custom-plan="{{customFamily}}"></insurance-plan-hdhp>
             </div>
 
           </div>
@@ -179,10 +175,20 @@
           value: 'No.', // default to No
           notify: true,
         },
+        hideCustomChildren: {
+          type: Boolean,
+          computed: '_hideCustomChildren(selectedChildren)',
+        },
+        customChildren: {
+          type: Object,
+          value: function () {
+            return null;
+          },
+        },
         filterOptions: {
           type: Object,
           notify: true,
-          computed: '_buildFilterOptions(selectedIncomeBracket, selectedChildren, selectedAdults, useTobacco, surchargeState, hideSpousalCoverageCosts, customSingle)',
+          computed: '_buildFilterOptions(selectedIncomeBracket, selectedChildren, selectedAdults, useTobacco, surchargeState, hideSpousalCoverageCosts, customSingle, customChildren, customFamily)',
         },
         hasSpousalCoverage: {
           type: String,
@@ -207,6 +213,9 @@
       },
       _toggleTobacco: function () {
         this.useTobacco = !this.useTobacco;
+      },
+      _hideCustomChildren: function (selectedChildren) {
+        return selectedChildren === '0';
       },
       _selectedAdultsChanged: function (newIndex) {
         this.set('hideSpousalOptions', newIndex === '1');
@@ -248,59 +257,58 @@
         // simple options based on number of people
         if (selectedAdults === '1' && selectedChildren === '0') {
           // Single person only needs single coverage.
-          filterOptions.suitablePlans.push({coverageLevel: '1'});
+          filterOptions.suitablePlans.push({ coverageLevel: '1' });
         } else if (selectedAdults === '1' && selectedChildren === '1') {
           // Single parent needs coverage for themself and their child.
-          filterOptions.suitablePlans.push({coverageLevel: '2'});
+          filterOptions.suitablePlans.push({ coverageLevel: '2' });
         } else if (selectedAdults === '1' && selectedChildren === '2') {
           // Single parent needs coverage for themself and their children.
-          filterOptions.suitablePlans.push({coverageLevel: '3+'});
+          filterOptions.suitablePlans.push({ coverageLevel: '3+' });
         } else if (selectedAdults === '2' && selectedChildren === '0') {
           // Childless couple, spouse may have coverage from their employer
-          filterOptions.suitablePlans.push({coverageLevel: '2'});
+          filterOptions.suitablePlans.push({ coverageLevel: '2' });
           if (customSingle) {
-            filterOptions.suitablePlans.push({coverageLevel: '1', custom: customSingle});
+            filterOptions.suitablePlans.push({ coverageLevel: '1', custom: customSingle });
           }
           if (customFamily) {
-            filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
+            filterOptions.suitablePlans.push({ coverageLevel: null, custom: customFamily });
           }
         } else if (selectedAdults !== '1' && selectedChildren === '1') {
           // whole family on the company's plan
-          filterOptions.suitablePlans.push({coverageLevel: '3+'});
+          filterOptions.suitablePlans.push({ coverageLevel: '3+' });
           if (customSingle) {
             // employee and children on company plan, spouse on their company's plan
-            filterOptions.suitablePlans.push({coverageLevel: '2', custom: customSingle});
+            filterOptions.suitablePlans.push({ coverageLevel: '2', custom: customSingle });
           }
           if (customChildren) {
             // employee only with spouse and children on spouse's plan
-            filterOptions.suitablePlans.push({coverageLevel: '1', custom: customChildren});
+            filterOptions.suitablePlans.push({ coverageLevel: '1', custom: customChildren });
           }
           if (customFamily) {
             // whole family on the spouse's plan
-            filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
+            filterOptions.suitablePlans.push({ coverageLevel: null, custom: customFamily });
           }
-
         } else if (selectedAdults !== '1' && selectedChildren === '2') {
           // whole family on the company's plan
-          filterOptions.suitablePlans.push({coverageLevel: '3+'});
+          filterOptions.suitablePlans.push({ coverageLevel: '3+' });
 
           if (customSingle) {
             // employee only with spouse and children on spouse's plan
-            filterOptions.suitablePlans.push({coverageLevel: '1', custom: customChildren});
+            filterOptions.suitablePlans.push({ coverageLevel: '1', custom: customChildren });
           }
           if (customChildren) {
             // employee and children on company plan, spouse on their company's plan
-            filterOptions.suitablePlans.push({coverageLevel: '3+', custom: customSingle});
+            filterOptions.suitablePlans.push({ coverageLevel: '3+', custom: customSingle });
           }
           if (customFamily) {
             // whole family on the spouse's plan
-            filterOptions.suitablePlans.push({coverageLevel: null, custom: customFamily});
+            filterOptions.suitablePlans.push({ coverageLevel: null, custom: customFamily });
           }
         } else {
           // Something was missed, just show company plans.
-          filterOptions.suitablePlans.push({coverageLevel: '1'});
-          filterOptions.suitablePlans.push({coverageLevel: '2'});
-          filterOptions.suitablePlans.push({coverageLevel: '3+'});
+          filterOptions.suitablePlans.push({ coverageLevel: '1' });
+          filterOptions.suitablePlans.push({ coverageLevel: '2' });
+          filterOptions.suitablePlans.push({ coverageLevel: '3+' });
         }
 
 

@@ -88,9 +88,6 @@
   </template>
 
   <script>
-    // var currencyRenderer = function (cell) {
-    //   cell.element.innerHTML = numeral(cell.data).format('$0,0');
-    // };
 
     function generateCustomOption(plan, coverageLevel) {
       var option = {};
@@ -204,9 +201,6 @@
         var unrankedOptions = [];
         var addons = 0;
 
-        if (filterOptions.value.useTobacco) {
-          addons += addonsSheet.tobaccoSurcharge;
-        }
 
         for (i = 0; i < rateSheet.coverageLevels.length; i += 1) {
           for (j = 0; j < filterOptions.value.suitablePlans.length; j += 1) {
@@ -218,6 +212,11 @@
                 coverageLevels.coverageLevels);
               for (k = 0; k < rateSheet.coverageLevels[i].plans.length; k += 1) {
                 option = {};
+                addons = 0;
+                if (filterOptions.value.useTobacco) {
+                  addons += addonsSheet.tobaccoSurcharge;
+                }
+
                 addons += lookupStateSurcharge(filterOptions.value.surchargeState,
                   rateSheet.coverageLevels[i].coverageLevel,
                   addonsSheet.stateSurcharge);
@@ -250,15 +249,22 @@
           }
         }
 
+        // Add options which ecline employer coverage
+        for (i = 0; i < filterOptions.value.suitablePlans.length; i += 1) {
+          if (!filterOptions.value.suitablePlans[i].coverageLevel) {
+            option = {};
+            customCoverageLevel = lookupCoverageLevel(
+                  filterOptions.value.suitablePlans[i].custom.coverageLevel,
+                  coverageLevels.coverageLevels);
+            option.spousePlan = generateCustomOption(
+              filterOptions.value.suitablePlans[i].custom,
+              customCoverageLevel);
+            unrankedOptions.push(option);
+          }
+        }
+
         return unrankedOptions;
       },
-      // updateGrid: function (unrankedOptions) {
-      //   var grid = this.$.optionGrid;
-      //   grid.columns[2].renderer = currencyRenderer;
-      //   grid.columns[3].renderer = currencyRenderer;
-      //   grid.columns[4].renderer = currencyRenderer;
-      //   grid.items = unrankedOptions;
-      // },
     });
   </script>
 </dom-module>
