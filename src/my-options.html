@@ -204,9 +204,6 @@
         var unrankedOptions = [];
         var addons = 0;
 
-        if (filterOptions.value.useTobacco) {
-          addons += addonsSheet.tobaccoSurcharge;
-        }
 
         for (i = 0; i < rateSheet.coverageLevels.length; i += 1) {
           for (j = 0; j < filterOptions.value.suitablePlans.length; j += 1) {
@@ -218,6 +215,11 @@
                 coverageLevels.coverageLevels);
               for (k = 0; k < rateSheet.coverageLevels[i].plans.length; k += 1) {
                 option = {};
+                addons = 0;
+                if (filterOptions.value.useTobacco) {
+                  addons += addonsSheet.tobaccoSurcharge;
+                }
+
                 addons += lookupStateSurcharge(filterOptions.value.surchargeState,
                   rateSheet.coverageLevels[i].coverageLevel,
                   addonsSheet.stateSurcharge);

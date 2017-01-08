@@ -124,9 +124,18 @@
   }
 
   function calculateTotalHealthcareSpending(scenario) {
-    var total = scenario.insuranceOption.employeePlan.premium;
-    total += sumForProperty(scenario.performance, 'employee', 'paidFromDeductible');
-    total += sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance');
+    var total = 0;
+    if (scenario.insuranceOption.employeePlan) {
+      total += scenario.insuranceOption.employeePlan.premium;
+      total += sumForProperty(scenario.performance, 'employee', 'paidFromDeductible');
+      total += sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance');
+    }
+
+    if (scenario.insuranceOption.spousePlan) {
+      total += scenario.insuranceOption.spousePlan.premium;
+      total += sumForProperty(scenario.performance, 'spouse', 'paidFromDeductible');
+      total += sumForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance');
+    }
 
     return 'Total Healthcare Spending: ' + numeral(total).format('$0,0');
   }
@@ -180,15 +189,23 @@
     var i = 0;
     var costEmployee;
     var costSpouse;
-
-    var savingsContributionRemainingEmployee = insuranceOption.employeePlan.savingsAccountContribution;
-    var deductibleRemainingEmployee = insuranceOption.employeePlan.deductible;
-    var coinsuranceRemainingEmployee = insuranceOption.employeePlan.coinsuranceMax;
-
-    var savingsContributionRemainingSpouse = insuranceOption.employeePlan.savingsAccountContribution;
-    var deductibleRemainingSpouse = insuranceOption.employeePlan.deductible;
-    var coinsuranceRemainingSpouse = insuranceOption.employeePlan.coinsuranceMax;
-
+    var savingsContributionRemainingEmployee;
+    var deductibleRemainingEmployee;
+    var coinsuranceRemainingEmployee;
+    var savingsContributionRemainingSpouse;
+    var deductibleRemainingSpouse;
+    var coinsuranceRemainingSpouse;
+    if (insuranceOption.employeePlan) {
+      savingsContributionRemainingEmployee =
+        insuranceOption.employeePlan.savingsAccountContribution;
+      deductibleRemainingEmployee = insuranceOption.employeePlan.deductible;
+      coinsuranceRemainingEmployee = insuranceOption.employeePlan.coinsuranceMax;
+    }
+    if (insuranceOption.spousePlan) {
+      savingsContributionRemainingSpouse = insuranceOption.spousePlan.savingsAccountContribution;
+      deductibleRemainingSpouse = insuranceOption.spousePlan.deductible;
+      coinsuranceRemainingSpouse = insuranceOption.spousePlan.coinsuranceMax;
+    }
     for (i = 0; i < healthcareCosts.length; i += 1) {
       paymentShares.push({});
       if (insuranceOption.employeePlan && insuranceOption.spousePlan) {
@@ -223,15 +240,25 @@
   }
 
   function buildCustomChartOptions(scenario) {
-    var chartTitle = scenario.insuranceOption.employeePlan.planName + ' - ' + scenario.insuranceOption.employeePlan.coverageLevel;
+    var chartTitle = '';
+    var employeePlanName;
+    var spousePlanName;
     var premiumEmployee = 0;
     var premiumSpouse = 0;
     var highChartOptionObject;
     if (scenario.insuranceOption.employeePlan) {
       premiumEmployee = scenario.insuranceOption.employeePlan.premium;
+      employeePlanName = scenario.insuranceOption.employeePlan.planName + ' - ' +
+        scenario.insuranceOption.employeePlan.coverageLevel;
+      chartTitle = employeePlanName;
     }
     if (scenario.insuranceOption.spousePlan) {
       premiumSpouse = scenario.insuranceOption.spousePlan.premium;
+      spousePlanName = scenario.insuranceOption.spousePlan.planName;
+      chartTitle = spousePlanName;
+    }
+    if (employeePlanName && spousePlanName) {
+      chartTitle = employeePlanName + ' / ' + spousePlanName;
     }
     highChartOptionObject =
     {
