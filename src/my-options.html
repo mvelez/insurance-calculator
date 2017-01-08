@@ -88,9 +88,6 @@
   </template>
 
   <script>
-    // var currencyRenderer = function (cell) {
-    //   cell.element.innerHTML = numeral(cell.data).format('$0,0');
-    // };
 
     function generateCustomOption(plan, coverageLevel) {
       var option = {};
@@ -268,13 +265,6 @@
 
         return unrankedOptions;
       },
-      // updateGrid: function (unrankedOptions) {
-      //   var grid = this.$.optionGrid;
-      //   grid.columns[2].renderer = currencyRenderer;
-      //   grid.columns[3].renderer = currencyRenderer;
-      //   grid.columns[4].renderer = currencyRenderer;
-      //   grid.items = unrankedOptions;
-      // },
     });
   </script>
 </dom-module>

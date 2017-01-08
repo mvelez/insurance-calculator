@@ -12,6 +12,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="components/insurance-plan-hdhp.html">
+<link rel="import" href="../bower_components/numeral-js/numeral-js.html">
 
 <dom-module id="my-questions">
   <template>
@@ -78,7 +79,7 @@
             <paper-toggle-button on-tap="_showSpousalCoverageCosts">{{hasSpousalCoverage}}</paper-toggle-button>
             <div hidden$="{{hideSpousalCoverageCosts}}">
               <p>Based on your income, if your spouse declines their employer's
-              insurance there is an additional charge of <b>${{spouseAddon}}</b>
+              insurance there is an additional charge of <b><numeral-js number="{{spouseAddon}}" format="$0,0" print></numeral-js></b>
               to extend coverage to them.</p>
 
               <p>It can be beneficial to have everyone paying against the same
@@ -89,12 +90,6 @@
               <p>If their companies insurance is not a High Deductible Health Plan,
               unfortunately this tool is not set up to support other types of
               plans such as PPO or HMO plans.</p>
-
-              <p>
-                This tool is currently only considering single income households of
-                any size or dual income households with no children.  Appropriate
-                support for dual income households with children will be coming soon.
-              </p>
             </div>
 
             <div layout="horizontal" hidden$="{{hideSpousalCoverageCosts}}">
