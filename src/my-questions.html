@@ -102,13 +102,14 @@
               plan-name="Spouse Only"
               coverage-level="1"
               custom-plan="{{customSingle}}"></insurance-plan-hdhp>
-<!--
-              <div hidden$='{{selectedChildren}} !== "0"'>
-                <insurance-plan-hdhp
-                plan-name="Spouse and Children"
-                coverage-level="2"
-                custom-plan="{{customChildren}}"></insurance-plan-hdhp>
-              </div>-->
+
+
+              <insurance-plan-hdhp
+              plan-name="Spouse and Children"
+              coverage-level="2"
+              custom-plan="{{customChildren}}"
+              hidden$="{{hideCustomChildren}}"></insurance-plan-hdhp>
+
 
               <insurance-plan-hdhp
               plan-name="Whole Family"
@@ -179,6 +180,10 @@
           value: 'No.', // default to No
           notify: true,
         },
+        hideCustomChildren: {
+          type: Boolean,
+          computed: '_hideCustomChildren(selectedChildren)',
+        },
         customChildren: {
           type: Object,
           value: function () {
@@ -213,6 +218,9 @@
       },
       _toggleTobacco: function () {
         this.useTobacco = !this.useTobacco;
+      },
+      _hideCustomChildren: function (selectedChildren) {
+        return selectedChildren === '0';
       },
       _selectedAdultsChanged: function (newIndex) {
         this.set('hideSpousalOptions', newIndex === '1');
