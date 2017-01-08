@@ -252,6 +252,20 @@
           }
         }
 
+        // Add options which ecline employer coverage
+        for (i = 0; i < filterOptions.value.suitablePlans.length; i += 1) {
+          if (!filterOptions.value.suitablePlans[i].coverageLevel) {
+            option = {};
+            customCoverageLevel = lookupCoverageLevel(
+                  filterOptions.value.suitablePlans[i].custom.coverageLevel,
+                  coverageLevels.coverageLevels);
+            option.spousePlan = generateCustomOption(
+              filterOptions.value.suitablePlans[i].custom,
+              customCoverageLevel);
+            unrankedOptions.push(option);
+          }
+        }
+
         return unrankedOptions;
       },
       // updateGrid: function (unrankedOptions) {
