@@ -215,11 +215,19 @@
       if (insuranceOption.employeePlan && insuranceOption.spousePlan) {
         costEmployee = healthcareCosts[i].employee;
         costSpouse = healthcareCosts[i].spouse;
+        if (insuranceOption.employeePlan.coverageLevel !== '1-person (employee only)') {
+          costEmployee += healthcareCosts[i].children;
+        } else {
+          costSpouse += healthcareCosts[i].children;
+        }
       } else if (insuranceOption.employeePlan) {
-        costEmployee = healthcareCosts[i].employee + healthcareCosts[i].spouse;
+        costEmployee = healthcareCosts[i].employee +
+          healthcareCosts[i].spouse + healthcareCosts[i].children;
       } else if (insuranceOption.spousePlan) {
-        costSpouse = healthcareCosts[i].spouse + healthcareCosts[i].employee;
+        costSpouse = healthcareCosts[i].spouse +
+          healthcareCosts[i].employee + healthcareCosts[i].children;
       }
+
       if (insuranceOption.employeePlan) {
         paymentShares[i].employee = allocateCosts(costEmployee, deductibleRemainingEmployee,
           savingsContributionRemainingEmployee, coinsuranceRemainingEmployee,
