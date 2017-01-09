@@ -189,7 +189,7 @@
       ],
       denormalizeOptions: function (rateSheet, coverageLevels, addonsSheet,
         planSheet, filterOptions) {
-          this.debounce('debounceCalculation', function () {
+          this.debounce('debounceDenormalizeOptions', function () {
             this.set('unrankedOptions', this._denormalizeOptions(rateSheet, coverageLevels, addonsSheet,
             planSheet, filterOptions));
           }, 250);
