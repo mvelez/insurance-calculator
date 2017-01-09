@@ -458,8 +458,6 @@
       healthcareCosts: {
         type: Array,
         notify: true,
-        // An array of 12 integers representing costs broken down by month
-        computed: 'generateCostCurve(totalHealthcareCostsEmployee,totalHealthcareCostsSpouse,totalHealthcareCostsChildren, hideSpouseSlider, hideChildrenSlider)',
       },
       chartOptions: {
         type: Array,
@@ -492,6 +490,7 @@
     },
     observers: [
       'buildChartOptions(scenarios)',
+      'generateCostCurve(totalHealthcareCostsEmployee,totalHealthcareCostsSpouse,totalHealthcareCostsChildren, hideSpouseSlider, hideChildrenSlider)',
     ],
     _hideChildrenSlider: function (children) {
       return children === '0';
@@ -510,6 +509,11 @@
       return result;
     },
     buildChartOptions: function (scenarios) {
+      this.debounce('debounceChartOptions', function () {
+        this._buildChartOptions(scenarios);
+      }, 100);
+    },
+    _buildChartOptions: function (scenarios) {
       var i = 0;
       this.set('chartOptions', []);
       this.$.scenarioCharts.render();
@@ -550,6 +554,15 @@
       return label;
     },
     generateCostCurve: function (totalHealthcareCostsEmployee,
+      totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
+      hideSpouseSlider, hideChildrenSlider) {
+        this.debounce('debounceCostCurve', function () {
+          this.set('healthcareCosts', this._generateCostCurve(totalHealthcareCostsEmployee,
+            totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
+            hideSpouseSlider, hideChildrenSlider));
+        }, 100);
+    },
+    _generateCostCurve: function (totalHealthcareCostsEmployee,
       totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
       hideSpouseSlider, hideChildrenSlider) {
       var costCurve = [];
