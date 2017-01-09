@@ -6,6 +6,8 @@
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../bower_components/px-slider/px-slider.html">
+
 
 <script>
 /* global Highcharts numeral:true */
@@ -82,7 +84,9 @@
       <div>Total Healthcare Costs:
          <span class="caption">{{totalHealthcareCostsLabel}}</span>
       </div>
-      <paper-slider value="{{logTotalHealthcareCosts}}" max="11.512925465" step=".001"></paper-slider>
+      <span>Employee</span><paper-slider value="{{logTotalHealthcareCostsEmployee}}" min="5" max="11.512925465" step=".001"></paper-slider>
+      <div hidden$="{{hideSpouseSlider}}"><span>Spouse</span><px-slider value="{{totalHealthcareCostsSpouse}}" max="100000" step="100"></px-slider></div>
+      <div hidden$="{{hideChildrenSlider}}"><span>Children</span><px-slider value="{{totalHealthcareCostsChildren}}" max="100000" step="100"></px-slider></div>
       <template id="scenarioCharts" is="dom-repeat" items="{{chartOptions}}" as="chartOption">
         <highcharts-chart highchart-options="{{chartOption}}" />
       </template>
@@ -211,11 +215,19 @@
       if (insuranceOption.employeePlan && insuranceOption.spousePlan) {
         costEmployee = healthcareCosts[i].employee;
         costSpouse = healthcareCosts[i].spouse;
+        if (insuranceOption.employeePlan.coverageLevel !== '1-person (employee only)') {
+          costEmployee += healthcareCosts[i].children;
+        } else {
+          costSpouse += healthcareCosts[i].children;
+        }
       } else if (insuranceOption.employeePlan) {
-        costEmployee = healthcareCosts[i].employee + healthcareCosts[i].spouse;
+        costEmployee = healthcareCosts[i].employee +
+          healthcareCosts[i].spouse + healthcareCosts[i].children;
       } else if (insuranceOption.spousePlan) {
-        costSpouse = healthcareCosts[i].spouse + healthcareCosts[i].employee;
+        costSpouse = healthcareCosts[i].spouse +
+          healthcareCosts[i].employee + healthcareCosts[i].children;
       }
+
       if (insuranceOption.employeePlan) {
         paymentShares[i].employee = allocateCosts(costEmployee, deductibleRemainingEmployee,
           savingsContributionRemainingEmployee, coinsuranceRemainingEmployee,
@@ -423,23 +435,31 @@
         notify: true,
         computed: 'calculateAll(insuranceOptions, healthcareCosts)',
       },
-      logTotalHealthcareCosts: {
+      logTotalHealthcareCostsEmployee: {
         type: Number,
         value: 8.16394095476,
       },
-      totalHealthcareCosts: {
-        type: Number,
-        computed: 'exponent(logTotalHealthcareCosts)',
-      },
       totalHealthcareCostsLabel: {
         type: Number,
-        computed: 'generateHealthcareCostsLabel(totalHealthcareCosts)',
+        computed: 'generateHealthcareCostsLabel(totalHealthcareCostsEmployee, totalHealthcareCostsSpouse, totalHealthcareCostsChildren,  hideSpouseSlider, hideChildrenSlider)',
+      },
+      totalHealthcareCostsEmployee: {
+        type: Number,
+        computed: 'exponent(logTotalHealthcareCostsEmployee, 150, 100000)',
+      },
+      totalHealthcareCostsSpouse: {
+        type: Number,
+        value: 3512,
+      },
+      totalHealthcareCostsChildren: {
+        type: Number,
+        value: 2064,
       },
       healthcareCosts: {
         type: Array,
         notify: true,
         // An array of 12 integers representing costs broken down by month
-        computed: 'generateCostCurve(totalHealthcareCosts,totalHealthcareCosts,totalHealthcareCosts)',
+        computed: 'generateCostCurve(totalHealthcareCostsEmployee,totalHealthcareCostsSpouse,totalHealthcareCostsChildren, hideSpouseSlider, hideChildrenSlider)',
       },
       chartOptions: {
         type: Array,
@@ -453,12 +473,41 @@
         type: Array,
         notify: true,
       },
+      childrenCount: {
+        type: String,
+        notify: true,
+      },
+      adultCount: {
+        type: String,
+        notify: true,
+      },
+      hideChildrenSlider: {
+        type: Boolean,
+        computed: '_hideChildrenSlider(childrenCount)',
+      },
+      hideSpouseSlider: {
+        type: Boolean,
+        computed: '_hideSpouseSlider(adultCount)',
+      },
     },
     observers: [
       'buildChartOptions(scenarios)',
     ],
-    exponent: function (value) {
-      return Math.exp(value);
+    _hideChildrenSlider: function (children) {
+      return children === '0';
+    },
+    _hideSpouseSlider: function (adults) {
+      return adults === '1';
+    },
+    exponent: function (value, clipValueLow, clipValueHigh) {
+      var result = Math.exp(value);
+      if (result < clipValueLow) {
+        result = 0;
+      }
+      if (result > clipValueHigh) {
+        result = clipValueHigh;
+      }
+      return result;
     },
     buildChartOptions: function (scenarios) {
       var i = 0;
@@ -483,18 +532,35 @@
 
       return scenarios;
     },
-    generateHealthcareCostsLabel: function (totalHealthcareCosts) {
-      var label = numeral(totalHealthcareCosts).format('$0,0');
-      if (totalHealthcareCosts > 100000) {
+    generateHealthcareCostsLabel: function (totalHealthcareCostsEmployee,
+      totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
+      hideSpouseSlider, hideChildrenSlider) {
+      var value = totalHealthcareCostsEmployee;
+      var label;
+      if (!hideSpouseSlider) {
+        value += totalHealthcareCostsSpouse;
+      }
+      if (!hideChildrenSlider) {
+        value += totalHealthcareCostsChildren;
+      }
+      label = numeral(value).format('$0,0');
+      if (value >= 100000) {
         label = '$100,000 or more';
       }
       return label;
     },
     generateCostCurve: function (totalHealthcareCostsEmployee,
-      totalHealthcareCostsSpouse, totalHealthcareCostsChildren) {
+      totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
+      hideSpouseSlider, hideChildrenSlider) {
       var costCurve = [];
       var i = 1;
       var segments = 42;
+      if (hideSpouseSlider) {
+        totalHealthcareCostsSpouse = 0;
+      }
+      if (hideChildrenSlider) {
+        totalHealthcareCostsChildren = 0;
+      }
       for (i = 1; i <= 6; i += 1) {
         costCurve.push({
           employee: totalHealthcareCostsEmployee * (i / segments),
