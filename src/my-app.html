@@ -102,7 +102,7 @@
           </my-options>
 
           <my-scenarios name="scenarios"
-            insurance-options="{{myOptions}}"
+            insurance-options="{{hardCodedOptions}}"
             children-count="[[childrenCount]]"
             adult-count="[[adultsCount]]">
           </my-scenarios>
@@ -149,7 +149,7 @@
           type: Array,
           value: function () {
             var dualIncomeSingleCouple = null;
-            // dualIncomeSingleCouple = [{"spousePlan":{"planName":"Spouse Only","deductible":2000,"savingsAccountContribution":1000,"coverageLevel":"1-person (employee only)","incomeBracket":"n/a","coinsuranceRate":0.2,"savingsAccountType":"HSA","premium":700,"coinsuranceMax":2000},"employeePlan":{"planName":"Option 1","deductible":1000,"savingsAccountContribution":500,"coverageLevel":"1-person (employee only)","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":1887,"coinsuranceMax":1750}},{"spousePlan":{"planName":"Spouse Only","deductible":2000,"savingsAccountContribution":1000,"coverageLevel":"1-person (employee only)","incomeBracket":"n/a","coinsuranceRate":0.2,"savingsAccountType":"HSA","premium":700,"coinsuranceMax":2000},"employeePlan":{"planName":"Option 2","deductible":1500,"savingsAccountContribution":500,"coverageLevel":"1-person (employee only)","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":1523,"coinsuranceMax":2250}},{"spousePlan":{"planName":"Spouse Only","deductible":2000,"savingsAccountContribution":1000,"coverageLevel":"1-person (employee only)","incomeBracket":"n/a","coinsuranceRate":0.2,"savingsAccountType":"HSA","premium":700,"coinsuranceMax":2000},"employeePlan":{"planName":"Option 3","deductible":2000,"savingsAccountContribution":0,"coverageLevel":"1-person (employee only)","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HSA","premium":691,"coinsuranceMax":2750}},{"employeePlan":{"planName":"Option 1","deductible":2000,"savingsAccountContribution":750,"coverageLevel":"2-persons","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":6383,"coinsuranceMax":2625}},{"employeePlan":{"planName":"Option 2","deductible":3000,"savingsAccountContribution":750,"coverageLevel":"2-persons","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":5655,"coinsuranceMax":3375}},{"employeePlan":{"planName":"Option 3","deductible":4000,"savingsAccountContribution":0,"coverageLevel":"2-persons","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HSA","premium":3990,"coinsuranceMax":4125}}];
+            dualIncomeSingleCouple = [{"spousePlan":{"planName":"Spouse Only","deductible":2000,"savingsAccountContribution":1000,"coverageLevel":"1-person (employee only)","incomeBracket":"n/a","coinsuranceRate":0.2,"savingsAccountType":"HSA","premium":700,"coinsuranceMax":2000},"employeePlan":{"planName":"Option 1","deductible":1000,"savingsAccountContribution":500,"coverageLevel":"1-person (employee only)","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":1887,"coinsuranceMax":1750}},{"spousePlan":{"planName":"Spouse Only","deductible":2000,"savingsAccountContribution":1000,"coverageLevel":"1-person (employee only)","incomeBracket":"n/a","coinsuranceRate":0.2,"savingsAccountType":"HSA","premium":700,"coinsuranceMax":2000},"employeePlan":{"planName":"Option 2","deductible":1500,"savingsAccountContribution":500,"coverageLevel":"1-person (employee only)","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":1523,"coinsuranceMax":2250}},{"spousePlan":{"planName":"Spouse Only","deductible":2000,"savingsAccountContribution":1000,"coverageLevel":"1-person (employee only)","incomeBracket":"n/a","coinsuranceRate":0.2,"savingsAccountType":"HSA","premium":700,"coinsuranceMax":2000},"employeePlan":{"planName":"Option 3","deductible":2000,"savingsAccountContribution":0,"coverageLevel":"1-person (employee only)","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HSA","premium":691,"coinsuranceMax":2750}},{"employeePlan":{"planName":"Option 1","deductible":2000,"savingsAccountContribution":750,"coverageLevel":"2-persons","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":6383,"coinsuranceMax":2625}},{"employeePlan":{"planName":"Option 2","deductible":3000,"savingsAccountContribution":750,"coverageLevel":"2-persons","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HRA","premium":5655,"coinsuranceMax":3375}},{"employeePlan":{"planName":"Option 3","deductible":4000,"savingsAccountContribution":0,"coverageLevel":"2-persons","incomeBracket":"$75,000-$99,999","coinsuranceRate":0.1,"savingsAccountType":"HSA","premium":3990,"coinsuranceMax":4125}}];
             return dualIncomeSingleCouple;
           },
         },
@@ -169,10 +169,10 @@
       _pageChanged: function (page) {
         var resolvedPageUrl;
         // If they are reuesting a page that depends on answering uestions, forward them to questions
-        if ((page === 'options' || page === 'scenarios') && !this.myFilterOption) {
-          this.set('route.path', 'questions');
-          this.set('page', 'questions');
-        }
+        // if ((page === 'options' || page === 'scenarios') && !this.myFilterOption) {
+        //   this.set('route.path', 'questions');
+        //   this.set('page', 'questions');
+        // }
 
         // Load page import on demand. Show 404 page if fails
         resolvedPageUrl = this.resolveUrl('my-' + page + '.html');

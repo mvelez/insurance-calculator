@@ -1,0 +1,39 @@
+<!doctype html>
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/numeral-js/numeral-js.html">
+<link rel="import" href="../../bower_components/highcharts-chart/highcharts-chart.html">
+
+<dom-module id="scenario-card">
+  <template>
+    <style>
+      paper-card {
+        box-sizing: border-box;
+        max-width: 800px;
+        margin: 4px;
+        padding: 4px;
+        flex: 0 0 auto;
+      }
+    </style>
+    <paper-card heading="planName">
+      <highcharts-chart highchart-options="{{chartOption}}" />
+    </paper-card>
+  </template>
+  <script>
+    Polymer({
+      is: 'scenario-card',
+      properties: {
+        scenario: {
+          type: Object,
+          notify: true,
+        },
+        planName: {
+          type: String,
+        },
+        chartOptions: {
+          type: Object,
+          notify: true,
+        },
+      },
+    });
+  </script>
+</dom-module>

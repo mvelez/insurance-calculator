@@ -7,7 +7,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../bower_components/px-slider/px-slider.html">
-
+<link rel="import" href="components/scenario-card.html">
 
 <script>
 /* global Highcharts numeral:true */
@@ -88,7 +88,7 @@
       <div hidden$="{{hideSpouseSlider}}"><span>Spouse</span><px-slider value="{{totalHealthcareCostsSpouse}}" max="100000" step="100"></px-slider></div>
       <div hidden$="{{hideChildrenSlider}}"><span>Children</span><px-slider value="{{totalHealthcareCostsChildren}}" max="100000" step="100"></px-slider></div>
       <template id="scenarioCharts" is="dom-repeat" items="{{chartOptions}}" as="chartOption">
-        <highcharts-chart highchart-options="{{chartOption}}" />
+        <scenario-card chart-option="{{chartOption}}"></scenario-card>
       </template>
       <div class="horizontal start-justified layout">
         <a href="/options"><paper-button raised>Back</paper-button></a>

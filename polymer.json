@@ -10,6 +10,7 @@
     "src/my-view404.html",
     "src/components/google-analytics.html",
     "src/components/insurance-plan-hdhp.html",
+    "src/components/sceario-card.html",
     "src/components/insurance-option-card.html"
   ],
   "sourceGlobs": [
