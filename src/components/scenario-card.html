@@ -20,8 +20,8 @@
       }
     </style>
     <paper-card heading="[[planName]]">
-      <!-- <highcharts-chart highchart-options="[[chartOption]]" /> -->
-      <highcharts-chart type="pie" data="[[pieChartData]]" title="" color-by-point></highcharts-chart>
+      <p>Total Healthcare Spending: <numeral-js number="[[totalHealthcareSpending]]" format="$0,0" print></numeral-js></p>
+      <highcharts-chart type="pie" data="[[pieChartData]]" title="" color-by-point highchart-options="[[pieChartOptions]]"></highcharts-chart>
       <highcharts-chart type="column" data="[[columnData]]" title="" color-by-point highchart-options="[[columnChartOptions]]"></highcharts-chart>
     </paper-card>
   </template>
@@ -49,24 +49,6 @@
       return Math.round(returnValue);
     }
 
-
-    function calculateTotalHealthcareSpending(scenario) {
-      var total = 0;
-      if (scenario.insuranceOption.employeePlan) {
-        total += scenario.insuranceOption.employeePlan.premium;
-        total += sumForProperty(scenario.performance, 'employee', 'paidFromDeductible');
-        total += sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance');
-      }
-
-      if (scenario.insuranceOption.spousePlan) {
-        total += scenario.insuranceOption.spousePlan.premium;
-        total += sumForProperty(scenario.performance, 'spouse', 'paidFromDeductible');
-        total += sumForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance');
-      }
-
-      return 'Total Healthcare Spending: ' + numeral(total).format('$0,0');
-    }
-
     Polymer({
       is: 'scenario-card',
       properties: {
@@ -78,13 +60,31 @@
           type: String,
           computed: 'buildPlanName(scenario)',
         },
-        chartOptions: {
-          type: Object,
-          computed: 'buildCustomChartOptions(scenario)',
+        totalHealthcareSpending: {
+          type: Number,
+          computed: 'calculateTotalHealthcareSpending(scenario)',
         },
         pieChartData: {
           type: Array,
           computed: 'buildPieChartData(scenario)',
+        },
+        pieChartOptions: {
+          type: Object,
+          value: function () {
+            var options = {
+              plotOptions: {
+                pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                    enabled: false,
+                  },
+                  showInLegend: true,
+                },
+              },
+            };
+            return options;
+          },
         },
         columnData: {
           type: Array,
@@ -121,6 +121,22 @@
           chartTitle = employeePlanName + ' / ' + spousePlanName;
         }
         return chartTitle;
+      },
+      calculateTotalHealthcareSpending: function (scenario) {
+        var total = 0;
+        if (scenario.insuranceOption.employeePlan) {
+          total += scenario.insuranceOption.employeePlan.premium;
+          total += sumForProperty(scenario.performance, 'employee', 'paidFromDeductible');
+          total += sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance');
+        }
+
+        if (scenario.insuranceOption.spousePlan) {
+          total += scenario.insuranceOption.spousePlan.premium;
+          total += sumForProperty(scenario.performance, 'spouse', 'paidFromDeductible');
+          total += sumForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance');
+        }
+
+        return total;
       },
       buildPieChartData: function (scenario) {
         var premiumEmployee = 0;
@@ -225,171 +241,6 @@
           },
         ];
         return data;
-      },
-
-      buildCustomChartOptions: function (scenario) {
-        var premiumEmployee = 0;
-        var premiumSpouse = 0;
-        var highChartOptionObject;
-        if (scenario.insuranceOption.employeePlan) {
-          premiumEmployee = scenario.insuranceOption.employeePlan.premium;
-        }
-        if (scenario.insuranceOption.spousePlan) {
-          premiumSpouse = scenario.insuranceOption.spousePlan.premium;
-        }
-        highChartOptionObject =
-        {
-          title: {
-            text: '',
-          },
-          xAxis: {
-            categories: ['Jan', 'Feb', 'Mar',
-              'Apr', 'May', 'Jun',
-              'Jul', 'Aug', 'Sep',
-              'Oct', 'Nov', 'Dec'],
-          },
-          labels: {
-            items: [{
-              html: calculateTotalHealthcareSpending(scenario),
-              style: {
-                left: '50px',
-                top: '18px',
-                color: 'black',
-              },
-            }],
-          },
-          plotOptions: {
-            column: {
-              stacking: 'normal',
-            },
-          },
-          series: [
-            {
-              type: 'column', // For some reason it is trying to make this first one a spline no matter what
-              name: 'Premium',
-              data: [],
-              stack: 'employee',
-            },
-            {
-              type: 'column',
-              name: 'Insured Totally',
-              data: arrayForProperty(scenario.performance, 'employee', 'insuredTotally'),
-              stack: 'employee',
-            },
-            {
-              type: 'column',
-              name: 'Insured By Coinsurance',
-              data: arrayForProperty(scenario.performance, 'employee', 'insuredByCoinsurance'),
-              stack: 'employee',
-            },
-            {
-              type: 'column',
-              name: 'Paid From Coinsurance',
-              data: arrayForProperty(scenario.performance, 'employee', 'paidFromCoinsurance'),
-              stack: 'employee',
-            },
-            {
-              type: 'column',
-              name: 'Paid From Deductible',
-              data: arrayForProperty(scenario.performance, 'employee', 'paidFromDeductible'),
-              stack: 'employee',
-            },
-            {
-              type: 'column',
-              name: 'Paid From Savings Account Contribution',
-              data: arrayForProperty(scenario.performance, 'employee', 'paidFromSavingsContribution'),
-              stack: 'employee',
-            },
-            {
-              type: 'column', // For some reason it is trying to make this first one a spline no matter what
-              name: 'Premium',
-              data: [],
-              stack: 'spouse',
-            },
-            {
-              type: 'column',
-              name: 'Insured Totally',
-              data: arrayForProperty(scenario.performance, 'spouse', 'insuredTotally'),
-              stack: 'spouse',
-            },
-            {
-              type: 'column',
-              name: 'Insured By Coinsurance',
-              data: arrayForProperty(scenario.performance, 'spouse', 'insuredByCoinsurance'),
-              stack: 'spouse',
-            },
-            {
-              type: 'column',
-              name: 'Paid From Coinsurance',
-              data: arrayForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance'),
-              stack: 'spouse',
-            },
-            {
-              type: 'column',
-              name: 'Paid From Deductible',
-              data: arrayForProperty(scenario.performance, 'spouse', 'paidFromDeductible'),
-              stack: 'spouse',
-            },
-            {
-              type: 'column',
-              name: 'Paid From Savings Account Contribution',
-              data: arrayForProperty(scenario.performance, 'spouse', 'paidFromSavingsContribution'),
-              stack: 'spouse',
-            },
-            // {
-            //   type: 'spline',
-            //   name: 'Average',
-            //   data: [3, 2.67, 3, 6.33, 3.33],
-            //   marker: {
-            //       lineWidth: 2,
-            //       fillColor: 'white'
-            //     }
-            // },
-            {
-              type: 'pie',
-              name: 'Total spending',
-              data: [
-                {
-                  name: 'Employee Premium',
-                  y: premiumEmployee,
-                  color: Highcharts.getOptions().colors[0],
-                },
-                {
-                  name: 'Employee Deductible',
-                  y: sumForProperty(scenario.performance, 'employee', 'paidFromDeductible'),
-                  color: Highcharts.getOptions().colors[4],
-                },
-                {
-                  name: 'Employee Coinsurance',
-                  y: sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance'),
-                  color: Highcharts.getOptions().colors[3],
-                },
-                {
-                  name: 'Spouse Premium',
-                  y: premiumSpouse,
-                  color: Highcharts.getOptions().colors[6],
-                },
-                {
-                  name: 'Spouse Deductible',
-                  y: sumForProperty(scenario.performance, 'spouse', 'paidFromDeductible'),
-                  color: Highcharts.getOptions().colors[11],
-                },
-                {
-                  name: 'Spouse Coinsurance',
-                  y: sumForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance'),
-                  color: Highcharts.getOptions().colors[10],
-                },
-              ],
-              center: [100, 80],
-              size: 100,
-              showInLegend: false,
-              dataLabels: {
-                enabled: false,
-              },
-            },
-          ],
-        };
-        return highChartOptionObject;
       },
     });
   </script>
