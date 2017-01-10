@@ -1,0 +1,247 @@
+<!doctype html>
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/numeral-js/numeral-js.html">
+
+<script>
+/* global Highcharts numeral:true */
+</script>
+<link rel="import" href="../../bower_components/numeral-js/numeral-js.html">
+<link rel="import" href="../../bower_components/highcharts-chart/highcharts-chart.html">
+
+<dom-module id="scenario-card">
+  <template>
+    <style>
+      paper-card {
+        box-sizing: border-box;
+        max-width: 800px;
+        margin: 4px;
+        padding: 4px;
+        flex: 0 0 auto;
+      }
+    </style>
+    <paper-card heading="[[planName]]">
+      <p>Total Healthcare Spending: <numeral-js number="[[totalHealthcareSpending]]" format="$0,0" print></numeral-js></p>
+      <highcharts-chart type="pie" data="[[pieChartData]]" title="" color-by-point highchart-options="[[pieChartOptions]]"></highcharts-chart>
+      <highcharts-chart type="column" data="[[columnData]]" title="" color-by-point highchart-options="[[columnChartOptions]]"></highcharts-chart>
+    </paper-card>
+  </template>
+  <script>
+
+    function arrayForProperty(objectArray, property, subproperty) {
+      var returnValue = [];
+      var i = 0;
+      for (i = 0; i < objectArray.length; i += 1) {
+        if (objectArray[i][property]) {
+          returnValue.push(objectArray[i][property][subproperty]);
+        }
+      }
+      return returnValue;
+    }
+
+    function sumForProperty(objectArray, property, subproperty) {
+      var returnValue = 0;
+      var i = 0;
+      for (i = 0; i < objectArray.length; i += 1) {
+        if (objectArray[i][property]) {
+          returnValue += objectArray[i][property][subproperty];
+        }
+      }
+      return Math.round(returnValue);
+    }
+
+    Polymer({
+      is: 'scenario-card',
+      properties: {
+        scenario: {
+          type: Object,
+          notify: true,
+        },
+        planName: {
+          type: String,
+          computed: 'buildPlanName(scenario)',
+        },
+        totalHealthcareSpending: {
+          type: Number,
+          computed: 'calculateTotalHealthcareSpending(scenario)',
+        },
+        pieChartData: {
+          type: Array,
+          computed: 'buildPieChartData(scenario)',
+        },
+        pieChartOptions: {
+          type: Object,
+          value: function () {
+            var options = {
+              plotOptions: {
+                pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                    enabled: false,
+                  },
+                  showInLegend: true,
+                },
+              },
+            };
+            return options;
+          },
+        },
+        columnData: {
+          type: Array,
+          computed: 'buildColumnData(scenario)',
+        },
+        columnChartOptions: {
+          type: Object,
+          value: function () {
+            var options = {
+              plotOptions: {
+                column: {
+                  stacking: 'normal',
+                },
+              },
+            };
+            return options;
+          },
+        },
+      },
+      buildPlanName(scenario) {
+        var chartTitle = '';
+        var employeePlanName;
+        var spousePlanName;
+        if (scenario.insuranceOption.employeePlan) {
+          employeePlanName = scenario.insuranceOption.employeePlan.planName + ' - ' +
+            scenario.insuranceOption.employeePlan.coverageLevel;
+          chartTitle = employeePlanName;
+        }
+        if (scenario.insuranceOption.spousePlan) {
+          spousePlanName = scenario.insuranceOption.spousePlan.planName;
+          chartTitle = spousePlanName;
+        }
+        if (employeePlanName && spousePlanName) {
+          chartTitle = employeePlanName + ' / ' + spousePlanName;
+        }
+        return chartTitle;
+      },
+      calculateTotalHealthcareSpending: function (scenario) {
+        var total = 0;
+        if (scenario.insuranceOption.employeePlan) {
+          total += scenario.insuranceOption.employeePlan.premium;
+          total += sumForProperty(scenario.performance, 'employee', 'paidFromDeductible');
+          total += sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance');
+        }
+
+        if (scenario.insuranceOption.spousePlan) {
+          total += scenario.insuranceOption.spousePlan.premium;
+          total += sumForProperty(scenario.performance, 'spouse', 'paidFromDeductible');
+          total += sumForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance');
+        }
+
+        return total;
+      },
+      buildPieChartData: function (scenario) {
+        var premiumEmployee = 0;
+        var premiumSpouse = 0;
+        var data;
+        if (scenario.insuranceOption.employeePlan) {
+          premiumEmployee = scenario.insuranceOption.employeePlan.premium;
+        }
+        if (scenario.insuranceOption.spousePlan) {
+          premiumSpouse = scenario.insuranceOption.spousePlan.premium;
+        }
+        data = [
+          {
+            name: 'Employee Premium',
+            y: premiumEmployee,
+          },
+          {
+            name: 'Employee Deductible',
+            y: sumForProperty(scenario.performance, 'employee', 'paidFromDeductible'),
+          },
+          {
+            name: 'Employee Coinsurance',
+            y: sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance'),
+          },
+          {
+            name: 'Spouse Premium',
+            y: premiumSpouse,
+          },
+          {
+            name: 'Spouse Deductible',
+            y: sumForProperty(scenario.performance, 'spouse', 'paidFromDeductible'),
+          },
+          {
+            name: 'Spouse Coinsurance',
+            y: sumForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance'),
+          },
+        ];
+        return data;
+      },
+      buildColumnData: function (scenario) {
+        var data;
+        data = [
+          {
+            type: 'column',
+            name: 'Insured Totally',
+            data: arrayForProperty(scenario.performance, 'employee', 'insuredTotally'),
+            stack: 'employee',
+          },
+          {
+            type: 'column',
+            name: 'Insured By Coinsurance',
+            data: arrayForProperty(scenario.performance, 'employee', 'insuredByCoinsurance'),
+            stack: 'employee',
+          },
+          {
+            type: 'column',
+            name: 'Paid From Coinsurance',
+            data: arrayForProperty(scenario.performance, 'employee', 'paidFromCoinsurance'),
+            stack: 'employee',
+          },
+          {
+            type: 'column',
+            name: 'Paid From Deductible',
+            data: arrayForProperty(scenario.performance, 'employee', 'paidFromDeductible'),
+            stack: 'employee',
+          },
+          {
+            type: 'column',
+            name: 'Paid From Savings Account Contribution',
+            data: arrayForProperty(scenario.performance, 'employee', 'paidFromSavingsContribution'),
+            stack: 'employee',
+          },
+          {
+            type: 'column',
+            name: 'Insured Totally',
+            data: arrayForProperty(scenario.performance, 'spouse', 'insuredTotally'),
+            stack: 'spouse',
+          },
+          {
+            type: 'column',
+            name: 'Insured By Coinsurance',
+            data: arrayForProperty(scenario.performance, 'spouse', 'insuredByCoinsurance'),
+            stack: 'spouse',
+          },
+          {
+            type: 'column',
+            name: 'Paid From Coinsurance',
+            data: arrayForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance'),
+            stack: 'spouse',
+          },
+          {
+            type: 'column',
+            name: 'Paid From Deductible',
+            data: arrayForProperty(scenario.performance, 'spouse', 'paidFromDeductible'),
+            stack: 'spouse',
+          },
+          {
+            type: 'column',
+            name: 'Paid From Savings Account Contribution',
+            data: arrayForProperty(scenario.performance, 'spouse', 'paidFromSavingsContribution'),
+            stack: 'spouse',
+          },
+        ];
+        return data;
+      },
+    });
+  </script>
+</dom-module>
