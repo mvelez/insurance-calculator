@@ -224,7 +224,7 @@
         scenarios: {
           type: Array,
           notify: true,
-          computed: 'calculateAll(insuranceOptions, healthcareCosts)',
+          computed: 'calculateAll(insuranceOptions, healthcareCosts, visible)',
         },
         logTotalHealthcareCostsEmployee: {
           type: Number,
@@ -286,6 +286,7 @@
           type: Boolean,
           computed: '_hideSpouseSlider(adultCount)',
         },
+        visible: Boolean,
       },
       observers: [
         'generateCostCurve(totalHealthcareCostsEmployee,totalHealthcareCostsSpouse,totalHealthcareCostsChildren, hideSpouseSlider, hideChildrenSlider)',
@@ -306,20 +307,22 @@
         }
         return result;
       },
-      calculateAll: function (insuranceOptions, healthcareCosts) {
-        var i = 0;
-        var scenario = {};
-        var scenarios = [];
-        // this.set('scenarios', []);
+      calculateAll: function (insuranceOptions, healthcareCosts, visible) {
+        if (visible){
+          var i = 0;
+          var scenario = {};
+          var scenarios = [];
+          // this.set('scenarios', []);
 
-        for (i = 0; i < insuranceOptions.length; i += 1) {
-          scenario = {};
-          scenario.insuranceOption = insuranceOptions[i];
-          scenario.performance = calculatePerformance(insuranceOptions[i], healthcareCosts);
-          scenarios.push(scenario);
+          for (i = 0; i < insuranceOptions.length; i += 1) {
+            scenario = {};
+            scenario.insuranceOption = insuranceOptions[i];
+            scenario.performance = calculatePerformance(insuranceOptions[i], healthcareCosts);
+            scenarios.push(scenario);
+          }
+
+          return scenarios;
         }
-
-        return scenarios;
       },
       generateHealthcareCostsLabel: function (totalHealthcareCostsEmployee,
         totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
