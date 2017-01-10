@@ -3,7 +3,7 @@
 <link rel="import" href="../../bower_components/numeral-js/numeral-js.html">
 
 <script>
-/* global Highcharts numeral:true */
+/* global Highcharts:true */
 </script>
 <link rel="import" href="../../bower_components/numeral-js/numeral-js.html">
 <link rel="import" href="../../bower_components/highcharts-chart/highcharts-chart.html">
@@ -26,6 +26,7 @@
     </paper-card>
   </template>
   <script>
+
 
     function arrayForProperty(objectArray, property, subproperty) {
       var returnValue = [];
@@ -103,6 +104,41 @@
             return options;
           },
         },
+        dataVisColors: {
+         type: Object,
+         value: {
+           "dv-light-yellow": "rgb(237,221,70)",
+           "dv-dark-blue": "rgb(38,93,171)",
+           "dv-dark-purple": "rgb(123,58,150)",
+           "dv-basic-blue": "rgb(93,165,218)",
+           "dv-light-orange": "rgb(251,178,88)",
+           "dv-dark-orange": "rgb(223,92,36)",
+           "dv-basic-brown": "rgb(178,145,47)",
+           "dv-basic-red": "rgb(241,88,84)",
+           "dv-dark-green": "rgb(5,151,72)",
+           "dv-basic-grey": "rgb(77,77,77)",
+           "dv-light-brown": "rgb(191,165,84)",
+           "dv-dark-yellow": "rgb(199,180,46)",
+           "dv-basic-green": "rgb(96,189,104)",
+           "dv-light-pink": "rgb(246,170,201)",
+           "dv-basic-gray": "rgb(77,77,77)",
+           "dv-basic-orange": "rgb(250,164,58)",
+           "dv-light-green": "rgb(144,205,151)",
+           "dv-dark-pink": "rgb(229,18,111)",
+           "dv-basic-purple": "rgb(178,118,178)",
+           "dv-dark-red": "rgb(203,32,39)",
+           "dv-basic-pink": "rgb(241,124,176)",
+           "dv-light-gray": "rgb(140,140,140)",
+           "dv-light-red": "rgb(240,126,110)",
+           "dv-light-blue": "rgb(136,189,230)",
+           "dv-light-grey": "rgb(140,140,140)",
+           "dv-dark-brown": "rgb(157,114,42)",
+           "dv-light-purple": "rgb(188,153,199)",
+           "dv-basic-yellow": "rgb(222,207,63)",
+           "dv-dark-gray": "rgb(0,0,0)",
+           "dv-dark-grey": "rgb(0,0,0)"
+          }
+        },
       },
       buildPlanName(scenario) {
         var chartTitle = '';
@@ -152,26 +188,32 @@
           {
             name: 'Employee Premium',
             y: premiumEmployee,
-          },
-          {
-            name: 'Employee Deductible',
-            y: sumForProperty(scenario.performance, 'employee', 'paidFromDeductible'),
-          },
-          {
-            name: 'Employee Coinsurance',
-            y: sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance'),
+            color: this.dataVisColors["dv-light-blue"],
           },
           {
             name: 'Spouse Premium',
             y: premiumSpouse,
+            color: this.dataVisColors["dv-dark-blue"],
+          },
+          {
+            name: 'Employee Deductible',
+            y: sumForProperty(scenario.performance, 'employee', 'paidFromDeductible'),
+            color: this.dataVisColors["dv-light-orange"],
           },
           {
             name: 'Spouse Deductible',
             y: sumForProperty(scenario.performance, 'spouse', 'paidFromDeductible'),
+            color: this.dataVisColors["dv-dark-orange"],
+          },
+          {
+            name: 'Employee Coinsurance',
+            y: sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance'),
+            color: this.dataVisColors["dv-light-green"],
           },
           {
             name: 'Spouse Coinsurance',
             y: sumForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance'),
+            color: this.dataVisColors["dv-dark-green"],
           },
         ];
         return data;
@@ -184,60 +226,70 @@
             name: 'Insured Totally',
             data: arrayForProperty(scenario.performance, 'employee', 'insuredTotally'),
             stack: 'employee',
+            color: this.dataVisColors["dv-light-purple"],
           },
           {
             type: 'column',
             name: 'Insured By Coinsurance',
             data: arrayForProperty(scenario.performance, 'employee', 'insuredByCoinsurance'),
             stack: 'employee',
+            color: this.dataVisColors["dv-light-brown"],
           },
           {
             type: 'column',
             name: 'Paid From Coinsurance',
             data: arrayForProperty(scenario.performance, 'employee', 'paidFromCoinsurance'),
             stack: 'employee',
+            color: this.dataVisColors["dv-light-green"],
           },
           {
             type: 'column',
             name: 'Paid From Deductible',
             data: arrayForProperty(scenario.performance, 'employee', 'paidFromDeductible'),
             stack: 'employee',
+            color: this.dataVisColors["dv-light-orange"],
           },
           {
             type: 'column',
             name: 'Paid From Savings Account Contribution',
             data: arrayForProperty(scenario.performance, 'employee', 'paidFromSavingsContribution'),
             stack: 'employee',
+            color: this.dataVisColors["dv-light-pink"],
           },
           {
             type: 'column',
             name: 'Insured Totally',
             data: arrayForProperty(scenario.performance, 'spouse', 'insuredTotally'),
             stack: 'spouse',
+            color: this.dataVisColors["dv-dark-purple"],
           },
           {
             type: 'column',
             name: 'Insured By Coinsurance',
             data: arrayForProperty(scenario.performance, 'spouse', 'insuredByCoinsurance'),
             stack: 'spouse',
+            color: this.dataVisColors["dv-dark-brown"],
           },
           {
             type: 'column',
             name: 'Paid From Coinsurance',
             data: arrayForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance'),
             stack: 'spouse',
+            color: this.dataVisColors["dv-dark-green"],
           },
           {
             type: 'column',
             name: 'Paid From Deductible',
             data: arrayForProperty(scenario.performance, 'spouse', 'paidFromDeductible'),
             stack: 'spouse',
+            color: this.dataVisColors["dv-dark-orange"],
           },
           {
             type: 'column',
             name: 'Paid From Savings Account Contribution',
             data: arrayForProperty(scenario.performance, 'spouse', 'paidFromSavingsContribution'),
             stack: 'spouse',
+            color: this.dataVisColors["dv-dark-pink"],
           },
         ];
         return data;
