@@ -198,6 +198,7 @@
             insuranceOption.employeePlan.coinsuranceRate);
 
           savingsContributionRemainingEmployee -= paymentShares[i].employee.paidFromSavingsContribution;
+          deductibleRemainingEmployee -= paymentShares[i].employee.paidFromSavingsContribution;
           deductibleRemainingEmployee -= paymentShares[i].employee.paidFromDeductible;
           coinsuranceRemainingEmployee -= paymentShares[i].employee.paidFromCoinsurance;
         }
@@ -208,6 +209,7 @@
             insuranceOption.spousePlan.coinsuranceRate);
 
           savingsContributionRemainingSpouse -= paymentShares[i].spouse.paidFromSavingsContribution;
+          deductibleRemainingSpouse -= paymentShares[i].spouse.paidFromSavingsContribution;
           deductibleRemainingSpouse -= paymentShares[i].spouse.paidFromDeductible;
           coinsuranceRemainingSpouse -= paymentShares[i].spouse.paidFromCoinsurance;
         }
