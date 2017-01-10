@@ -288,7 +288,6 @@
         },
       },
       observers: [
-        // 'buildChartOptions(scenarios)',
         'generateCostCurve(totalHealthcareCostsEmployee,totalHealthcareCostsSpouse,totalHealthcareCostsChildren, hideSpouseSlider, hideChildrenSlider)',
       ],
       _hideChildrenSlider: function (children) {
@@ -307,19 +306,6 @@
         }
         return result;
       },
-      // buildChartOptions: function (scenarios) {
-      //   this.debounce('debounceChartOptions', function () {
-      //     this._buildChartOptions(scenarios);
-      //   }, 100);
-      // },
-      // _buildChartOptions: function (scenarios) {
-      //   var i = 0;
-      //   this.set('chartOptions', []);
-      //   this.$.scenarioCharts.render();
-      //   for (i = 0; i < scenarios.length; i += 1) {
-      //     this.push('chartOptions', buildCustomChartOptions(scenarios[i]));
-      //   }
-      // },
       calculateAll: function (insuranceOptions, healthcareCosts) {
         var i = 0;
         var scenario = {};
