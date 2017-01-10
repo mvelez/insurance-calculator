@@ -8,10 +8,6 @@
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../bower_components/px-slider/px-slider.html">
 <link rel="import" href="components/scenario-card.html">
-
-<script>
-/* global numeral:true */
-</script>
 <link rel="import" href="../bower_components/numeral-js/numeral-js.html">
 
 
@@ -81,11 +77,19 @@
         <a href="https://www.cdc.gov/nchs/data/hus/hus15.pdf#097">Source</a>
       </p>
       <div>Total Healthcare Costs:
-         <span class="caption">{{totalHealthcareCostsLabel}}</span>
+         <numeral-js number="[[totalHealthcareCostsLabel]]" format="$0,0" print></numeral-js>
       </div>
       <span>Employee</span><paper-slider value="{{logTotalHealthcareCostsEmployee}}" min="5" max="11.512925465" step=".001"></paper-slider>
-      <div hidden$="{{hideSpouseSlider}}"><span>Spouse</span><px-slider value="{{totalHealthcareCostsSpouse}}" max="100000" step="100"></px-slider></div>
-      <div hidden$="{{hideChildrenSlider}}"><span>Children</span><px-slider value="{{totalHealthcareCostsChildren}}" max="100000" step="100"></px-slider></div>
+      <div hidden$="{{hideSpouseSlider}}">
+        <span>Spouse</span>
+        <!-- <px-slider value="{{totalHealthcareCostsSpouse}}" max="100000" step="100"></px-slider> -->
+        <paper-slider value="{{logTotalHealthcareCostsSpouse}}" min="5" max="11.512925465" step=".001"></paper-slider>
+      </div>
+      <div hidden$="{{hideChildrenSlider}}">
+        <span>Children</span>
+        <!-- <px-slider value="{{totalHealthcareCostsChildren}}" max="100000" step="100"></px-slider> -->
+        <paper-slider value="{{logTotalHealthcareCostsChildren}}" min="5" max="11.512925465" step=".001"></paper-slider>
+      </div>
       <template id="scenarioCharts" is="dom-repeat" items="{{scenarios}}" as="scenario">
         <scenario-card scenario="{{scenario}}"></scenario-card>
       </template>
@@ -224,6 +228,14 @@
         type: Number,
         value: 8.16394095476,
       },
+      logTotalHealthcareCostsSpouse: {
+        type: Number,
+        value: 8.16394095476,
+      },
+      logTotalHealthcareCostsChildren: {
+        type: Number,
+        value: 7.6324011266,
+      },
       totalHealthcareCostsLabel: {
         type: Number,
         computed: 'generateHealthcareCostsLabel(totalHealthcareCostsEmployee, totalHealthcareCostsSpouse, totalHealthcareCostsChildren,  hideSpouseSlider, hideChildrenSlider)',
@@ -234,11 +246,11 @@
       },
       totalHealthcareCostsSpouse: {
         type: Number,
-        value: 3512,
+        computed: 'exponent(logTotalHealthcareCostsSpouse, 150, 100000)',
       },
       totalHealthcareCostsChildren: {
         type: Number,
-        value: 2064,
+        computed: 'exponent(logTotalHealthcareCostsChildren, 150, 100000)',
       },
       healthcareCosts: {
         type: Array,
@@ -332,11 +344,7 @@
       if (!hideChildrenSlider) {
         value += totalHealthcareCostsChildren;
       }
-      label = numeral(value).format('$0,0');
-      if (value >= 100000) {
-        label = '$100,000 or more';
-      }
-      return label;
+      return Math.round(value);
     },
     generateCostCurve: function (totalHealthcareCostsEmployee,
       totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
