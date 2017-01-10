@@ -181,18 +181,16 @@
         unrankedOptions: {
           type: Array,
           notify: true,
-          // computed: 'denormalizeOptions(rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions.*)',
         },
       },
       observers: [
         'denormalizeOptions(rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions.*)',
       ],
-      denormalizeOptions: function (rateSheet, coverageLevels, addonsSheet,
-        planSheet, filterOptions) {
-          this.debounce('debounceDenormalizeOptions', function () {
-            this.set('unrankedOptions', this._denormalizeOptions(rateSheet, coverageLevels, addonsSheet,
-            planSheet, filterOptions));
-          }, 250);
+      denormalizeOptions: function (rateSheet, coverageLevels, addonsSheet, planSheet, filterOptions) {
+        this.debounce('debounceDenormalizeOptions', function () {
+          this.set('unrankedOptions', this._denormalizeOptions(rateSheet, coverageLevels, addonsSheet,
+          planSheet, filterOptions));
+        }, 250);
       },
       _denormalizeOptions: function (rateSheet, coverageLevels, addonsSheet,
         planSheet, filterOptions) {
