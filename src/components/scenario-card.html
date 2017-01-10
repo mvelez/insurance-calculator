@@ -47,17 +47,21 @@
     Polymer({
       is: 'scenario-card',
       properties: {
+        visible: {
+          type: Boolean,
+          notify: true,
+        },
         scenario: {
           type: Object,
           notify: true,
         },
         planName: {
           type: String,
-          computed: 'buildPlanName(scenario)',
+          computed: 'buildPlanName(scenario, visible)',
         },
         totalHealthcareSpending: {
           type: Number,
-          computed: 'calculateTotalHealthcareSpending(scenario)',
+          computed: 'calculateTotalHealthcareSpending(scenario, visible)',
         },
         pieChartData: {
           type: Array,
@@ -74,6 +78,7 @@
                     enabled: false,
                   },
                   showInLegend: true,
+                  animation: false,
                 },
               },
             };
@@ -90,6 +95,7 @@
               plotOptions: {
                 column: {
                   stacking: 'normal',
+                  animation: false,
                 },
               },
             };
@@ -133,48 +139,54 @@
         },
       },
       observers: [
-        'buildColumnData(scenario)',
-        'buildPieChartData(scenario)',
+        'buildColumnData(scenario, visible)',
+        'buildPieChartData(scenario, visible)',
       ],
 
-      buildPlanName: function (scenario) {
-        var chartTitle = '';
-        var employeePlanName;
-        var spousePlanName;
-        if (scenario.insuranceOption.employeePlan) {
-          employeePlanName = scenario.insuranceOption.employeePlan.planName + ' - ' +
-            scenario.insuranceOption.employeePlan.coverageLevel;
-          chartTitle = employeePlanName;
+      buildPlanName: function (scenario, visible) {
+        if (visible) {
+          var chartTitle = '';
+          var employeePlanName;
+          var spousePlanName;
+          if (scenario.insuranceOption.employeePlan) {
+            employeePlanName = scenario.insuranceOption.employeePlan.planName + ' - ' +
+              scenario.insuranceOption.employeePlan.coverageLevel;
+            chartTitle = employeePlanName;
+          }
+          if (scenario.insuranceOption.spousePlan) {
+            spousePlanName = scenario.insuranceOption.spousePlan.planName;
+            chartTitle = spousePlanName;
+          }
+          if (employeePlanName && spousePlanName) {
+            chartTitle = employeePlanName + ' / ' + spousePlanName;
+          }
+          return chartTitle;
         }
-        if (scenario.insuranceOption.spousePlan) {
-          spousePlanName = scenario.insuranceOption.spousePlan.planName;
-          chartTitle = spousePlanName;
-        }
-        if (employeePlanName && spousePlanName) {
-          chartTitle = employeePlanName + ' / ' + spousePlanName;
-        }
-        return chartTitle;
       },
-      calculateTotalHealthcareSpending: function (scenario) {
-        var total = 0;
-        if (scenario.insuranceOption.employeePlan) {
-          total += scenario.insuranceOption.employeePlan.premium;
-          total += sumForProperty(scenario.performance, 'employee', 'paidFromDeductible');
-          total += sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance');
-        }
+      calculateTotalHealthcareSpending: function (scenario, visible) {
+        if (visible) {
+          var total = 0;
+          if (scenario.insuranceOption.employeePlan) {
+            total += scenario.insuranceOption.employeePlan.premium;
+            total += sumForProperty(scenario.performance, 'employee', 'paidFromDeductible');
+            total += sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance');
+          }
 
-        if (scenario.insuranceOption.spousePlan) {
-          total += scenario.insuranceOption.spousePlan.premium;
-          total += sumForProperty(scenario.performance, 'spouse', 'paidFromDeductible');
-          total += sumForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance');
-        }
+          if (scenario.insuranceOption.spousePlan) {
+            total += scenario.insuranceOption.spousePlan.premium;
+            total += sumForProperty(scenario.performance, 'spouse', 'paidFromDeductible');
+            total += sumForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance');
+          }
 
-        return total;
+          return total;
+        }
       },
-      buildPieChartData: function (scenario) {
+      buildPieChartData: function (scenario, visible) {
+        if(visible) {
           this.debounce('debouncePieChartData', function () {
             this.set('pieChartData', this._buildPieChartData(scenario));
           }, 100);
+        }
       },
       _buildPieChartData: function (scenario) {
         var premiumEmployee = 0;
@@ -220,10 +232,12 @@
         ];
         return data;
       },
-      buildColumnData: function (scenario) {
-        this.debounce('debounceColumnData', function () {
-          this.set('columnData', this._buildColumnData(scenario));
-        }, 100);
+      buildColumnData: function (scenario, visible) {
+        if (visible) {
+          this.debounce('debounceColumnData', function () {
+            this.set('columnData', this._buildColumnData(scenario));
+          }, 100);
+        }
       },
       _buildColumnData: function (scenario) {
         var data;

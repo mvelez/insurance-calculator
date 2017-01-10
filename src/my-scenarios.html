@@ -91,7 +91,7 @@
         <paper-slider value="{{logTotalHealthcareCostsChildren}}" min="5" max="11.512925465" step=".001"></paper-slider>
       </div>
       <template id="scenarioCharts" is="dom-repeat" items="{{scenarios}}" as="scenario">
-        <scenario-card scenario="{{scenario}}"></scenario-card>
+        <scenario-card scenario="[[scenario]]" visible="[[visible]]"></scenario-card>
       </template>
       <div class="horizontal start-justified layout">
         <a href="/options"><paper-button raised>Back</paper-button></a>
@@ -224,7 +224,7 @@
         scenarios: {
           type: Array,
           notify: true,
-          computed: 'calculateAll(insuranceOptions, healthcareCosts, visible)',
+          computed: 'calculateAll(insuranceOptions, healthcareCosts)',
         },
         logTotalHealthcareCostsEmployee: {
           type: Number,
@@ -307,22 +307,20 @@
         }
         return result;
       },
-      calculateAll: function (insuranceOptions, healthcareCosts, visible) {
-        if (visible){
-          var i = 0;
-          var scenario = {};
-          var scenarios = [];
-          // this.set('scenarios', []);
+      calculateAll: function (insuranceOptions, healthcareCosts) {
+        var i = 0;
+        var scenario = {};
+        var scenarios = [];
+        // this.set('scenarios', []);
 
-          for (i = 0; i < insuranceOptions.length; i += 1) {
-            scenario = {};
-            scenario.insuranceOption = insuranceOptions[i];
-            scenario.performance = calculatePerformance(insuranceOptions[i], healthcareCosts);
-            scenarios.push(scenario);
-          }
-
-          return scenarios;
+        for (i = 0; i < insuranceOptions.length; i += 1) {
+          scenario = {};
+          scenario.insuranceOption = insuranceOptions[i];
+          scenario.performance = calculatePerformance(insuranceOptions[i], healthcareCosts);
+          scenarios.push(scenario);
         }
+
+        return scenarios;
       },
       generateHealthcareCostsLabel: function (totalHealthcareCostsEmployee,
         totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
