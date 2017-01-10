@@ -100,292 +100,291 @@
   </template>
 
   <script>
-  function minimumValue(a, b) {
-    if (a < b) {
-      return a;
-    }
-    return b;
-  }
-
-
-  function allocateCosts(cost, deductibleBalance, savingsBalance,
-    coinsuranceBalance, coinsuranceRate) {
-    var paymentShare = {};
-    var toAllocate = cost;
-    var appliedAmount = 0;
-    var deductibleRemaining = deductibleBalance;
-    var savingsContributionRemaining = savingsBalance;
-    var coinsuranceRemaining = coinsuranceBalance;
-    paymentShare.healthcareCost = toAllocate;
-    paymentShare.paidFromSavingsContribution = 0;
-    paymentShare.paidFromDeductible = 0;
-    paymentShare.paidFromCoinsurance = 0;
-    paymentShare.insuredByCoinsurance = 0;
-    paymentShare.insuredTotally = 0;
-
-    if (toAllocate > 0 && deductibleRemaining > 0 && savingsContributionRemaining > 0) {
-      appliedAmount = minimumValue(savingsContributionRemaining, toAllocate);
-      paymentShare.paidFromSavingsContribution = Math.round(appliedAmount * 100) / 100;
-      deductibleRemaining -= appliedAmount;
-      toAllocate -= appliedAmount;
+    function minimumValue(a, b) {
+      if (a < b) {
+        return a;
+      }
+      return b;
     }
 
-    if (toAllocate > 0 && deductibleRemaining > 0) {
-      appliedAmount = minimumValue(deductibleRemaining, toAllocate);
-      paymentShare.paidFromDeductible = Math.round(appliedAmount * 100) / 100;
-      toAllocate -= appliedAmount;
-    }
 
-    if (toAllocate > 0 && coinsuranceRemaining > 0) {
-      appliedAmount = minimumValue(
-        (coinsuranceRemaining * (1 / coinsuranceRate)), toAllocate);
-      paymentShare.paidFromCoinsurance = Math.round(
-        (appliedAmount * coinsuranceRate) * 100) / 100;
-      paymentShare.insuredByCoinsurance = Math.round(
-        (appliedAmount * (1 - coinsuranceRate) * 100)) / 100;
-      toAllocate -= appliedAmount;
-    }
+    function allocateCosts(cost, deductibleBalance, savingsBalance,
+      coinsuranceBalance, coinsuranceRate) {
+      var paymentShare = {};
+      var toAllocate = cost;
+      var appliedAmount = 0;
+      var deductibleRemaining = deductibleBalance;
+      var savingsContributionRemaining = savingsBalance;
+      var coinsuranceRemaining = coinsuranceBalance;
+      paymentShare.healthcareCost = toAllocate;
+      paymentShare.paidFromSavingsContribution = 0;
+      paymentShare.paidFromDeductible = 0;
+      paymentShare.paidFromCoinsurance = 0;
+      paymentShare.insuredByCoinsurance = 0;
+      paymentShare.insuredTotally = 0;
 
-    if (toAllocate > 0) {
-      paymentShare.insuredTotally = Math.round(toAllocate * 100) / 100;
-    }
-    return paymentShare;
-  }
-
-  function calculatePerformance(insuranceOption, healthcareCosts) {
-    var paymentShares = [];
-    var i = 0;
-    var costEmployee;
-    var costSpouse;
-    var savingsContributionRemainingEmployee;
-    var deductibleRemainingEmployee;
-    var coinsuranceRemainingEmployee;
-    var savingsContributionRemainingSpouse;
-    var deductibleRemainingSpouse;
-    var coinsuranceRemainingSpouse;
-    if (insuranceOption.employeePlan) {
-      savingsContributionRemainingEmployee =
-        insuranceOption.employeePlan.savingsAccountContribution;
-      deductibleRemainingEmployee = insuranceOption.employeePlan.deductible;
-      coinsuranceRemainingEmployee = insuranceOption.employeePlan.coinsuranceMax;
-    }
-    if (insuranceOption.spousePlan) {
-      savingsContributionRemainingSpouse = insuranceOption.spousePlan.savingsAccountContribution;
-      deductibleRemainingSpouse = insuranceOption.spousePlan.deductible;
-      coinsuranceRemainingSpouse = insuranceOption.spousePlan.coinsuranceMax;
-    }
-    for (i = 0; i < healthcareCosts.length; i += 1) {
-      paymentShares.push({});
-      if (insuranceOption.employeePlan && insuranceOption.spousePlan) {
-        costEmployee = healthcareCosts[i].employee;
-        costSpouse = healthcareCosts[i].spouse;
-        if (insuranceOption.employeePlan.coverageLevel !== '1-person (employee only)') {
-          costEmployee += healthcareCosts[i].children;
-        } else {
-          costSpouse += healthcareCosts[i].children;
-        }
-      } else if (insuranceOption.employeePlan) {
-        costEmployee = healthcareCosts[i].employee +
-          healthcareCosts[i].spouse + healthcareCosts[i].children;
-      } else if (insuranceOption.spousePlan) {
-        costSpouse = healthcareCosts[i].spouse +
-          healthcareCosts[i].employee + healthcareCosts[i].children;
+      if (toAllocate > 0 && deductibleRemaining > 0 && savingsContributionRemaining > 0) {
+        appliedAmount = minimumValue(savingsContributionRemaining, toAllocate);
+        paymentShare.paidFromSavingsContribution = Math.round(appliedAmount * 100) / 100;
+        deductibleRemaining -= appliedAmount;
+        toAllocate -= appliedAmount;
       }
 
+      if (toAllocate > 0 && deductibleRemaining > 0) {
+        appliedAmount = minimumValue(deductibleRemaining, toAllocate);
+        paymentShare.paidFromDeductible = Math.round(appliedAmount * 100) / 100;
+        toAllocate -= appliedAmount;
+      }
+
+      if (toAllocate > 0 && coinsuranceRemaining > 0) {
+        appliedAmount = minimumValue(
+          (coinsuranceRemaining * (1 / coinsuranceRate)), toAllocate);
+        paymentShare.paidFromCoinsurance = Math.round(
+          (appliedAmount * coinsuranceRate) * 100) / 100;
+        paymentShare.insuredByCoinsurance = Math.round(
+          (appliedAmount * (1 - coinsuranceRate) * 100)) / 100;
+        toAllocate -= appliedAmount;
+      }
+
+      if (toAllocate > 0) {
+        paymentShare.insuredTotally = Math.round(toAllocate * 100) / 100;
+      }
+      return paymentShare;
+    }
+
+    function calculatePerformance(insuranceOption, healthcareCosts) {
+      var paymentShares = [];
+      var i = 0;
+      var costEmployee;
+      var costSpouse;
+      var savingsContributionRemainingEmployee;
+      var deductibleRemainingEmployee;
+      var coinsuranceRemainingEmployee;
+      var savingsContributionRemainingSpouse;
+      var deductibleRemainingSpouse;
+      var coinsuranceRemainingSpouse;
       if (insuranceOption.employeePlan) {
-        paymentShares[i].employee = allocateCosts(costEmployee, deductibleRemainingEmployee,
-          savingsContributionRemainingEmployee, coinsuranceRemainingEmployee,
-          insuranceOption.employeePlan.coinsuranceRate);
-
-        savingsContributionRemainingEmployee -= paymentShares[i].employee.paidFromSavingsContribution;
-        deductibleRemainingEmployee -= paymentShares[i].employee.paidFromDeductible;
-        coinsuranceRemainingEmployee -= paymentShares[i].employee.paidFromCoinsurance;
+        savingsContributionRemainingEmployee =
+          insuranceOption.employeePlan.savingsAccountContribution;
+        deductibleRemainingEmployee = insuranceOption.employeePlan.deductible;
+        coinsuranceRemainingEmployee = insuranceOption.employeePlan.coinsuranceMax;
       }
-
       if (insuranceOption.spousePlan) {
-        paymentShares[i].spouse = allocateCosts(costSpouse, deductibleRemainingSpouse,
-          savingsContributionRemainingSpouse, coinsuranceRemainingSpouse,
-          insuranceOption.spousePlan.coinsuranceRate);
-
-        savingsContributionRemainingSpouse -= paymentShares[i].spouse.paidFromSavingsContribution;
-        deductibleRemainingSpouse -= paymentShares[i].spouse.paidFromDeductible;
-        coinsuranceRemainingSpouse -= paymentShares[i].spouse.paidFromCoinsurance;
+        savingsContributionRemainingSpouse = insuranceOption.spousePlan.savingsAccountContribution;
+        deductibleRemainingSpouse = insuranceOption.spousePlan.deductible;
+        coinsuranceRemainingSpouse = insuranceOption.spousePlan.coinsuranceMax;
       }
+      for (i = 0; i < healthcareCosts.length; i += 1) {
+        paymentShares.push({});
+        if (insuranceOption.employeePlan && insuranceOption.spousePlan) {
+          costEmployee = healthcareCosts[i].employee;
+          costSpouse = healthcareCosts[i].spouse;
+          if (insuranceOption.employeePlan.coverageLevel !== '1-person (employee only)') {
+            costEmployee += healthcareCosts[i].children;
+          } else {
+            costSpouse += healthcareCosts[i].children;
+          }
+        } else if (insuranceOption.employeePlan) {
+          costEmployee = healthcareCosts[i].employee +
+            healthcareCosts[i].spouse + healthcareCosts[i].children;
+        } else if (insuranceOption.spousePlan) {
+          costSpouse = healthcareCosts[i].spouse +
+            healthcareCosts[i].employee + healthcareCosts[i].children;
+        }
+
+        if (insuranceOption.employeePlan) {
+          paymentShares[i].employee = allocateCosts(costEmployee, deductibleRemainingEmployee,
+            savingsContributionRemainingEmployee, coinsuranceRemainingEmployee,
+            insuranceOption.employeePlan.coinsuranceRate);
+
+          savingsContributionRemainingEmployee -= paymentShares[i].employee.paidFromSavingsContribution;
+          deductibleRemainingEmployee -= paymentShares[i].employee.paidFromDeductible;
+          coinsuranceRemainingEmployee -= paymentShares[i].employee.paidFromCoinsurance;
+        }
+
+        if (insuranceOption.spousePlan) {
+          paymentShares[i].spouse = allocateCosts(costSpouse, deductibleRemainingSpouse,
+            savingsContributionRemainingSpouse, coinsuranceRemainingSpouse,
+            insuranceOption.spousePlan.coinsuranceRate);
+
+          savingsContributionRemainingSpouse -= paymentShares[i].spouse.paidFromSavingsContribution;
+          deductibleRemainingSpouse -= paymentShares[i].spouse.paidFromDeductible;
+          coinsuranceRemainingSpouse -= paymentShares[i].spouse.paidFromCoinsurance;
+        }
+      }
+      return paymentShares;
     }
-    return paymentShares;
-  }
 
 
-  Polymer({
-    is: 'my-scenarios',
-    properties: {
-      scenarios: {
-        type: Array,
-        notify: true,
-        computed: 'calculateAll(insuranceOptions, healthcareCosts)',
-      },
-      logTotalHealthcareCostsEmployee: {
-        type: Number,
-        value: 8.16394095476,
-      },
-      logTotalHealthcareCostsSpouse: {
-        type: Number,
-        value: 8.16394095476,
-      },
-      logTotalHealthcareCostsChildren: {
-        type: Number,
-        value: 7.6324011266,
-      },
-      totalHealthcareCostsLabel: {
-        type: Number,
-        computed: 'generateHealthcareCostsLabel(totalHealthcareCostsEmployee, totalHealthcareCostsSpouse, totalHealthcareCostsChildren,  hideSpouseSlider, hideChildrenSlider)',
-      },
-      totalHealthcareCostsEmployee: {
-        type: Number,
-        computed: 'exponent(logTotalHealthcareCostsEmployee, 150, 100000)',
-      },
-      totalHealthcareCostsSpouse: {
-        type: Number,
-        computed: 'exponent(logTotalHealthcareCostsSpouse, 150, 100000)',
-      },
-      totalHealthcareCostsChildren: {
-        type: Number,
-        computed: 'exponent(logTotalHealthcareCostsChildren, 150, 100000)',
-      },
-      healthcareCosts: {
-        type: Array,
-        notify: true,
-      },
-      chartOptions: {
-        type: Array,
-        notify: true,
-        value: function () {
-          var retVal = [];
-          return retVal;
+    Polymer({
+      is: 'my-scenarios',
+      properties: {
+        scenarios: {
+          type: Array,
+          notify: true,
+          computed: 'calculateAll(insuranceOptions, healthcareCosts)',
+        },
+        logTotalHealthcareCostsEmployee: {
+          type: Number,
+          value: 8.16394095476,
+        },
+        logTotalHealthcareCostsSpouse: {
+          type: Number,
+          value: 8.16394095476,
+        },
+        logTotalHealthcareCostsChildren: {
+          type: Number,
+          value: 7.6324011266,
+        },
+        totalHealthcareCostsLabel: {
+          type: Number,
+          computed: 'generateHealthcareCostsLabel(totalHealthcareCostsEmployee, totalHealthcareCostsSpouse, totalHealthcareCostsChildren,  hideSpouseSlider, hideChildrenSlider)',
+        },
+        totalHealthcareCostsEmployee: {
+          type: Number,
+          computed: 'exponent(logTotalHealthcareCostsEmployee, 150, 100000)',
+        },
+        totalHealthcareCostsSpouse: {
+          type: Number,
+          computed: 'exponent(logTotalHealthcareCostsSpouse, 150, 100000)',
+        },
+        totalHealthcareCostsChildren: {
+          type: Number,
+          computed: 'exponent(logTotalHealthcareCostsChildren, 150, 100000)',
+        },
+        healthcareCosts: {
+          type: Array,
+          notify: true,
+        },
+        chartOptions: {
+          type: Array,
+          notify: true,
+          value: function () {
+            var retVal = [];
+            return retVal;
+          },
+        },
+        insuranceOptions: {
+          type: Array,
+          notify: true,
+        },
+        childrenCount: {
+          type: String,
+          notify: true,
+        },
+        adultCount: {
+          type: String,
+          notify: true,
+        },
+        hideChildrenSlider: {
+          type: Boolean,
+          computed: '_hideChildrenSlider(childrenCount)',
+        },
+        hideSpouseSlider: {
+          type: Boolean,
+          computed: '_hideSpouseSlider(adultCount)',
         },
       },
-      insuranceOptions: {
-        type: Array,
-        notify: true,
+      observers: [
+        // 'buildChartOptions(scenarios)',
+        'generateCostCurve(totalHealthcareCostsEmployee,totalHealthcareCostsSpouse,totalHealthcareCostsChildren, hideSpouseSlider, hideChildrenSlider)',
+      ],
+      _hideChildrenSlider: function (children) {
+        return children === '0';
       },
-      childrenCount: {
-        type: String,
-        notify: true,
+      _hideSpouseSlider: function (adults) {
+        return adults === '1';
       },
-      adultCount: {
-        type: String,
-        notify: true,
+      exponent: function (value, clipValueLow, clipValueHigh) {
+        var result = Math.exp(value);
+        if (result < clipValueLow) {
+          result = 0;
+        }
+        if (result > clipValueHigh) {
+          result = clipValueHigh;
+        }
+        return result;
       },
-      hideChildrenSlider: {
-        type: Boolean,
-        computed: '_hideChildrenSlider(childrenCount)',
-      },
-      hideSpouseSlider: {
-        type: Boolean,
-        computed: '_hideSpouseSlider(adultCount)',
-      },
-    },
-    observers: [
-      // 'buildChartOptions(scenarios)',
-      'generateCostCurve(totalHealthcareCostsEmployee,totalHealthcareCostsSpouse,totalHealthcareCostsChildren, hideSpouseSlider, hideChildrenSlider)',
-    ],
-    _hideChildrenSlider: function (children) {
-      return children === '0';
-    },
-    _hideSpouseSlider: function (adults) {
-      return adults === '1';
-    },
-    exponent: function (value, clipValueLow, clipValueHigh) {
-      var result = Math.exp(value);
-      if (result < clipValueLow) {
-        result = 0;
-      }
-      if (result > clipValueHigh) {
-        result = clipValueHigh;
-      }
-      return result;
-    },
-    // buildChartOptions: function (scenarios) {
-    //   this.debounce('debounceChartOptions', function () {
-    //     this._buildChartOptions(scenarios);
-    //   }, 100);
-    // },
-    // _buildChartOptions: function (scenarios) {
-    //   var i = 0;
-    //   this.set('chartOptions', []);
-    //   this.$.scenarioCharts.render();
-    //   for (i = 0; i < scenarios.length; i += 1) {
-    //     this.push('chartOptions', buildCustomChartOptions(scenarios[i]));
-    //   }
-    // },
-    calculateAll: function (insuranceOptions, healthcareCosts) {
-      var i = 0;
-      var scenario = {};
-      var scenarios = [];
-      // this.set('scenarios', []);
+      // buildChartOptions: function (scenarios) {
+      //   this.debounce('debounceChartOptions', function () {
+      //     this._buildChartOptions(scenarios);
+      //   }, 100);
+      // },
+      // _buildChartOptions: function (scenarios) {
+      //   var i = 0;
+      //   this.set('chartOptions', []);
+      //   this.$.scenarioCharts.render();
+      //   for (i = 0; i < scenarios.length; i += 1) {
+      //     this.push('chartOptions', buildCustomChartOptions(scenarios[i]));
+      //   }
+      // },
+      calculateAll: function (insuranceOptions, healthcareCosts) {
+        var i = 0;
+        var scenario = {};
+        var scenarios = [];
+        // this.set('scenarios', []);
 
-      for (i = 0; i < insuranceOptions.length; i += 1) {
-        scenario = {};
-        scenario.insuranceOption = insuranceOptions[i];
-        scenario.performance = calculatePerformance(insuranceOptions[i], healthcareCosts);
-        scenarios.push(scenario);
-      }
+        for (i = 0; i < insuranceOptions.length; i += 1) {
+          scenario = {};
+          scenario.insuranceOption = insuranceOptions[i];
+          scenario.performance = calculatePerformance(insuranceOptions[i], healthcareCosts);
+          scenarios.push(scenario);
+        }
 
-      return scenarios;
-    },
-    generateHealthcareCostsLabel: function (totalHealthcareCostsEmployee,
-      totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
-      hideSpouseSlider, hideChildrenSlider) {
-      var value = totalHealthcareCostsEmployee;
-      var label;
-      if (!hideSpouseSlider) {
-        value += totalHealthcareCostsSpouse;
-      }
-      if (!hideChildrenSlider) {
-        value += totalHealthcareCostsChildren;
-      }
-      return Math.round(value);
-    },
-    generateCostCurve: function (totalHealthcareCostsEmployee,
-      totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
-      hideSpouseSlider, hideChildrenSlider) {
-      this.debounce('debounceCostCurve', function () {
-        this.set('healthcareCosts', this._generateCostCurve(totalHealthcareCostsEmployee,
-          totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
-          hideSpouseSlider, hideChildrenSlider));
-      }, 100);
-    },
-    _generateCostCurve: function (totalHealthcareCostsEmployee,
-      totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
-      hideSpouseSlider, hideChildrenSlider) {
-      var costCurve = [];
-      var i = 1;
-      var segments = 42;
-      if (hideSpouseSlider) {
-        totalHealthcareCostsSpouse = 0;
-      }
-      if (hideChildrenSlider) {
-        totalHealthcareCostsChildren = 0;
-      }
-      for (i = 1; i <= 6; i += 1) {
-        costCurve.push({
-          employee: totalHealthcareCostsEmployee * (i / segments),
-          spouse: totalHealthcareCostsSpouse * (i / segments),
-          children: totalHealthcareCostsChildren * (i / segments),
-        });
-      }
+        return scenarios;
+      },
+      generateHealthcareCostsLabel: function (totalHealthcareCostsEmployee,
+        totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
+        hideSpouseSlider, hideChildrenSlider) {
+        var value = totalHealthcareCostsEmployee;
+        if (!hideSpouseSlider) {
+          value += totalHealthcareCostsSpouse;
+        }
+        if (!hideChildrenSlider) {
+          value += totalHealthcareCostsChildren;
+        }
+        return Math.round(value);
+      },
+      generateCostCurve: function (totalHealthcareCostsEmployee,
+        totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
+        hideSpouseSlider, hideChildrenSlider) {
+        this.debounce('debounceCostCurve', function () {
+          this.set('healthcareCosts', this._generateCostCurve(totalHealthcareCostsEmployee,
+            totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
+            hideSpouseSlider, hideChildrenSlider));
+        }, 100);
+      },
+      _generateCostCurve: function (totalHealthcareCostsEmployee,
+        totalHealthcareCostsSpouse, totalHealthcareCostsChildren,
+        hideSpouseSlider, hideChildrenSlider) {
+        var costCurve = [];
+        var i = 1;
+        var segments = 42;
+        if (hideSpouseSlider) {
+          totalHealthcareCostsSpouse = 0;
+        }
+        if (hideChildrenSlider) {
+          totalHealthcareCostsChildren = 0;
+        }
+        for (i = 1; i <= 6; i += 1) {
+          costCurve.push({
+            employee: totalHealthcareCostsEmployee * (i / segments),
+            spouse: totalHealthcareCostsSpouse * (i / segments),
+            children: totalHealthcareCostsChildren * (i / segments),
+          });
+        }
 
-      for (i = 6; i >= 1; i -= 1) {
-        costCurve.push({
-          employee: totalHealthcareCostsEmployee * (i / segments),
-          spouse: totalHealthcareCostsSpouse * (i / segments),
-          children: totalHealthcareCostsChildren * (i / segments),
-        });
-      }
+        for (i = 6; i >= 1; i -= 1) {
+          costCurve.push({
+            employee: totalHealthcareCostsEmployee * (i / segments),
+            spouse: totalHealthcareCostsSpouse * (i / segments),
+            children: totalHealthcareCostsChildren * (i / segments),
+          });
+        }
 
-      return costCurve;
-    },
-  });
+        return costCurve;
+      },
+    });
 
   </script>
 </dom-module>
