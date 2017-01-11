@@ -14,6 +14,10 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="my-icons.html">
 <link rel="import" href="components/google-analytics.html">
+<link rel="import" href="../bower_components/px-theme/px-theme-styles.html">
+<style include="px-theme-styles" is="custom-style"></style>
+<link rel="import" href="../bower_components/px-app-nav/px-app-nav.html"/>
+<link rel="import" href="../bower_components/px-view-header/px-view-header.html"/>
 
 <dom-module id="my-app">
   <template>
@@ -58,8 +62,10 @@
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <app-drawer-layout fullbleed>
-      <!-- Drawer content -->
+    <px-app-nav nav-items="[[pxNavItems]]" path-prefix="/" id="pxNav"></px-app-nav>
+    <px-view-header title="Health Choice Insurance Calculator"></px-view-header>
+    <!-- <app-drawer-layout fullbleed> -->
+<!--
       <app-drawer id="drawer">
         <app-toolbar>Insurance Calculator</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
@@ -70,16 +76,16 @@
           <a name="feedback" href="/feedback">Feedback</a>
         </iron-selector>
       </app-drawer>
+ -->
 
-      <!-- Main content -->
-      <app-header-layout has-scrolling-region>
+      <!-- <app-header-layout has-scrolling-region>
 
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Insurance Calculator</div>
           </app-toolbar>
-        </app-header>
+        </app-header> -->
 
         <iron-pages
             selected="[[page]]"
@@ -111,8 +117,9 @@
           <my-feedback name="feedback"></my-feedback>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
-      </app-header-layout>
-    </app-drawer-layout>
+
+      <!-- </app-header-layout> -->
+    <!-- </app-drawer-layout> -->
     <google-analytics ga-code="UA-89710417-1" page="{{page}}" />
   </template>
 
@@ -154,17 +161,87 @@
             return dualIncomeSingleCouple;
           },
         },
-      },
+        pxNavItems: {
+          type: Array,
+          value: function () {
+            var value = [];
+            var overview = {
+              path: 'overview',
+              icon: 'fa-info',
+              label: 'Overview',
+              href: 'overview',
+              class: '',
+              subitemclass: 'visuallyhidden',
+              subitemlistclass: 'visuallyhidden list-bare',
+              selected: false,
+              subSelected: false,
+            };
+            var questions = {
+              path: 'questions',
+              icon: 'fa-user-md',
+              label: 'Questions',
+              href: 'questions',
+              class: '',
+              subitemclass: 'visuallyhidden',
+              subitemlistclass: 'visuallyhidden list-bare',
+              selected: false,
+              subSelected: false,
+            };
+            var options = {
+              path: 'options',
+              icon: 'fa-arrows-alt',
+              label: 'Options',
+              href: 'options',
+              class: '',
+              subitemclass: 'visuallyhidden',
+              subitemlistclass: 'visuallyhidden list-bare',
+              selected: false,
+              subSelected: false,
+            };
+            var scenarios = {
+              path: 'scenarios',
+              icon: 'fa-bar-chart',
+              label: 'Cost Estimator',
+              href: 'scenarios',
+              class: '',
+              subitemclass: 'visuallyhidden',
+              subitemlistclass: 'visuallyhidden list-bare',
+              selected: false,
+              subSelected: false,
+            };
+            var feedback = {
+              path: 'feedback',
+              icon: 'fa-thumbs-up',
+              label: 'Feedback',
+              href: 'feedback',
+              class: '',
+              subitemclass: 'visuallyhidden',
+              subitemlistclass: 'visuallyhidden list-bare',
+              selected: false,
+              subSelected: false,
+            };
+            value.push(overview);
+            value.push(questions);
+            value.push(options);
+            value.push(scenarios);
+            value.push(feedback);
 
+            return value;
+          },
+        },
+      },
       observers: [
         '_routePageChanged(routeData.page)',
       ],
       _routePageChanged: function (page) {
         this.page = page || 'overview';
 
-        if (!this.$.drawer.persistent) {
-          this.$.drawer.close();
-        }
+        // if (!this.$.drawer.persistent) {
+        //   this.$.drawer.close();
+        // }
+        // if (!this.$.pxNav.navExpanded) {
+        //   this.$.pxNav
+        // }
       },
 
       _pageChanged: function (page) {
