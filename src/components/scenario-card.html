@@ -151,45 +151,47 @@
       ],
 
       buildPlanName: function (scenario, visible) {
-        if (visible) {
-          var chartTitle = '';
-          var employeePlanName;
-          var spousePlanName;
-          if (scenario.insuranceOption.employeePlan) {
-            employeePlanName = scenario.insuranceOption.employeePlan.planName + ' - ' +
-              scenario.insuranceOption.employeePlan.coverageLevel;
-            chartTitle = employeePlanName;
-          }
-          if (scenario.insuranceOption.spousePlan) {
-            spousePlanName = scenario.insuranceOption.spousePlan.planName;
-            chartTitle = spousePlanName;
-          }
-          if (employeePlanName && spousePlanName) {
-            chartTitle = employeePlanName + ' / ' + spousePlanName;
-          }
-          return chartTitle;
+        var chartTitle = '';
+        var employeePlanName;
+        var spousePlanName;
+        if (!visible) {
+          return null;
         }
+        if (scenario.insuranceOption.employeePlan) {
+          employeePlanName = scenario.insuranceOption.employeePlan.planName + ' - ' +
+            scenario.insuranceOption.employeePlan.coverageLevel;
+          chartTitle = employeePlanName;
+        }
+        if (scenario.insuranceOption.spousePlan) {
+          spousePlanName = scenario.insuranceOption.spousePlan.planName;
+          chartTitle = spousePlanName;
+        }
+        if (employeePlanName && spousePlanName) {
+          chartTitle = employeePlanName + ' / ' + spousePlanName;
+        }
+        return chartTitle;
       },
       calculateTotalHealthcareSpending: function (scenario, visible) {
-        if (visible) {
-          var total = 0;
-          if (scenario.insuranceOption.employeePlan) {
-            total += scenario.insuranceOption.employeePlan.premium;
-            total += sumForProperty(scenario.performance, 'employee', 'paidFromDeductible');
-            total += sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance');
-          }
-
-          if (scenario.insuranceOption.spousePlan) {
-            total += scenario.insuranceOption.spousePlan.premium;
-            total += sumForProperty(scenario.performance, 'spouse', 'paidFromDeductible');
-            total += sumForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance');
-          }
-
-          return total;
+        var total = 0;
+        if (!visible) {
+          return null;
         }
+        if (scenario.insuranceOption.employeePlan) {
+          total += scenario.insuranceOption.employeePlan.premium;
+          total += sumForProperty(scenario.performance, 'employee', 'paidFromDeductible');
+          total += sumForProperty(scenario.performance, 'employee', 'paidFromCoinsurance');
+        }
+
+        if (scenario.insuranceOption.spousePlan) {
+          total += scenario.insuranceOption.spousePlan.premium;
+          total += sumForProperty(scenario.performance, 'spouse', 'paidFromDeductible');
+          total += sumForProperty(scenario.performance, 'spouse', 'paidFromCoinsurance');
+        }
+
+        return total;
       },
       buildPieChartData: function (scenario, visible) {
-        if(visible) {
+        if (visible) {
           this.debounce('debouncePieChartData', function () {
             this.set('pieChartData', this._buildPieChartData(scenario));
           }, 100);
