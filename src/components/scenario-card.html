@@ -1,6 +1,6 @@
 <!doctype html>
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../../bower_components/numeral-js/numeral-js.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/numeral-js/numeral-js.html">
 <link rel="import" href="../../bower_components/highcharts-chart/highcharts-chart.html">
 
@@ -9,16 +9,23 @@
     <style>
       paper-card {
         box-sizing: border-box;
-        max-width: 800px;
         margin: 4px;
         padding: 4px;
         flex: 0 0 auto;
       }
     </style>
+    <style is="custom-style" include="iron-flex"></style>
     <paper-card heading="[[planName]]">
       <p>Total Healthcare Spending: <numeral-js number="[[totalHealthcareSpending]]" format="$0,0" print></numeral-js></p>
-      <highcharts-chart type="pie" data="[[pieChartData]]" title="" color-by-point highchart-options="[[pieChartOptions]]"></highcharts-chart>
-      <highcharts-chart type="column" data="[[columnData]]" title="" color-by-point highchart-options="[[columnChartOptions]]"></highcharts-chart>
+
+      <div class="layout horizontal">
+        <div>
+          <highcharts-chart type="pie" data="[[pieChartData]]" title="" color-by-point highchart-options="[[pieChartOptions]]"></highcharts-chart>
+        </div>
+        <div class="flex">
+          <highcharts-chart type="column" data="[[columnData]]" title="" color-by-point highchart-options="[[columnChartOptions]]"></highcharts-chart>
+        </div>
+      </div>
     </paper-card>
   </template>
   <script>
@@ -72,12 +79,12 @@
             var options = {
               plotOptions: {
                 pie: {
-                  allowPointSelect: true,
-                  cursor: 'pointer',
+                  // allowPointSelect: true,
+                  // cursor: 'pointer',
                   dataLabels: {
                     enabled: false,
                   },
-                  showInLegend: true,
+                  // showInLegend: true,
                   animation: false,
                 },
               },
