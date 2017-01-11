@@ -1,6 +1,6 @@
 <!doctype html>
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../../bower_components/numeral-js/numeral-js.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/numeral-js/numeral-js.html">
 <link rel="import" href="../../bower_components/highcharts-chart/highcharts-chart.html">
 
@@ -9,16 +9,23 @@
     <style>
       paper-card {
         box-sizing: border-box;
-        max-width: 800px;
         margin: 4px;
         padding: 4px;
         flex: 0 0 auto;
       }
     </style>
+    <style is="custom-style" include="iron-flex"></style>
     <paper-card heading="[[planName]]">
       <p>Total Healthcare Spending: <numeral-js number="[[totalHealthcareSpending]]" format="$0,0" print></numeral-js></p>
-      <highcharts-chart type="pie" data="[[pieChartData]]" title="" color-by-point highchart-options="[[pieChartOptions]]"></highcharts-chart>
-      <highcharts-chart type="column" data="[[columnData]]" title="" color-by-point highchart-options="[[columnChartOptions]]"></highcharts-chart>
+
+      <div class="layout horizontal">
+        <div>
+          <highcharts-chart type="pie" data="[[pieChartData]]" title="" color-by-point highchart-options="[[pieChartOptions]]"></highcharts-chart>
+        </div>
+        <div class="flex">
+          <highcharts-chart type="column" data="[[columnData]]" title="" color-by-point highchart-options="[[columnChartOptions]]"></highcharts-chart>
+        </div>
+      </div>
     </paper-card>
   </template>
   <script>
@@ -47,17 +54,21 @@
     Polymer({
       is: 'scenario-card',
       properties: {
+        visible: {
+          type: Boolean,
+          notify: true,
+        },
         scenario: {
           type: Object,
           notify: true,
         },
         planName: {
           type: String,
-          computed: 'buildPlanName(scenario)',
+          computed: 'buildPlanName(scenario, visible)',
         },
         totalHealthcareSpending: {
           type: Number,
-          computed: 'calculateTotalHealthcareSpending(scenario)',
+          computed: 'calculateTotalHealthcareSpending(scenario, visible)',
         },
         pieChartData: {
           type: Array,
@@ -68,12 +79,13 @@
             var options = {
               plotOptions: {
                 pie: {
-                  allowPointSelect: true,
-                  cursor: 'pointer',
+                  // allowPointSelect: true,
+                  // cursor: 'pointer',
                   dataLabels: {
                     enabled: false,
                   },
-                  showInLegend: true,
+                  // showInLegend: true,
+                  animation: false,
                 },
               },
             };
@@ -90,6 +102,7 @@
               plotOptions: {
                 column: {
                   stacking: 'normal',
+                  animation: false,
                 },
               },
             };
@@ -133,14 +146,17 @@
         },
       },
       observers: [
-        'buildColumnData(scenario)',
-        'buildPieChartData(scenario)',
+        'buildColumnData(scenario, visible)',
+        'buildPieChartData(scenario, visible)',
       ],
 
-      buildPlanName: function (scenario) {
+      buildPlanName: function (scenario, visible) {
         var chartTitle = '';
         var employeePlanName;
         var spousePlanName;
+        if (!visible) {
+          return null;
+        }
         if (scenario.insuranceOption.employeePlan) {
           employeePlanName = scenario.insuranceOption.employeePlan.planName + ' - ' +
             scenario.insuranceOption.employeePlan.coverageLevel;
@@ -155,8 +171,11 @@
         }
         return chartTitle;
       },
-      calculateTotalHealthcareSpending: function (scenario) {
+      calculateTotalHealthcareSpending: function (scenario, visible) {
         var total = 0;
+        if (!visible) {
+          return null;
+        }
         if (scenario.insuranceOption.employeePlan) {
           total += scenario.insuranceOption.employeePlan.premium;
           total += sumForProperty(scenario.performance, 'employee', 'paidFromDeductible');
@@ -171,10 +190,12 @@
 
         return total;
       },
-      buildPieChartData: function (scenario) {
+      buildPieChartData: function (scenario, visible) {
+        if (visible) {
           this.debounce('debouncePieChartData', function () {
             this.set('pieChartData', this._buildPieChartData(scenario));
           }, 100);
+        }
       },
       _buildPieChartData: function (scenario) {
         var premiumEmployee = 0;
@@ -220,10 +241,12 @@
         ];
         return data;
       },
-      buildColumnData: function (scenario) {
-        this.debounce('debounceColumnData', function () {
-          this.set('columnData', this._buildColumnData(scenario));
-        }, 100);
+      buildColumnData: function (scenario, visible) {
+        if (visible) {
+          this.debounce('debounceColumnData', function () {
+            this.set('columnData', this._buildColumnData(scenario));
+          }, 100);
+        }
       },
       _buildColumnData: function (scenario) {
         var data;

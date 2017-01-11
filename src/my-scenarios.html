@@ -91,7 +91,7 @@
         <paper-slider value="{{logTotalHealthcareCostsChildren}}" min="5" max="11.512925465" step=".001"></paper-slider>
       </div>
       <template id="scenarioCharts" is="dom-repeat" items="{{scenarios}}" as="scenario">
-        <scenario-card scenario="{{scenario}}"></scenario-card>
+        <scenario-card scenario="[[scenario]]" visible="[[visible]]"></scenario-card>
       </template>
       <div class="horizontal start-justified layout">
         <a href="/options"><paper-button raised>Back</paper-button></a>
@@ -286,6 +286,7 @@
           type: Boolean,
           computed: '_hideSpouseSlider(adultCount)',
         },
+        visible: Boolean,
       },
       observers: [
         'generateCostCurve(totalHealthcareCostsEmployee,totalHealthcareCostsSpouse,totalHealthcareCostsChildren, hideSpouseSlider, hideChildrenSlider)',
