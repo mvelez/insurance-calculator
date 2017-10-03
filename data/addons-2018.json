@@ -1,0 +1,118 @@
+{
+  "tobaccoSurcharge": 652,
+  "stateSurcharge": [
+    {
+      "1": 0,
+      "2": 0,
+      "state": "No.",
+      "3+": 0
+    },
+    {
+      "1": 20,
+      "2": 39,
+      "state": "AK",
+      "3+": 59
+    },
+    {
+      "1": 3,
+      "2": 7,
+      "state": "CT",
+      "3+": 10
+
+    },
+    {
+      "1": 9,
+      "2": 17,
+      "state": "ID",
+      "3+": 26
+    },
+    {
+      "1": 10,
+      "2": 20,
+      "state": "ME",
+      "3+": 30
+    },
+    {
+      "1": 48,
+      "2": 97,
+      "state": "MA",
+      "3+": 145
+    },
+    {
+      "1": 16,
+      "2": 32,
+      "state": "MI",
+      "3+": 49
+    },
+    {
+      "1": 126,
+      "2": 252,
+      "state": "NY",
+      "3+": 378
+    },
+    {
+      "1": 35,
+      "2": 69,
+      "state": "VT",
+      "3+": 104
+    }
+  ],
+  "visionInsurance": [
+    {
+      "coverageLevel": "1",
+      "cost": 138
+    },
+    {
+      "coverageLevel": "2",
+      "cost": 276
+    },
+    {
+      "coverageLevel": "3+",
+      "cost": 414
+    }
+  ],
+  "dentalInsurance": [
+    {
+      "coverageLevel": "1",
+      "cost": 216
+    },
+    {
+      "coverageLevel": "2",
+      "cost": 432
+    },
+    {
+      "coverageLevel": "3+",
+      "cost": 648
+    }
+  ],
+  "workingSpouse": [
+    {
+      "incomeBracket": "Up to $24,999",
+      "surcharge": 0
+    },
+    {
+      "incomeBracket": "$25,000-$37,499",
+      "surcharge": 780
+    },
+    {
+      "incomeBracket": "$37,500-$49,999",
+      "surcharge": 1300
+    },
+    {
+      "incomeBracket": "$50,000-$74,999",
+      "surcharge": 2080
+    },
+    {
+      "incomeBracket": "$75,000-$99,999",
+      "surcharge": 2600
+    },
+    {
+      "incomeBracket": "$100,000-$149,999",
+      "surcharge": 3380
+    },
+    {
+      "incomeBracket": "$150,000 or more",
+      "surcharge": 3640
+    }
+  ]
+}

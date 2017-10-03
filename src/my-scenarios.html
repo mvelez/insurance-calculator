@@ -31,8 +31,16 @@
       <h1>Cost Estimator</h1>
       <p>
         Explore how this will help you cover potential health scenarios.
-        Use the slider below to choose your expected healthcare costs.
+        Use the slider(s) below to estimate your expected healthcare costs
+        and the graphs will adjust to estimate how those costs will be covered
+        by your different insurance options and to calculate your total out of
+        pocket costs (Insurance Premium + Dedctible + Co-Insurance).  
         Initial value is based on CDC statistics for an adult age 18 to 44.
+      </p>
+      <p>
+        At the upper limits of health care expenditures, ACA limits apply so please
+        refer to the official GE Health Choice site for those details if that is a
+        concern for you.
       </p>
 
       <vaadin-grid id="cdcCostGrid">
@@ -74,7 +82,7 @@
         </table>
       </vaadin-grid>
       <p>
-        <a href="https://www.cdc.gov/nchs/data/hus/hus15.pdf#097">Source</a>
+        <a href="https://www.cdc.gov/nchs/data/hus/hus15.pdf#097" target="_blank">CDC Statistics</a>
       </p>
       <div>Total Healthcare Costs:
          <numeral-js number="[[totalHealthcareCostsLabel]]" format="$0,0" print></numeral-js>
